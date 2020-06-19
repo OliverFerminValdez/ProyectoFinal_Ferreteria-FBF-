@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Ferreteria_FBF_App.Data;
+using Blazored.Modal;
 
 namespace Ferreteria_FBF_App
 {
@@ -29,6 +30,8 @@ namespace Ferreteria_FBF_App
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+            services.AddBlazoredModal();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

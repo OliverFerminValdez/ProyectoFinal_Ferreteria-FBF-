@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.Modal" Version="4.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SQLite" Version="3.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.5">
       <PrivateAssets>all</PrivateAssets>
@@ -19,6 +20,7 @@
     <Folder Include="DAL\" />
     <Folder Include="Models\" />
     <Folder Include="Pages\Consultas\" />
+    <Folder Include="Pages\Extentions\" />
     <Folder Include="Pages\Reportes\" />
     <Folder Include="Pages\Registros\" />
   </ItemGroup>
