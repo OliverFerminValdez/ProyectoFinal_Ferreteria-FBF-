@@ -20,7 +20,6 @@
     <Folder Include="BLL\" />
     <Folder Include="DAL\" />
     <Folder Include="Models\" />
-    <Folder Include="Pages\Consultas\" />
     <Folder Include="Pages\Extentions\" />
     <Folder Include="Pages\Reportes\" />
     <Folder Include="Pages\Registros\" />
