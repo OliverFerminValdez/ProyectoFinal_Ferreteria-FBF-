@@ -1,4 +1,109 @@
-﻿<h3>C_Ventas</h3>
+﻿@page "/ConsultaVentas"
+
+<div class="card rounded" style="border-color:#dc3545">
+    <div class="card-header text-lg-center" style="background-color: #dc3545">
+        <h3><strong>Consulta de Ventas</strong></h3>
+    </div>
+    <div class="card-body">
+        <div class="card">
+            <div class="card-header" style="background-color:#CDCBCB">
+                <div class="row">
+                    <div class="input-group col-12">
+                        <div class="form-group col-2">
+                            <label><strong>Desde: </strong></label>
+                            <input type="date" class="form-control" />
+                        </div>
+                        <div class="form-group col-2">
+                            <label><strong>Hasta: </strong></label>
+                            <input type="date" class="form-control" />
+                        </div>
+                        <div class="form-group col-3">
+                            <label><strong>Filtro: </strong></label>
+                            <select class="form-control">
+                                <option value="0">Eliga un filtro</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-3">
+                            <label><strong>Criterio: </strong></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Criterio" />
+                                <button type="button" class="btn btn-danger input-group-append">Consultar</button>
+                            </div>
+                        </div>
+                        <div class="form-group col-2 col-md-2 ml-auto">
+                            <label><strong>Ordenar por: </strong></label>
+                            <select class="form-control">
+                                <option value="value">Eliga una opcion</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">SubTotal</th>
+                            <th scope="col">ITBIS</th>
+                            <th scope="col">Descuentos</th>
+                            <th scope="col">Total General</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>14/08/2020</td>
+                            <td>Credito</td>
+                            <td>Oliver Fermin</td>
+                            <td>150,000.00</td>
+                            <td>27,000.00</td>
+                            <td>100.00</td>
+                            <td>176,900.00</td>
+                            <td><a href="#" class="btn btn-dark "><strong>Editar</strong></a></td>
+                        </tr>
+                        <tr>
+                            <td>14/08/2020</td>
+                            <td>Credito</td>
+                            <td>Martinsito Brito</td>
+                            <td>150,000.00</td>
+                            <td>27,000.00</td>
+                            <td>100.00</td>
+                            <td>176,900.00</td>
+                            <td><a href="#" class="btn btn-dark "><strong>Editar</strong></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer" style="background-color:#CDCBCB">
+                <div class="form-group col-6">
+                    <label><strong>Total ventas</strong></label>
+                    <input type="number" class="form-control" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-footer" style="background-color: #dc3545">
+        <div class="form-group text-center" display: inline-block>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
 
 @code {
 
