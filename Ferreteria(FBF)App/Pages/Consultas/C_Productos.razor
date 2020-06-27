@@ -1,7 +1,7 @@
 ﻿@page "/ConsultaProductos"
 
     <div class="card rounded" style="border-color:#dc3545">
-        <div class="card-header" style="background-color: #dc3545">
+        <div class="card-header text-lg-center" style="background-color: #dc3545">
             <h3><strong>Consulta de productos</strong></h3>
         </div>
         <div class="card-body">
@@ -36,7 +36,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">Descripcion</th>
-                                <th scope="col">Cantidad</th>
+                                <th scope="col">Almacen</th>
                                 <th scope="col">Costo</th>
                                 <th scope="col">Importe</th>
                                 <th scope="col"></th>
@@ -61,9 +61,19 @@
                     </table>
                 </div>
                 <div class="card-footer" style="background-color:#CDCBCB">
-                    <div class="form-group col-6">
-                        <label><strong>Monto</strong></label>
-                        <input type="number" class="form-control"/>
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label><strong>Valor inventario</strong></label>
+                            <input type="number" class="form-control" />
+                        </div>
+                        <div class="form-group col-3 col-md-2 ml-md-auto">
+                            <label><strong>Reporte </strong></label>
+                            <button type="button" class="btn btn-danger form-control"><span class="oi oi-print"></span> Productos en reorden</button>
+                        </div>
+                        <div class="form-group col-2 col-md-2 ml-auto">
+                            <label><strong>Imprimir </strong></label>
+                            <button type="button" class="btn btn-danger form-control"><span class="oi oi-print"></span> Consulta</button>
+                        </div>
                     </div>
                 </div>
             </div>

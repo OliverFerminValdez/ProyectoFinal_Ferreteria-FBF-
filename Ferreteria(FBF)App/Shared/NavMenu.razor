@@ -1,30 +1,127 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Ferreteria(FBF)App</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-    </ul>
-</div>
-
+﻿@inject IJSRuntime js 
+    <div class="page-wrapper chiller-theme toggled">
+        <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+            <i class="fas fa-bars"></i>
+        </a>
+        <nav id="sidebar" class="sidebar-wrapper">
+            <div class="sidebar-content">
+                <div class="sidebar-brand">
+                    <a href="#"><h4 style="color:#dc3545">Ferreteria FBF</h4></a>
+                    <div id="close-sidebar">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="sidebar-header">
+                    <div class="user-pic">
+                        <img class="img-responsive img-rounded" src="Resources/LOGO.jpg" height="100"
+                             alt="User picture">
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">Oliver <strong> Fermin</strong></span>
+                        <span class="user-role">Administrator</span>
+                        <span class="user-status">
+                            <i class="fa fa-circle"></i>
+                            <span>Online</span>
+                        </span>
+                    </div>
+                </div>
+                <!-- sidebar-header  -->
+                <!-- sidebar-search  -->
+                <div class="sidebar-menu">
+                    <ul>
+                        <li class="header-menu">
+                            <span>Menu</span>
+                        </li>
+                        <li class="sidebar-content">
+                            <a href="#">
+                                <i class="fa fa-tachometer"></i>
+                                <span>Inicio</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-folder"></i>
+                                <span>Registros</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#"><span class="oi oi-cart"></span>Ventas</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><span class="oi oi-wrench"></span>Productos</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><span class="oi oi-credit-card"></span>Clientes</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><span class="oi oi-dollar"></span>Cobros</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><span class="oi oi-people"></span>Usuarios</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-database"></i>
+                                <span>Consultas</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="consultaventas"><span class="oi oi-cart"></span>Ventas</a>
+                                    </li>
+                                    <li>
+                                        <a href="consultaproductos"><span class="oi oi-wrench"></span>Productos</a>
+                                    </li>
+                                    <li>
+                                        <a href="consultaclientes"><span class="oi oi-credit-card"></span>Clientes</a>
+                                    </li>
+                                    <li>
+                                        <a href="consultacobros"><span class="oi oi-dollar"></span>Cobros</a>
+                                    </li>
+                                    <li>
+                                        <a href="consultausuarios"><span class="oi oi-people"></span>Usuarios</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-print"></i>
+                                <span>Reportes</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#"><span class="oi oi-cart"></span>Ventas del dia</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><span class="oi oi-dollar"></span>Productos en reorden</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><span class="oi oi-credit-card"></span>Clientes con deuda</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- sidebar-menu  -->
+            </div>
+            <!-- sidebar-content  -->
+            <div class="sidebar-footer">
+                <a href="#">Cerrar Seccion
+                    <i class="fa fa-sign-out"></i>
+                </a>
+            </div>
+        </nav>
+        <!-- sidebar-wrapper  -->
+      
+        <!-- page-content" -->
+    </div>
 @code {
     private bool collapseNavMenu = true;
 
@@ -33,5 +130,13 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await MainMenu();
+    }
+    private async Task MainMenu()
+    {
+        await js.InvokeVoidAsync("menujquery");
     }
 }
