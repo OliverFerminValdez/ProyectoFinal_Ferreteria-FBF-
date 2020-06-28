@@ -20,8 +20,8 @@
   <ItemGroup>
     <Folder Include="BLL\" />
     <Folder Include="DAL\" />
-    <Folder Include="Models\" />
     <Folder Include="Pages\Extentions\" />
+    <Folder Include="Pages\Herramientas\" />
     <Folder Include="Pages\Reportes\" />
     <Folder Include="Pages\Registros\" />
   </ItemGroup>
