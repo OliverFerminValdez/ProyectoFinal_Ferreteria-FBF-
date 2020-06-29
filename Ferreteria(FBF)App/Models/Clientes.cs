@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,6 +24,9 @@ namespace Ferreteria_FBF_App.Models
         [StringLength(11, ErrorMessage = "Debe contener 11 digitos", MinimumLength = 11)]
         public string Cedula { get; set; }
 
+        [EmailAddress(ErrorMessage ="Introduzca una direccion valida")]
+        public string Email { get; set; }
+
         [Required(ErrorMessage = "Es obligatorio introducir la direccion")]
         public string Dirección { get; set; }
 
@@ -33,11 +37,10 @@ namespace Ferreteria_FBF_App.Models
         
         [Required(ErrorMessage = "Debe introducir el limite de credito")]
         public double LimiteCredito { get; set; }
-       
-        //No lleva data anotations porque entiendo que se calcula mediante el registro de ventas.
         public double Balance { get; set; }
-
-        //No le puse ninguna dataAnnotations porque se va a tomar de el usuario que este logeado.
+        [ForeignKey("ClienteId")]
+        public virtual List<CobroDetalle> Cobros { get; set; } = new List<CobroDetalle>();
+        [ForeignKey("UsuarioId")]
         public int UsuarioId { get; set; }
     }
 }

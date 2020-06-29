@@ -10,11 +10,8 @@ namespace Ferreteria_FBF_App.Models
     {
         [Key]
         public int MarcaId { get; set; }
-        
         [Required(ErrorMessage = "Debe de introducir el nombre")]
-        public string Nombre { get; set; }
-
-        //No le puse ninguna dataAnnotations porque se va a tomar de el usuario que este logeado.
+        public string Descripcion { get; set; }
         public int UsuarioId { get; set; }
     }
 }

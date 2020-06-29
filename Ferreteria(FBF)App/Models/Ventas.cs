@@ -31,14 +31,7 @@ namespace Ferreteria_FBF_App.Models
 
         [Required(ErrorMessage = "Es obligatorio introducir el total general")]
         public double TotalGeneral { get; set; }
-
-        [Required(ErrorMessage = "Es obligatorio introducir la cantidad de productos")]
         public int CantidadProductos { get; set; }
-
-        //Entiendo que este atributo se puede obviar.
-        public int ProcdutoId { get; set; }
-
-        //No le puse ninguna dataAnnotations porque se va a tomar de el usuario que este logeado.
         public int UsuarioId { get; set; }
 
         [ForeignKey("VentaId")]

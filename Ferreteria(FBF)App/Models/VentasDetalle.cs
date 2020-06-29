@@ -8,8 +8,6 @@ namespace Ferreteria_FBF_App.Models
 {
     public class VentasDetalle
     {
-        //Todo:Hay que evaluar las data anotations de esta entidad + el atributo FacturaId
-
         [Key]
         public int VentasDetalleId { get; set; }
         public int FacturaId { get; set; }

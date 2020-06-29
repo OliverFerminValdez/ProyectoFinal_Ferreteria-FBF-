@@ -10,21 +10,14 @@ namespace Ferreteria_FBF_App.Models
     {
         [Key]
         public int CobroId { get; set; }
-
-        //Debe de ponerse dentro de la clase de InputSelectNumber como que "Debe de seleccionar una opcion" para que sea un poco generico,
-        //ya que se va a utilizar los combos con mas refencias.
         public int ClienteId { get; set; }
 
         [Required(ErrorMessage = "Es obligatorio introducir la fecha")]
-        public DateTime Fecha { get; set; }
+        public DateTime Fecha { get; set; } = DateTime.Now;
 
-        [Required(ErrorMessage = "Es obligatorio introducir el Monto")]
+        [Range(0, 99999999999999, ErrorMessage = "Es obligatorio introducir un monto")]
         public double Monto { get; set; }
-
-        [Required(ErrorMessage = "Es obligatorio introducir el Balance")]
         public double Balance { get; set; }
-
-        //No le puse ninguna dataAnnotations porque se va a tomar de el usuario que este logeado.
         public int UsuarioId { get; set; }
     }
 }
