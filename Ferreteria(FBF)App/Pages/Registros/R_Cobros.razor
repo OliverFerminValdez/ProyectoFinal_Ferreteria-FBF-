@@ -1,0 +1,81 @@
+﻿@page "/Cobros"
+
+<div class="card border-danger">
+    <div class="card-header bg-danger text-lg-center">
+        <h2 style="font-family :'Segoe UI'">Registro de Cobros</h2>
+    </div>
+
+    <div class="card-body">
+        <div class="form">
+
+            @*Cobro Id*@
+            <div class="form-row align-items-center">
+                <div class="col">
+                    <div class="form-group">
+                        <label>Cobro Id</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control col-3" />
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary input-group-text">
+                                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*Cliente Id*@
+            <div class="form-group">
+                <label>Cliente Id</label>
+                <select class="form-control">
+                    <option disabled="disabled" selected="selected">Elija una opción</option>
+                    <option value="0">Cliente 1</option>
+                    <option value="1">Cliente 2</option>
+                    <option value="2">Cliente 3</option>
+                    <option value="3">Cliente 4</option>
+                </select>
+            </div>
+
+            @*Fecha*@
+            <div class="form-group date">
+                <label>Fecha</label>
+                <input type="date" class="form-control" />
+            </div>
+
+            @*Monto*@
+            <div class="form-group">
+                <label>Monto</label>
+                <input type="number" class="form-control" />
+            </div>
+
+            @*Balance*@
+            <div class="form-group">
+                <label>Balance</label>
+                <input type="number" class="form-control" />
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer text-center" display: inline-block">
+        <div class="form-group">
+
+            <button type="button" class="btn btn-lg btn-secondary">
+                <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
+            </button>
+
+            <button type="button" class="btn btn-lg btn-success">
+                <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
+            </button>
+
+            <button type="button" class="btn btn-lg btn-danger">
+                <span class="oi oi-circle-x"></span> Eliminar
+            </button>
+        </div>
+    </div>
+
+</div>
+
+@code{
+
+}

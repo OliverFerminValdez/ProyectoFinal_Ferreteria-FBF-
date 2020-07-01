@@ -1,0 +1,58 @@
+﻿@page "/Marcas"
+
+    <div class="card border-danger">
+
+        <div class="card-header bg-danger text-lg-center">
+            <h2 style="font-family : 'Segoe UI'">Registro de Marcas</h2>
+        </div>
+
+        <div class="card-body">
+            <form>
+
+                @*Marca Id*@
+                <div class="form-row align-content-center">
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Marca Id</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control col-3" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-primary input-group-text">
+                                        <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @*Nombre*@
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" class="form-control" />
+                </div>
+
+            </form>
+        </div>
+
+        <div class="card-footer text-center" display: inline-block">
+            <div class="form-group">
+
+                <button type="button" class="btn btn-lg btn-secondary">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
+                </button>
+
+                <button type="button" class="btn btn-lg btn-success">
+                    <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
+                </button>
+
+                <button type="button" class="btn btn-lg btn-danger">
+                    <span class="oi oi-circle-x"></span> Eliminar
+                </button>
+            </div>
+        </div>
+
+    </div>
+@code {
+
+}

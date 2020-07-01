@@ -1,0 +1,172 @@
+﻿@page "/Ventas"
+
+<div class="card border-danger">
+    <div class="card-header bg-danger text-lg-center">
+        <h2 style="font-family :'Segoe UI'">Registro de Ventas</h2>
+    </div>
+
+    <div class="card-body">
+        <div class="form">
+
+            <div class="form-group form-row">
+                @*Venta Id*@
+                <div class="col-md-4">
+                    <label>Venta Id</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" />
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-primary input-group-text">
+                                <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                @*Fecha*@
+                <div class="col-md-4 offset-md-4">
+                    <label>Fecha</label>
+                    <input type="date" class="form-control" />
+                </div>
+            </div>
+
+            @*Cliente Id*@
+            <div class="form-group">
+                <label>Cliente Id</label>
+                <select class="form-control">
+                    <option disabled="disabled" selected="selected">Elija una opción</option>
+                    <option value="0">Cliente 1</option>
+                    <option value="1">Cliente 2</option>
+                    <option value="2">Cliente 3</option>
+                    <option value="3">Cliente 4</option>
+                </select>
+            </div>
+
+            @*Detalle*@
+            <div class="card">
+
+                <div class="form-row">
+
+                    <div class="form-group col-3">
+                        <label>Descripción</label>
+                        <input type="text" class="form-control" />
+                    </div>
+
+                    <div class="form-group col-2">
+                        <label>Cantidad</label>
+                        <input type="number" class="form-control" />
+                    </div>
+
+                    <div class="form-group col-2">
+                        <label>Unidad</label>
+                        <input type="number" class="form-control" />
+                    </div>
+
+                    <div class="form-group col-2">
+                        <label>Precio unitario</label>
+                        <input type="number" class="form-control" />
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label>Importe</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control"/>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary input-group-text">
+                                    <i class="oi oi-plus" aria-hidden="true" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                @*Tabla del detalle*@
+                <table class="table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+
+
+            @*Total*@
+            <div class="form-group">
+                <label>Total</label>
+                <input type="text" class="form-control" />
+            </div>
+
+            <div class="form-group form-row">
+                @*Unidad*@
+                <div class="col-6">
+                    <label>Unidad</label>
+                    <select class="form-control">
+                        <option disabled="disabled" selected="selected">Elija una opción</option>
+                        <option value="0">Unidad 1</option>
+                        <option value="1">Unidad 2</option>
+                        <option value="2">Unidad 3</option>
+                        <option value="3">Unidad 4</option>
+                    </select>
+                </div>
+
+                @*Marca*@
+                <div class="col-6">
+                    <label>Marcas</label>
+                    <select class="form-control">
+                        <option disabled="disabled" selected="selected">Elija una opción</option>
+                        <option value="0">Marca 1</option>
+                        <option value="1">Marca 2</option>
+                        <option value="2">Marca 3</option>
+                        <option value="3">Marca 4</option>
+                    </select>
+                </div>
+            </div>
+
+            @*Precio unitario*@
+            <div class="form-group">
+                <label>Precio unitario</label>
+                <input type="number" class="form-control" />
+            </div>
+
+            @*Inventario*@
+            <div class="form-group">
+                <label>Inventario</label>
+                <input type="number" class="form-control" />
+            </div>
+
+            @*Valor inventario*@
+            <div class="form-group">
+                <label>Valor inventario</label>
+                <input type="number" class="form-control" />
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer text-center" display: inline-block">
+        <div class="form-group">
+
+            <button type="button" class="btn btn-lg btn-secondary">
+                <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
+            </button>
+
+            <button type="button" class="btn btn-lg btn-success">
+                <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
+            </button>
+
+            <button type="button" class="btn btn-lg btn-danger">
+                <span class="oi oi-circle-x"></span> Eliminar
+            </button>
+        </div>
+    </div>
+
+</div>
+
+@code {
+
+}
