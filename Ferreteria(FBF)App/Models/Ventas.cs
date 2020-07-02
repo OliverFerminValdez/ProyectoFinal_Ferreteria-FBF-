@@ -9,12 +9,8 @@ namespace Ferreteria_FBF_App.Models
 {
     public class Ventas
     {
-        //Todo:Hay que evaluar las data anotations de esta entidad
         [Key]
         public int VentaId { get; set; }
-
-        //Debe de ponerse dentro de la clase de InputSelectNumber como que "Debe de seleccionar una opcion" para que sea un poco generico,
-        //ya que se va a utilizar los combos con mas refencias.
         public int ClienteId { get; set; }
 
         [Required(ErrorMessage = "Es obligatorio introducir la fecha")]

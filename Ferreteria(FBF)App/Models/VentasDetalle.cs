@@ -14,6 +14,5 @@ namespace Ferreteria_FBF_App.Models
         public int ProductoId { get; set; }
         public int Cantidad { get; set; }
         public double Precio { get; set; }
-        public int UsuarioId { get; set; }
     }
 }

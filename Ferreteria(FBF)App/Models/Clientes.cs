@@ -32,7 +32,7 @@ namespace Ferreteria_FBF_App.Models
 
         [Phone(ErrorMessage = "Solo debe introducir numeros")]
         [Required(ErrorMessage = "Es obligatorio introducir el telefono")]
-        [StringLength(10, ErrorMessage = "Debe contener 10 digitos", MinimumLength = 10)] 
+        [StringLength(12, ErrorMessage = "Debe contener 10 digitos", MinimumLength = 10)] 
         public string Telefono { get; set; }
         
         [Required(ErrorMessage = "Debe introducir el limite de credito")]
