@@ -14,7 +14,10 @@ namespace Ferreteria_FBF_App.Models
         public int ClienteId { get; set; }
 
         [Required(ErrorMessage = "Es obligatorio introducir la fecha")]
+        [DisplayFormat(DataFormatString ="{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Fecha { get; set; }
+        [Required(ErrorMessage = "Es obligatorio introducir el tipo de factura")]
+        public string Tipo { get; set; }
 
         [Required(ErrorMessage = "Es obligatorio introducir el total")]
         public double Total { get; set; }
