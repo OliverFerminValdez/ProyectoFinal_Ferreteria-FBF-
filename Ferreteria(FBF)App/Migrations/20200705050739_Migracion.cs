@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ferreteria_FBF_App.Migrations
 {
-    public partial class migracioninicial : Migration
+    public partial class Migracion : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -63,7 +63,7 @@ namespace Ferreteria_FBF_App.Migrations
                 name: "Productos",
                 columns: table => new
                 {
-                    ProdcutoId = table.Column<int>(nullable: false)
+                    ProductoId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Descripción = table.Column<string>(nullable: false),
                     Unidad = table.Column<string>(nullable: false),
@@ -75,7 +75,7 @@ namespace Ferreteria_FBF_App.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Productos", x => x.ProdcutoId);
+                    table.PrimaryKey("PK_Productos", x => x.ProductoId);
                 });
 
             migrationBuilder.CreateTable(
@@ -183,7 +183,7 @@ namespace Ferreteria_FBF_App.Migrations
             migrationBuilder.InsertData(
                 table: "Ventas",
                 columns: new[] { "VentaId", "CantidadProductos", "ClienteId", "Descuentos", "Fecha", "ITBIS", "Tipo", "Total", "TotalGeneral", "UsuarioId" },
-                values: new object[] { 3, 2, 2, 0.0, new DateTime(2020, 7, 4, 11, 47, 28, 643, DateTimeKind.Local).AddTicks(4798), 18.0, "Credito", 100.0, 200.0, 1 });
+                values: new object[] { 3, 2, 2, 0.0, new DateTime(2020, 7, 5, 1, 7, 39, 619, DateTimeKind.Local).AddTicks(6247), 18.0, "Credito", 100.0, 200.0, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_CobroDetalle_ClienteId",

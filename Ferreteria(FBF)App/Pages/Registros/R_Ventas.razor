@@ -22,11 +22,21 @@
                     </div>
                 </div>
 
-                @*Fecha*@
-                <div class="col-md-4 offset-md-4">
-                    <label>Fecha</label>
-                    <input type="date" class="form-control" />
+                @*Tipo Factura*@
+                <div class="col-md-2 offset-md-6">
+                    <label>Tipo de factura</label>
+                    <select class="form-control">
+                        <option disabled="disabled" selected="selected">Elija una opción</option>
+                        <option value="0">Credito</option>
+                        <option value="1">Contado</option>
+                    </select>
                 </div>
+            </div>
+
+            @*Fecha*@
+            <div class="form-group">
+                <label>Fecha</label>
+                <input type="date" class="form-control" />
             </div>
 
             @*Cliente Id*@
@@ -42,120 +52,135 @@
             </div>
 
             @*Detalle*@
-            <div class="card">
+            <div class="card border-dark">
 
-                <div class="form-row">
-
-                    <div class="form-group col-3">
-                        <label>Descripción</label>
-                        <input type="text" class="form-control" />
-                    </div>
-
-                    <div class="form-group col-2">
-                        <label>Cantidad</label>
-                        <input type="number" class="form-control" />
-                    </div>
-
-                    <div class="form-group col-2">
-                        <label>Unidad</label>
-                        <input type="number" class="form-control" />
-                    </div>
-
-                    <div class="form-group col-2">
-                        <label>Precio unitario</label>
-                        <input type="number" class="form-control" />
-                    </div>
-
-                    <div class="form-group col-md-3">
-                        <label>Importe</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control"/>
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-primary input-group-text">
-                                    <i class="oi oi-plus" aria-hidden="true" />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
+                <div class="card-header-pills text-lg-center">
+                    <h4 style="font-family:'Segoe UI'" class="col-form-label-lg">Articulos</h4>
                 </div>
 
+                <div class="card-body">
+                    <div class="form-row">
 
-                @*Tabla del detalle*@
-                <table class="table">
-                    <thead class="thead-light">
-                        <tr>
-                            <th scope="col">Fecha</th>
-                            <th scope="col">Valor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                        <div class="form-group col-3">
+                            <label>Descripción</label>
+                            <select class="form-control">
+                                <option disabled="disabled" selected="selected">Elija una opción</option>
+                                <option value="0">Producto 1</option>
+                                <option value="1">Prodcuto 2</option>
+                                <option value="2">Producto 3</option>
+                                <option value="3">Producto 4</option>
+                            </select>
+                        </div>
 
-                    </tbody>
-                </table>
+                        <div class="form-group col-2">
+                            <label>Cantidad</label>
+                            <input type="number" class="form-control" />
+                        </div>
+
+                        <div class="form-group col-2">
+                            <label>Unidad</label>
+                            <input type="number" class="form-control" />
+                        </div>
+
+                        <div class="form-group col-2">
+                            <label>Precio unitario</label>
+                            <input type="number" class="form-control" />
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label>Importe</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-primary input-group-text">
+                                        <i class="oi oi-plus" aria-hidden="true" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    @*Tabla del detalle*@
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Cantidad</th>
+                                <th scope="col">Unidad</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col">Importe</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>@DateTime.Now</td>
+                                <td>50</td>
+                                <td>Docenas</td>
+                                <td>75000.00</td>
+                                <td>3750000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
+            <br />
 
-            @*Total*@
-            <div class="form-group">
-                <label>Total</label>
-                <input type="text" class="form-control" />
+            <div class="form-group form-row">
+                @*Sub-Total*@
+                <div class="col-md-4">
+                    <label>Sub Total</label>
+                    <input type="number" class="form-control" readonly />
+                </div>
+
+                @*Cantidad*@
+                <div class="col-md-4 offset-md-4">
+                    <label>Cantidad</label>
+                    <input type="number" class="form-control" readonly />
+                </div>
             </div>
 
             <div class="form-group form-row">
-                @*Unidad*@
-                <div class="col-6">
-                    <label>Unidad</label>
-                    <select class="form-control">
-                        <option disabled="disabled" selected="selected">Elija una opción</option>
-                        <option value="0">Unidad 1</option>
-                        <option value="1">Unidad 2</option>
-                        <option value="2">Unidad 3</option>
-                        <option value="3">Unidad 4</option>
-                    </select>
+                @*Descuentos*@
+                <div class="col-md-4">
+                    <label>Descuentos</label>
+                    <input type="number" class="form-control" />
                 </div>
 
-                @*Marca*@
-                <div class="col-6">
-                    <label>Marcas</label>
-                    <select class="form-control">
-                        <option disabled="disabled" selected="selected">Elija una opción</option>
-                        <option value="0">Marca 1</option>
-                        <option value="1">Marca 2</option>
-                        <option value="2">Marca 3</option>
-                        <option value="3">Marca 4</option>
-                    </select>
+                @*Comentarios*@
+                <div class="col-md-4 offset-md-4">
+                    <label>Comentarios</label>
+                    <textarea class="form-control"></textarea>
                 </div>
             </div>
 
-            @*Precio unitario*@
-            <div class="form-group">
-                <label>Precio unitario</label>
-                <input type="number" class="form-control" />
+            <div class="form-group form-row">
+                @*ITBIS*@
+                <div class="col-md-4">
+                    <label>ITBIS</label>
+                    <input type="number" class="form-control" readonly />
+                </div>
+
+                @*Total General*@
+                <div class="col-md-4 offset-md-4">
+                    <label>Total General</label>
+                    <input type="number" class="form-control" readonly />
+                </div>
             </div>
 
-            @*Inventario*@
-            <div class="form-group">
-                <label>Inventario</label>
-                <input type="number" class="form-control" />
-            </div>
-
-            @*Valor inventario*@
-            <div class="form-group">
-                <label>Valor inventario</label>
-                <input type="number" class="form-control" />
-            </div>
         </div>
     </div>
 
-    <div class="card-footer text-center" display: inline-block">
+    <div class="card-footer text-center" display: inline-block>
         <div class="form-group">
 
             <button type="button" class="btn btn-lg btn-secondary">
                 <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
             </button>
 
-            <button type="button" class="btn btn-lg btn-success">
+            <button type="button" class="btn btn-lg btn-info">
                 <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
             </button>
 

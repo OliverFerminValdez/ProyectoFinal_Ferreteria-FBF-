@@ -9,13 +9,14 @@ namespace Ferreteria_FBF_App.Models
     public class Productos
     {
         [Key]
-        public int ProdcutoId { get; set; }
+        public int ProductoId { get; set; }
 
-        [Required(ErrorMessage = "Es obligatorio introducir la descripción")]
+        [Required(ErrorMessage = "Debe de introducir la descripción")]
         public string Descripción { get; set; }
 
         [Required(ErrorMessage = "Es obligatorio introducir la unidad")]
         public string Unidad { get; set; }
+
         public int MarcaId { get; set; }
         
         [Required(ErrorMessage = "Es obligatorio introducir el precio unitario")]

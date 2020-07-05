@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ferreteria_FBF_App.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20200704154729_migracion inicial")]
-    partial class migracioninicial
+    [Migration("20200705050739_Migracion")]
+    partial class Migracion
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -156,7 +156,7 @@ namespace Ferreteria_FBF_App.Migrations
 
             modelBuilder.Entity("Ferreteria_FBF_App.Models.Productos", b =>
                 {
-                    b.Property<int>("ProdcutoId")
+                    b.Property<int>("ProductoId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -183,7 +183,7 @@ namespace Ferreteria_FBF_App.Migrations
                     b.Property<double>("ValorInventario")
                         .HasColumnType("REAL");
 
-                    b.HasKey("ProdcutoId");
+                    b.HasKey("ProductoId");
 
                     b.ToTable("Productos");
                 });
@@ -296,7 +296,7 @@ namespace Ferreteria_FBF_App.Migrations
                             CantidadProductos = 2,
                             ClienteId = 2,
                             Descuentos = 0.0,
-                            Fecha = new DateTime(2020, 7, 4, 11, 47, 28, 643, DateTimeKind.Local).AddTicks(4798),
+                            Fecha = new DateTime(2020, 7, 5, 1, 7, 39, 619, DateTimeKind.Local).AddTicks(6247),
                             ITBIS = 18.0,
                             Tipo = "Credito",
                             Total = 100.0,
