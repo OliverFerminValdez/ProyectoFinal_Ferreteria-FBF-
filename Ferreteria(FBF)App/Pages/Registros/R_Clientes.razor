@@ -67,6 +67,13 @@
                     <ValidationMessage For="@(() => Cliente.Dirección)" />
                 </div>
 
+                @*Email*@
+                <div class="form-group">
+                    <label>Email</label>
+                    <InputText @bind-Value="Cliente.Email" class="form-control" />
+                    <ValidationMessage For="@(() => Cliente.Email)" />
+                </div>
+
                 @*Telefono*@
                 <div class="form-group">
                     <label>Telefono</label>
@@ -78,7 +85,7 @@
                 <div class="form-group">
                     <label>Limite de Credito</label>
                     <InputNumber @bind-Value="Cliente.LimiteCredito" class="form-control" />
-                    <ValidationMessage For="@(() => Cliente.LimiteCredito)"/>
+                    <ValidationMessage For="@(() => Cliente.LimiteCredito)" />
                 </div>
 
                 @*Balance*@
