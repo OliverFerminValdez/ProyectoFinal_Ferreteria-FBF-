@@ -1,81 +1,168 @@
 ﻿@page "/Cobros"
+@page "/Cobros/{CobroId:int}"
 
-<div class="card border-danger">
-    <div class="card-header bg-danger text-lg-center">
-        <h2 style="font-family :'Segoe UI'">Registro de Cobros</h2>
-    </div>
+@using BLL
+@using Models
+@inject IToastService toast
 
-    <div class="card-body">
-        <div class="form">
+<EditForm Model="Cobro" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-lg-center">
+            <h2 style="font-family :'Segoe UI'">Registro de Cobros</h2>
+        </div>
 
-            @*Cobro Id*@
-            <div class="form-row align-items-center">
-                <div class="col">
-                    <div class="form-group">
-                        <label>Cobro Id</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control col-3" />
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-primary input-group-text">
-                                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
-                                </button>
+        <div class="card-body">
+            <div class="form">
+
+                @*Cobro Id*@
+                <div class="form-row align-items-center">
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Cobro Id</label>
+                            <div class="input-group">
+                                <InputNumber @bind-Value="Cobro.CobroId" class="form-control col-3" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
+                                        <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            @*Cliente Id*@
-            <div class="form-group">
-                <label>Cliente Id</label>
-                <select class="form-control">
-                    <option disabled="disabled" selected="selected">Elija una opción</option>
-                    <option value="0">Cliente 1</option>
-                    <option value="1">Cliente 2</option>
-                    <option value="2">Cliente 3</option>
-                    <option value="3">Cliente 4</option>
-                </select>
-            </div>
+                @*Cliente Id*@
+                <div class="form-group">
+                    <label>Cliente Id</label>
+                    <InputSelectNumber class="form-control" @bind-Value="Cobro.ClienteId">
+                        @foreach (var auxiliar in LlenarComboCliente())
+                        {
+                            <option value="@auxiliar.ClienteId">@auxiliar.Nombre</option>
+                        }
+                    </InputSelectNumber>
+                </div>
 
-            @*Fecha*@
-            <div class="form-group date">
-                <label>Fecha</label>
-                <input type="date" class="form-control" />
-            </div>
+                @*Fecha*@
+                <div class="form-group date">
+                    <label>Fecha</label>
+                    <InputDate @bind-Value="Cobro.Fecha" class="form-control" />
+                    <ValidationMessage For="@(() => Cobro.Fecha)" />
+                </div>
 
-            @*Monto*@
-            <div class="form-group">
-                <label>Monto</label>
-                <input type="number" class="form-control" />
-            </div>
+                @*Monto*@
+                <div class="form-group">
+                    <label>Monto</label>
+                    <InputNumber @bind-Value="Cobro.Monto" class="form-control" />
+                    <ValidationMessage For="@(() => Cobro.Monto)" />
+                </div>
 
-            @*Balance*@
-            <div class="form-group">
-                <label>Balance</label>
-                <input type="number" class="form-control" />
+                @*Balance*@
+                <div class="form-group">
+                    <label>Balance</label>
+                    <InputNumber @bind-Value="Cobro.Balance" class="form-control" readonly/>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="card-footer text-center" display: inline-block">
-        <div class="form-group">
+        <div class="card-footer text-center" display: inline-block>
+            <div class="form-group">
 
-            <button type="button" class="btn btn-lg btn-secondary">
-                <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
-            </button>
+                <button type="button" class="btn btn-lg btn-secondary" @onclick="Nuevo">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
+                </button>
 
-            <button type="button" class="btn btn-lg btn-success">
-                <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
-            </button>
+                <button type="submit" class="btn btn-lg btn-success">
+                    <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
+                </button>
 
-            <button type="button" class="btn btn-lg btn-danger">
-                <span class="oi oi-circle-x"></span> Eliminar
-            </button>
+                <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
+                    <span class="oi oi-circle-x"></span> Eliminar
+                </button>
+            </div>
         </div>
-    </div>
 
-</div>
+    </div>
+</EditForm>
 
 @code{
+    [Parameter]
+    public int CobroId { get; set; }
 
+    private Cobros Cobro = new Cobros();
+
+    protected override void OnInitialized()
+    {
+        Nuevo();
+        Buscar();
+        LlenarComboCliente();
+    }
+
+    public void Nuevo()
+    {
+        Cobro = new Cobros();
+    }
+
+    public void Buscar()
+    {
+
+        if (Cobro.CobroId > 0)
+        {
+            var encontrado = CobrosBLL.Buscar(Cobro.CobroId);
+
+            if (encontrado != null)
+                this.Cobro = encontrado;
+            else
+                toast.ShowWarning("Cobro no encontrada");
+        }
+    }
+
+    public void Guardar()
+    {
+        bool guardo = false;
+
+        if (Cobro.CobroId >= 0)
+        {
+            guardo = CobrosBLL.Guardar(Cobro);
+
+            if (guardo)
+            {
+                Nuevo();
+                toast.ShowSuccess("Guardado exitosamente");
+            }
+            else
+                toast.ShowError("No fue posible guardo");
+        }
+    }
+
+    public void Eliminar()
+    {
+        bool eliminar = false;
+
+        eliminar = CobrosBLL.Eliminar(Cobro.CobroId);
+
+        if (eliminar)
+        {
+            Nuevo();
+            toast.ShowSuccess("Eliminado correctamente");
+        }
+        else
+            toast.ShowError("!No fue posible eliminar!");
+    }
+
+    public List<Clientes> LlenarComboCliente()
+    {
+        List<Clientes> listaClientes = new List<Clientes>();
+
+        try
+        {
+            listaClientes = ClientesBLL.GetList(c => true);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+
+        return listaClientes;
+    }
 }

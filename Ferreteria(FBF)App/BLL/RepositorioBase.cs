@@ -35,7 +35,7 @@ namespace Ferreteria_FBF_App.BLL
             _contexto.Dispose();
         }
 
-        public bool Eliminar(int id)
+        public virtual bool Eliminar(int id)
         {
             bool paso = false;
             T entity;
@@ -57,7 +57,7 @@ namespace Ferreteria_FBF_App.BLL
             return paso;
         }
 
-        public bool Existe(int id)
+        public virtual bool Existe(int id)
         {
             T entity;
             bool encontrado = false;
@@ -77,7 +77,7 @@ namespace Ferreteria_FBF_App.BLL
             return encontrado;
         }
 
-        public List<T> GetList(Expression<Func<T, bool>> expression)
+        public virtual List<T> GetList(Expression<Func<T, bool>> expression)
         {
             List<T> lista = new List<T>();
 
@@ -92,7 +92,7 @@ namespace Ferreteria_FBF_App.BLL
             return lista;
         }
 
-        public bool Guardar(T entity, int id)
+        public virtual bool Guardar(T entity, int id)
         {
             if (!Existe(id))
                 return Insertar(entity);

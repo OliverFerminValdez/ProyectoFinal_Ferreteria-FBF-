@@ -1,5 +1,12 @@
 ﻿@page "/Marcas"
+@page "/Marcas/{MarcaId:int}"
 
+@using BLL
+@using Models
+@inject IToastService toast
+
+<EditForm Model="Marca" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
     <div class="card border-danger">
 
         <div class="card-header bg-danger text-lg-center">
@@ -8,16 +15,15 @@
 
         <div class="card-body">
             <form>
-
                 @*Marca Id*@
                 <div class="form-row align-content-center">
                     <div class="col">
                         <div class="form-group">
                             <label>Marca Id</label>
                             <div class="input-group">
-                                <input type="number" class="form-control col-3" />
+                                <InputNumber @bind-Value="Marca.MarcaId" class="form-control col-3" />
                                 <div class="input-group-append">
-                                    <button type="button" class="btn btn-primary input-group-text">
+                                    <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
                                         <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
                                     </button>
                                 </div>
@@ -29,30 +35,94 @@
                 @*Nombre*@
                 <div class="form-group">
                     <label>Nombre</label>
-                    <input type="text" class="form-control" />
+                    <InputText @bind-Value="Marca.Descripcion" class="form-control" />
+                    <ValidationMessage For="@(() => Marca.Descripcion)" />
                 </div>
 
             </form>
         </div>
 
-        <div class="card-footer text-center" display: inline-block">
+        <div class="card-footer text-center" display: inline-block>
             <div class="form-group">
 
-                <button type="button" class="btn btn-lg btn-secondary">
+                <button type="button" class="btn btn-lg btn-secondary" @onclick="Nuevo">
                     <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
                 </button>
 
-                <button type="button" class="btn btn-lg btn-success">
+                <button type="submit" class="btn btn-lg btn-info">
                     <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
                 </button>
 
-                <button type="button" class="btn btn-lg btn-danger">
+                <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
                     <span class="oi oi-circle-x"></span> Eliminar
                 </button>
             </div>
         </div>
 
     </div>
-@code {
+</EditForm>
 
+@code {
+    [Parameter]
+    public int MarcaId { get; set; }
+
+    private Marcas Marca = new Marcas();
+
+    protected override void OnInitialized()
+    {
+        Nuevo();
+        Buscar();
+    }
+
+    public void Nuevo()
+    {
+        Marca = new Marcas();
+    }
+
+    public void Buscar()
+    {
+
+        if (Marca.MarcaId > 0)
+        {
+            var encontrado = MarcasBLL.Buscar(Marca.MarcaId);
+
+            if (encontrado != null)
+                this.Marca = encontrado;
+            else
+                toast.ShowWarning("Marca no encontrada");
+        }
+    }
+
+    public void Guardar()
+    {
+        bool guardo = false;
+
+        if (Marca.MarcaId >= 0)
+        {
+            guardo = MarcasBLL.Guardar(Marca);
+
+            if (guardo)
+            {
+                Nuevo();
+                toast.ShowSuccess("Guardado exitosamente");
+            }
+            else
+                toast.ShowError("No fue posible guardo");
+        }
+    }
+
+    public void Eliminar()
+    {
+        bool eliminar = false;
+
+        eliminar = MarcasBLL.Eliminar(Marca.MarcaId);
+
+        if (eliminar)
+        {
+            Nuevo();
+            toast.ShowSuccess("Eliminado correctamente");
+        }
+        else
+            toast.ShowError("No fue posible eliminar la marca");
+    }
 }
