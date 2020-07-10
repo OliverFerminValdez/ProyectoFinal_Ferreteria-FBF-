@@ -15,7 +15,8 @@ namespace Ferreteria_FBF_App.Models
         [Required(ErrorMessage = "Es obligatorio introducir la fecha")]
         public DateTime Fecha { get; set; } = DateTime.Now;
 
-        [Range(0, 99999999999999, ErrorMessage = "Es obligatorio introducir un monto valido")]
+        [Required(ErrorMessage = "Es obligatorio introducir el monto")]
+        [Range(1, 99999999999999, ErrorMessage = "Es obligatorio introducir un monto valido")]
         public double Monto { get; set; }
         public double Balance { get; set; }
         public int UsuarioId { get; set; }

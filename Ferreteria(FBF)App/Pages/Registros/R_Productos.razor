@@ -51,6 +51,7 @@
                     <div class="col-6">
                         <label>Marcas</label>
                         <InputSelectNumber class="form-control" @bind-Value="Producto.MarcaId">
+                            <option disabled="disabled" selected="selected">Elija una opción</option>
                             @foreach (var auxiliar in LlenarComboMarcas())
                             {
                                 <option value="@auxiliar.MarcaId">@auxiliar.Descripcion</option>

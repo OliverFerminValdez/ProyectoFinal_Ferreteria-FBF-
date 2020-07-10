@@ -109,6 +109,7 @@ namespace Ferreteria_FBF_App.Migrations
                     ITBIS = table.Column<double>(nullable: false),
                     Descuentos = table.Column<double>(nullable: false),
                     TotalGeneral = table.Column<double>(nullable: false),
+                    Comentario = table.Column<string>(nullable: true),
                     CantidadProductos = table.Column<int>(nullable: false),
                     UsuarioId = table.Column<int>(nullable: false)
                 },
@@ -143,11 +144,10 @@ namespace Ferreteria_FBF_App.Migrations
                 {
                     VentasDetalleId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    FacturaId = table.Column<int>(nullable: false),
+                    VentaId = table.Column<int>(nullable: false),
                     ProductoId = table.Column<int>(nullable: false),
                     Cantidad = table.Column<int>(nullable: false),
-                    Precio = table.Column<double>(nullable: false),
-                    VentaId = table.Column<int>(nullable: true)
+                    Precio = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -157,7 +157,7 @@ namespace Ferreteria_FBF_App.Migrations
                         column: x => x.VentaId,
                         principalTable: "Ventas",
                         principalColumn: "VentaId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -172,18 +172,18 @@ namespace Ferreteria_FBF_App.Migrations
 
             migrationBuilder.InsertData(
                 table: "Ventas",
-                columns: new[] { "VentaId", "CantidadProductos", "ClienteId", "Descuentos", "Fecha", "ITBIS", "Tipo", "Total", "TotalGeneral", "UsuarioId" },
-                values: new object[] { 1, 2, 1, 0.0, new DateTime(2020, 6, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 18.0, "Credito", 100.0, 200.0, 1 });
+                columns: new[] { "VentaId", "CantidadProductos", "ClienteId", "Comentario", "Descuentos", "Fecha", "ITBIS", "Tipo", "Total", "TotalGeneral", "UsuarioId" },
+                values: new object[] { 1, 2, 1, null, 0.0, new DateTime(2020, 6, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 18.0, "Credito", 100.0, 200.0, 1 });
 
             migrationBuilder.InsertData(
                 table: "Ventas",
-                columns: new[] { "VentaId", "CantidadProductos", "ClienteId", "Descuentos", "Fecha", "ITBIS", "Tipo", "Total", "TotalGeneral", "UsuarioId" },
-                values: new object[] { 2, 2, 1, 0.0, new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), 18.0, "Credito", 100.0, 200.0, 1 });
+                columns: new[] { "VentaId", "CantidadProductos", "ClienteId", "Comentario", "Descuentos", "Fecha", "ITBIS", "Tipo", "Total", "TotalGeneral", "UsuarioId" },
+                values: new object[] { 2, 2, 1, null, 0.0, new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), 18.0, "Credito", 100.0, 200.0, 1 });
 
             migrationBuilder.InsertData(
                 table: "Ventas",
-                columns: new[] { "VentaId", "CantidadProductos", "ClienteId", "Descuentos", "Fecha", "ITBIS", "Tipo", "Total", "TotalGeneral", "UsuarioId" },
-                values: new object[] { 3, 2, 2, 0.0, new DateTime(2020, 7, 5, 1, 7, 39, 619, DateTimeKind.Local).AddTicks(6247), 18.0, "Credito", 100.0, 200.0, 1 });
+                columns: new[] { "VentaId", "CantidadProductos", "ClienteId", "Comentario", "Descuentos", "Fecha", "ITBIS", "Tipo", "Total", "TotalGeneral", "UsuarioId" },
+                values: new object[] { 3, 2, 2, null, 0.0, new DateTime(2020, 7, 9, 21, 8, 28, 871, DateTimeKind.Local).AddTicks(3295), 18.0, "Credito", 100.0, 200.0, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_CobroDetalle_ClienteId",

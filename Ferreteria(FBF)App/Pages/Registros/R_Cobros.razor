@@ -36,6 +36,7 @@
                 <div class="form-group">
                     <label>Cliente Id</label>
                     <InputSelectNumber class="form-control" @bind-Value="Cobro.ClienteId">
+                        <option disabled="disabled" selected="selected" >Elija una opción</option>
                         @foreach (var auxiliar in LlenarComboCliente())
                         {
                             <option value="@auxiliar.ClienteId">@auxiliar.Nombre</option>
@@ -72,7 +73,7 @@
                     <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
                 </button>
 
-                <button type="submit" class="btn btn-lg btn-success">
+                <button type="submit" class="btn btn-lg btn-info">
                     <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
                 </button>
 

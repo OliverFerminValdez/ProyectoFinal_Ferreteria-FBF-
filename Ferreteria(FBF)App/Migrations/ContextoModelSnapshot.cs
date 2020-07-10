@@ -235,6 +235,9 @@ namespace Ferreteria_FBF_App.Migrations
                     b.Property<int>("ClienteId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Comentario")
+                        .HasColumnType("TEXT");
+
                     b.Property<double>("Descuentos")
                         .HasColumnType("REAL");
 
@@ -294,7 +297,7 @@ namespace Ferreteria_FBF_App.Migrations
                             CantidadProductos = 2,
                             ClienteId = 2,
                             Descuentos = 0.0,
-                            Fecha = new DateTime(2020, 7, 5, 1, 7, 39, 619, DateTimeKind.Local).AddTicks(6247),
+                            Fecha = new DateTime(2020, 7, 9, 21, 8, 28, 871, DateTimeKind.Local).AddTicks(3295),
                             ITBIS = 18.0,
                             Tipo = "Credito",
                             Total = 100.0,
@@ -312,16 +315,13 @@ namespace Ferreteria_FBF_App.Migrations
                     b.Property<int>("Cantidad")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("FacturaId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<double>("Precio")
                         .HasColumnType("REAL");
 
                     b.Property<int>("ProductoId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("VentaId")
+                    b.Property<int>("VentaId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("VentasDetalleId");
@@ -344,7 +344,9 @@ namespace Ferreteria_FBF_App.Migrations
                 {
                     b.HasOne("Ferreteria_FBF_App.Models.Ventas", null)
                         .WithMany("VentasDetalle")
-                        .HasForeignKey("VentaId");
+                        .HasForeignKey("VentaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

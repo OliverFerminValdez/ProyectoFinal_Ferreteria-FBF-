@@ -10,7 +10,7 @@ namespace Ferreteria_FBF_App.Models
     {
         [Key]
         public int VentasDetalleId { get; set; }
-        public int FacturaId { get; set; }
+        public int VentaId { get; set; }
         public int ProductoId { get; set; }
         public int Cantidad { get; set; }
         public double Precio { get; set; }

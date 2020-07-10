@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,6 +17,7 @@ namespace Ferreteria_FBF_App.Models
         [Required(ErrorMessage = "Es obligatorio introducir la fecha")]
         [DisplayFormat(DataFormatString ="{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Fecha { get; set; }
+
         [Required(ErrorMessage = "Es obligatorio introducir el tipo de factura")]
         public string Tipo { get; set; }
 
@@ -30,6 +32,7 @@ namespace Ferreteria_FBF_App.Models
 
         [Required(ErrorMessage = "Es obligatorio introducir el total general")]
         public double TotalGeneral { get; set; }
+        public string Comentario { get; set; }
         public int CantidadProductos { get; set; }
         public int UsuarioId { get; set; }
 

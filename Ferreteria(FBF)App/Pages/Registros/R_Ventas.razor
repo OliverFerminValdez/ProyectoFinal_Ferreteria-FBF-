@@ -1,197 +1,453 @@
 ﻿@page "/Ventas"
+@page "/Ventas/{VentaId:int}"
 
-<div class="card border-danger">
-    <div class="card-header bg-danger text-lg-center">
-        <h2 style="font-family :'Segoe UI'">Registro de Ventas</h2>
-    </div>
+@using BLL
+@using Models
 
-    <div class="card-body">
-        <div class="form">
+@inject IToastService toast
 
-            <div class="form-group form-row">
-                @*Venta Id*@
-                <div class="col-md-4">
-                    <label>Venta Id</label>
-                    <div class="input-group">
-                        <input type="number" class="form-control" />
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-primary input-group-text">
-                                <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+<EditForm Model="Venta" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-lg-center">
+            <h2 style="font-family :'Segoe UI'">Registro de Ventas</h2>
+        </div>
 
-                @*Tipo Factura*@
-                <div class="col-md-2 offset-md-6">
-                    <label>Tipo de factura</label>
-                    <select class="form-control">
-                        <option disabled="disabled" selected="selected">Elija una opción</option>
-                        <option value="0">Credito</option>
-                        <option value="1">Contado</option>
-                    </select>
-                </div>
-            </div>
+        <div class="card-body">
+            <div class="form">
+                <div class="form-group form-row">
 
-            @*Fecha*@
-            <div class="form-group">
-                <label>Fecha</label>
-                <input type="date" class="form-control" />
-            </div>
-
-            @*Cliente Id*@
-            <div class="form-group">
-                <label>Cliente Id</label>
-                <select class="form-control">
-                    <option disabled="disabled" selected="selected">Elija una opción</option>
-                    <option value="0">Cliente 1</option>
-                    <option value="1">Cliente 2</option>
-                    <option value="2">Cliente 3</option>
-                    <option value="3">Cliente 4</option>
-                </select>
-            </div>
-
-            @*Detalle*@
-            <div class="card border-dark">
-
-                <div class="card-header-pills text-lg-center">
-                    <h4 style="font-family:'Segoe UI'" class="col-form-label-lg">Articulos</h4>
-                </div>
-
-                <div class="card-body">
-                    <div class="form-row">
-
-                        <div class="form-group col-3">
-                            <label>Descripción</label>
-                            <select class="form-control">
-                                <option disabled="disabled" selected="selected">Elija una opción</option>
-                                <option value="0">Producto 1</option>
-                                <option value="1">Prodcuto 2</option>
-                                <option value="2">Producto 3</option>
-                                <option value="3">Producto 4</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group col-2">
-                            <label>Cantidad</label>
-                            <input type="number" class="form-control" />
-                        </div>
-
-                        <div class="form-group col-2">
-                            <label>Unidad</label>
-                            <input type="number" class="form-control" />
-                        </div>
-
-                        <div class="form-group col-2">
-                            <label>Precio unitario</label>
-                            <input type="number" class="form-control" />
-                        </div>
-
-                        <div class="form-group col-md-3">
-                            <label>Importe</label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" />
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-primary input-group-text">
-                                        <i class="oi oi-plus" aria-hidden="true" />
-                                    </button>
-                                </div>
+                    @*Venta Id*@
+                    <div class="col-md-4">
+                        <label>Venta Id</label>
+                        <div class="input-group">
+                            <InputNumber @bind-Value="Venta.VentaId" class="form-control" />
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
+                                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+                                </button>
                             </div>
                         </div>
-
                     </div>
 
-
-                    @*Tabla del detalle*@
-                    <table class="table">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Descripción</th>
-                                <th scope="col">Cantidad</th>
-                                <th scope="col">Unidad</th>
-                                <th scope="col">Precio</th>
-                                <th scope="col">Importe</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>@DateTime.Now</td>
-                                <td>50</td>
-                                <td>Docenas</td>
-                                <td>75000.00</td>
-                                <td>3750000</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    @*Tipo Factura*@
+                    <div class="col-md-2 offset-md-6">
+                        <label>Tipo de factura</label>
+                        <select @bind="Venta.Tipo" class="form-control">
+                            <option disabled="disabled" selected="selected">Elija una opción</option>
+                            <option value="0">Credito</option>
+                            <option value="1">Contado</option>
+                        </select>
+                    </div>
                 </div>
+
+                @*Fecha*@
+                <div class="form-group">
+                    <label>Fecha</label>
+                    <InputDate @bind-Value="Venta.Fecha" class="form-control" />
+                    <ValidationMessage For="@(() => Venta.Fecha)" />
+                </div>
+
+                @*Cliente Id*@
+                <div class="form-group">
+                    <label>Cliente Id</label>
+                    <InputSelectNumber class="form-control" @bind-Value="Venta.ClienteId">
+                        <option disabled="disabled" selected="selected">Elija una opción</option>
+                        @foreach (var auxiliar in LlenarComboCliente())
+                        {
+                            <option value="@auxiliar.ClienteId">@auxiliar.Nombre</option>
+                        }
+                    </InputSelectNumber>
+                </div>
+
+                @*Detalle*@
+                <div class="card border-dark">
+
+                    <div class="card-header-pills text-lg-center">
+                        <h4 style="font-family:'Segoe UI'" class="col-form-label-lg">Productos</h4>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="form-row">
+
+                            <div class="form-group col-3">
+                                <label>Descripción</label>
+                                <InputSelectNumber class="form-control" @bind-Value="productoSeleccionado" @onfocusout="BuscarProducto">
+                                    <option disabled="disabled" selected="selected">Elija una opción</option>
+                                    @foreach (var auxiliar in LlenarComboProductos())
+                                    {
+                                        <option value="@auxiliar.ProductoId">@auxiliar.Descripción</option>
+                                    }
+                                </InputSelectNumber>
+                            </div>
+
+                            <div class="form-group col-2">
+                                <label>Cantidad</label>
+                                <InputNumber @bind-Value="cantidadProducto" class="form-control" @onfocusout="CalcularImporte" />
+                            </div>
+
+                            <div class="form-group col-2">
+                                <label>Unidad</label>
+                                <InputText @bind-Value="unidadProducto" class="form-control" readonly />
+                            </div>
+
+                            <div class="form-group col-2">
+                                <label>Precio unitario</label>
+                                <InputNumber @bind-Value="precioProducto" class="form-control" readOnly />
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label>Importe</label>
+                                <div class="input-group">
+                                    <InputNumber @bind-Value="importe" class="form-control" readonly />
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary input-group-text" @onclick="AgregarDetalle">
+                                            <i class="oi oi-plus" aria-hidden="true" />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        @*Tabla del detalle*@
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Descripción</th>
+                                    <th scope="col">Cantidad</th>
+                                    <th scope="col">Unidad</th>
+                                    <th scope="col">Precio</th>
+                                    <th scope="col">Importe</th>
+                                    <th scope="col">Ajuste</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var auxiliar in Venta.VentasDetalle)
+                                {
+                                    <tr>
+                                        <td>@(GetDescripcionProducto(auxiliar.ProductoId))</td>
+                                        <td>@auxiliar.Cantidad</td>
+                                        <td>@(GetUnidadProducto(auxiliar.ProductoId))</td>
+                                        <td>@auxiliar.Precio</td>
+                                        <td>@(CalcularImporteTabla(auxiliar.Cantidad,auxiliar.Precio))</td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger" @onclick="@(() => EliminarDetalle(auxiliar))">
+                                                <span class="oi oi-x"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="form-group form-row">
+                    @*Total*@
+                    <div class="col-md-4">
+                        <label>Total</label>
+                        <InputNumber @bind-Value="Venta.Total" class="form-control" readonly />
+                        <ValidationMessage For="@(() => Venta.Total)" />
+                    </div>
+
+                    @*Cantidad*@
+                    <div class="col-md-4 offset-md-4">
+                        <label>Cantidad</label>
+                        <InputNumber @bind-Value="Venta.CantidadProductos" class="form-control" readonly />
+                        <ValidationMessage For="@(() => Venta.CantidadProductos)" />
+                    </div>
+                </div>
+
+                <div class="form-group form-row">
+                    @*Descuentos*@
+                    <div class="col-md-4">
+                        <label>Descuentos</label>
+                        <InputNumber @bind-Value="Venta.Descuentos" class="form-control" @onfocusout="CalcularTotalGeneral" />
+                        <ValidationMessage For="@(() => Venta.Descuentos)" />
+                    </div>
+
+                    @*Comentarios*@
+                    <div class="col-md-4 offset-md-4">
+                        <label>Comentarios</label>
+                        <textarea @bind="Venta.Comentario" class="form-control"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group form-row">
+                    @*ITBIS*@
+                    <div class="col-md-4">
+                        <label>ITBIS</label>
+                        <InputNumber @bind-Value="Venta.ITBIS" class="form-control" readonly />
+                        <ValidationMessage For="@(() => Venta.ITBIS)" />
+                    </div>
+
+                    @*Total General*@
+                    <div class="col-md-4 offset-md-4">
+                        <label>Total General</label>
+                        <InputNumber @bind-Value="Venta.TotalGeneral" class="form-control" />
+                        <ValidationMessage For="@(() => Venta.TotalGeneral)" />
+                    </div>
+                </div>
+
             </div>
-
-            <br />
-
-            <div class="form-group form-row">
-                @*Sub-Total*@
-                <div class="col-md-4">
-                    <label>Sub Total</label>
-                    <input type="number" class="form-control" readonly />
-                </div>
-
-                @*Cantidad*@
-                <div class="col-md-4 offset-md-4">
-                    <label>Cantidad</label>
-                    <input type="number" class="form-control" readonly />
-                </div>
-            </div>
-
-            <div class="form-group form-row">
-                @*Descuentos*@
-                <div class="col-md-4">
-                    <label>Descuentos</label>
-                    <input type="number" class="form-control" />
-                </div>
-
-                @*Comentarios*@
-                <div class="col-md-4 offset-md-4">
-                    <label>Comentarios</label>
-                    <textarea class="form-control"></textarea>
-                </div>
-            </div>
-
-            <div class="form-group form-row">
-                @*ITBIS*@
-                <div class="col-md-4">
-                    <label>ITBIS</label>
-                    <input type="number" class="form-control" readonly />
-                </div>
-
-                @*Total General*@
-                <div class="col-md-4 offset-md-4">
-                    <label>Total General</label>
-                    <input type="number" class="form-control" readonly />
-                </div>
-            </div>
-
         </div>
-    </div>
 
-    <div class="card-footer text-center" display: inline-block>
-        <div class="form-group">
+        <div class="card-footer text-center" display: inline-block>
+            <div class="form-group">
 
-            <button type="button" class="btn btn-lg btn-secondary">
-                <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
-            </button>
+                <button type="button" class="btn btn-lg btn-secondary" @onclick="Nuevo">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
+                </button>
 
-            <button type="button" class="btn btn-lg btn-info">
-                <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
-            </button>
+                <button type="submit" class="btn btn-lg btn-info">
+                    <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
+                </button>
 
-            <button type="button" class="btn btn-lg btn-danger">
-                <span class="oi oi-circle-x"></span> Eliminar
-            </button>
+                <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
+                    <span class="oi oi-circle-x"></span> Eliminar
+                </button>
+            </div>
         </div>
-    </div>
 
-</div>
+    </div>
+</EditForm>
 
 @code {
 
+        [Parameter]
+        public int VentaId { get; set; }
+
+    public int productoSeleccionado { get; set; }
+    public int cantidadProducto { get; set; }
+    public double precioProducto { get; set; }
+    public string unidadProducto { get; set; }
+    public double importe { get; set; }
+
+    private Ventas Venta = new Ventas();
+
+    protected override void OnInitialized()
+    {
+        Nuevo();
+        Buscar();
+        LlenarComboCliente();
+        LlenarComboProductos();
+    }
+
+    private void AgregarDetalle()
+    {
+        if (VerificoDetalle())
+        {
+
+            Venta.VentasDetalle.Add(new VentasDetalle
+            {
+                VentaId = Venta.VentaId,
+                ProductoId = productoSeleccionado,
+                Cantidad = cantidadProducto,
+                Precio = precioProducto
+            });
+
+            Venta.CantidadProductos = Venta.VentasDetalle.Count;
+
+            CalcularTotal();
+            CalcularITBIS();
+            CalcularTotalGeneral();
+        }
+        else
+            toast.ShowWarning("Tienes que selecionar un producto y llenar los campos");
+
+    }
+
+    public void Nuevo()
+    {
+        cantidadProducto = 0;
+        precioProducto = 0.0;
+        productoSeleccionado = 0;
+        importe = 0;
+        unidadProducto = "";
+        Venta = new Ventas();
+    }
+
+    private void Buscar()
+    {
+        if (Venta.VentaId > 0)
+        {
+            var encontrado = VentasBLL.Buscar(Venta.VentaId);
+
+            if (encontrado != null)
+                this.Venta = encontrado;
+            else
+                toast.ShowWarning("Venta no encontrada");
+        }
+    }
+
+    public void Guardar()
+    {
+        bool guardo;
+
+        if (Venta.VentasDetalle.Count > 0)
+        {
+            guardo = VentasBLL.Guardar(Venta);
+
+            if (guardo)
+            {
+                Nuevo();
+                toast.ShowSuccess("Guardo correctamente");
+            }
+            else
+                toast.ShowError("No fue posible guardar");
+        }
+        else
+        {
+            toast.ShowWarning("Debes agregar productos al detalle");
+        } 
+
+    }
+
+    public void Eliminar()
+    {
+        bool elimino;
+
+        elimino = VentasBLL.Eliminar(Venta.VentaId);
+
+        if (elimino)
+        {
+            Nuevo();
+            toast.ShowSuccess("Eliminada correctamente");
+        }
+        else
+            toast.ShowError("No fue posible eliminar");
+    }
+
+    public List<Clientes> LlenarComboCliente()
+    {
+        List<Clientes> listaClientes = new List<Clientes>();
+
+        try
+        {
+            listaClientes = ClientesBLL.GetList(c => true);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+
+        return listaClientes;
+    }
+
+    public List<Productos> LlenarComboProductos()
+    {
+        List<Productos> listaProductos = new List<Productos>();
+
+        try
+        {
+            listaProductos = ProductosBLL.GetList(p => true);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+
+        return listaProductos;
+    }
+
+    public void BuscarProducto()
+    {
+        Productos producto = ProductosBLL.Buscar(productoSeleccionado);
+
+        if (producto != null)
+        {
+            unidadProducto = producto.Unidad;
+            precioProducto = producto.PrecioUnitario;
+        }
+    }
+
+    public double CalcularImporteTabla(int cantidad, double costo)
+    {
+        return (costo * cantidad);
+    }
+
+    public void CalcularImporte()
+    {
+        importe = (cantidadProducto * precioProducto);
+    }
+
+    public void EliminarDetalle(VentasDetalle ventasDetalle)
+    {
+        Venta.VentasDetalle.Remove(ventasDetalle);
+
+        Venta.CantidadProductos = Venta.VentasDetalle.Count;
+
+        CalcularTotal();
+        CalcularITBIS();
+        CalcularTotalGeneral();
+    }
+
+    public string GetDescripcionProducto(int id)
+    {
+        Productos producto = ProductosBLL.Buscar(id);
+
+        if (producto != null)
+        {
+            return producto.Descripción;
+        }
+
+        return "Error...";
+    }
+
+    public string GetUnidadProducto(int id)
+    {
+        Productos producto = ProductosBLL.Buscar(id);
+
+        if (producto != null)
+        {
+            return producto.Unidad;
+        }
+
+        return "Error...";
+    }
+
+    public bool VerificoDetalle()
+    {
+        bool paso = false;
+
+        if (precioProducto == 0)
+            return paso;
+        else
+            paso = true;
+
+        return paso;
+    }
+
+    public void CalcularTotal()
+    {
+        Venta.Total = 0;
+
+        foreach (var item in Venta.VentasDetalle)
+        {
+            Venta.Total += (item.Precio * item.Cantidad);
+        }
+    }
+
+    public void CalcularITBIS()
+    {
+        Venta.ITBIS = 0;
+
+        foreach (var item in Venta.VentasDetalle)
+        {
+            Venta.ITBIS += ((item.Precio * item.Cantidad) * 0.18);
+        }
+    }
+
+    public void CalcularTotalGeneral()
+    {
+        Venta.TotalGeneral = 0;
+
+        Venta.TotalGeneral = ((Venta.Total + Venta.ITBIS) - Venta.Descuentos);
+    }
+
 }
+

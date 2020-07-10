@@ -53,11 +53,24 @@
                     </div>
                 </div>
 
-                @*Cedula*@
-                <div class="form-group">
-                    <label>Cedula</label>
-                    <InputText @bind-Value="Cliente.Cedula" class="form-control" />
-                    <ValidationMessage For="@(() => Cliente.Cedula)" />
+                <div class="form-group form-row">
+                    @*Cedula*@
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>Cedula</label>
+                            <InputText @bind-Value="Cliente.Cedula" class="form-control" />
+                            <ValidationMessage For="@(() => Cliente.Cedula)" />
+                        </div>
+                    </div>
+
+                    @*Telefono*@
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>Telefono</label>
+                            <InputText @bind-Value="Cliente.Telefono" class="form-control" />
+                            <ValidationMessage For="@(() => Cliente.Telefono)" />
+                        </div>
+                    </div>
                 </div>
 
                 @*Dirección*@
@@ -74,13 +87,6 @@
                     <ValidationMessage For="@(() => Cliente.Email)" />
                 </div>
 
-                @*Telefono*@
-                <div class="form-group">
-                    <label>Telefono</label>
-                    <InputText @bind-Value="Cliente.Telefono" class="form-control" />
-                    <ValidationMessage For="@(() => Cliente.Telefono)" />
-                </div>
-
                 @*Limite de credito*@
                 <div class="form-group">
                     <label>Limite de Credito</label>
@@ -94,25 +100,25 @@
                     <InputNumber @bind-Value="Cliente.Balance" class="form-control" readonly />
                 </div>
             </div>
-        </div>
 
-        <div class="card-footer text-center" display: inline-block>
-            <div class="form-group">
+            <div class="card-footer text-center" display: inline-block>
+                <div class="form-group">
 
-                <button type="button" class="btn btn-lg btn-secondary" @onclick="Nuevo">
-                    <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
-                </button>
+                    <button type="button" class="btn btn-lg btn-secondary" @onclick="Nuevo">
+                        <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
+                    </button>
 
-                <button type="submit" class="btn btn-lg btn-info">
-                    <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
-                </button>
+                    <button type="submit" class="btn btn-lg btn-info">
+                        <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
+                    </button>
 
-                <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
-                    <span class="oi oi-circle-x"></span> Eliminar
-                </button>
+                    <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
+                        <span class="oi oi-circle-x"></span> Eliminar
+                    </button>
+                </div>
             </div>
-        </div>
 
+        </div>
     </div>
 </EditForm>
 
