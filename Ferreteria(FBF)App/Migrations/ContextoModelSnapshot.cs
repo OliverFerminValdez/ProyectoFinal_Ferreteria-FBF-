@@ -297,7 +297,7 @@ namespace Ferreteria_FBF_App.Migrations
                             CantidadProductos = 2,
                             ClienteId = 2,
                             Descuentos = 0.0,
-                            Fecha = new DateTime(2020, 7, 9, 21, 8, 28, 871, DateTimeKind.Local).AddTicks(3295),
+                            Fecha = new DateTime(2020, 7, 9, 22, 10, 53, 896, DateTimeKind.Local).AddTicks(4634),
                             ITBIS = 18.0,
                             Tipo = "Credito",
                             Total = 100.0,

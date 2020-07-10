@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ferreteria_FBF_App.Migrations
 {
-    public partial class Migracion : Migration
+    public partial class Migracioninicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -183,7 +183,7 @@ namespace Ferreteria_FBF_App.Migrations
             migrationBuilder.InsertData(
                 table: "Ventas",
                 columns: new[] { "VentaId", "CantidadProductos", "ClienteId", "Comentario", "Descuentos", "Fecha", "ITBIS", "Tipo", "Total", "TotalGeneral", "UsuarioId" },
-                values: new object[] { 3, 2, 2, null, 0.0, new DateTime(2020, 7, 9, 21, 8, 28, 871, DateTimeKind.Local).AddTicks(3295), 18.0, "Credito", 100.0, 200.0, 1 });
+                values: new object[] { 3, 2, 2, null, 0.0, new DateTime(2020, 7, 9, 22, 10, 53, 896, DateTimeKind.Local).AddTicks(4634), 18.0, "Credito", 100.0, 200.0, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_CobroDetalle_ClienteId",

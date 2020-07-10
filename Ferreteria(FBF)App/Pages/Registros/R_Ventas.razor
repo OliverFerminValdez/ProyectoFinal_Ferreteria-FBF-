@@ -4,6 +4,7 @@
 @using BLL
 @using Models
 
+@inject IJSRuntime js
 @inject IToastService toast
 
 <EditForm Model="Venta" OnValidSubmit="Guardar">
@@ -35,8 +36,8 @@
                         <label>Tipo de factura</label>
                         <select @bind="Venta.Tipo" class="form-control">
                             <option disabled="disabled" selected="selected">Elija una opción</option>
-                            <option value="0">Credito</option>
-                            <option value="1">Contado</option>
+                            <option value="Credito">Credito</option>
+                            <option value="Contado">Contado</option>
                         </select>
                     </div>
                 </div>
@@ -218,8 +219,8 @@
 
 @code {
 
-        [Parameter]
-        public int VentaId { get; set; }
+    [Parameter]
+    public int VentaId { get; set; }
 
     public int productoSeleccionado { get; set; }
     public int cantidadProducto { get; set; }
@@ -284,7 +285,7 @@
         }
     }
 
-    public void Guardar()
+    public async void Guardar()
     {
         bool guardo;
 
@@ -294,6 +295,7 @@
 
             if (guardo)
             {
+                await js.InvokeVoidAsync("NotificarGuardado","Se ha guardado una venta en el sistema");
                 Nuevo();
                 toast.ShowSuccess("Guardo correctamente");
             }
@@ -303,23 +305,26 @@
         else
         {
             toast.ShowWarning("Debes agregar productos al detalle");
-        } 
+        }
 
     }
 
-    public void Eliminar()
+    public async void Eliminar()
     {
-        bool elimino;
-
-        elimino = VentasBLL.Eliminar(Venta.VentaId);
-
-        if (elimino)
+        if (await js.InvokeAsync<bool>("ConfirmationPrumpt","Confirmacion", "¿Esta seguro que desea eliminar esta venta?", "question"))
         {
-            Nuevo();
-            toast.ShowSuccess("Eliminada correctamente");
+            bool elimino;
+            elimino = VentasBLL.Eliminar(Venta.VentaId);
+
+            if (elimino)
+            {
+                Nuevo();
+                toast.ShowSuccess("Eliminada correctamente");
+            }
+            else
+                toast.ShowError("No fue posible eliminar");
         }
-        else
-            toast.ShowError("No fue posible eliminar");
+
     }
 
     public List<Clientes> LlenarComboCliente()

@@ -4,6 +4,7 @@
 @using BLL
 @using Models
 @inject IToastService toast 
+@inject IJSRuntime js
 
 <EditForm Model="Cliente" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -171,18 +172,21 @@
         }
     }
 
-    public void Eliminar()
+    public async void Eliminar()
     {
-        bool eliminar = false;
-
-        eliminar = ClientesBLL.Eliminar(Cliente.ClienteId);
-
-        if (eliminar)
+        if (await js.InvokeAsync<bool>("ConfirmationPrumpt", "Confirmacion", "¿Esta seguro que desea eliminar este cliente?", "question"))
         {
-            Nuevo();
-            toast.ShowSuccess("Eliminado correctamente");
+            bool eliminar = false;
+
+            eliminar = ClientesBLL.Eliminar(Cliente.ClienteId);
+
+            if (eliminar)
+            {
+                Nuevo();
+                toast.ShowSuccess("Eliminado correctamente");
+            }
+            else
+                toast.ShowError("!No fue posible eliminar!");
         }
-        else
-            toast.ShowError("!No fue posible eliminar!");
     }
 }
