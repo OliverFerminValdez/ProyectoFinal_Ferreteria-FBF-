@@ -47,8 +47,15 @@ namespace Ferreteria_FBF_App.BLL
 
             try
             {
+                foreach (var item in venta.VentasDetalle)
+                {
+                    var Producto = ProductosBLL.Buscar(item.ProductoId);
+                    Producto.Inventario -= item.Cantidad;
+                    ProductosBLL.Modificar(Producto);
+                }
                 contexto.Ventas.Add(venta);
                 paso = (contexto.SaveChanges() > 0);
+                
             }
             catch (Exception)
             {
@@ -66,13 +73,28 @@ namespace Ferreteria_FBF_App.BLL
         {
             Contexto contexto = new Contexto();
             bool paso = false;
+            var anterior = Buscar(venta.VentaId);
 
             try
             {
-                contexto.Database.ExecuteSqlRaw($"Delete FROM VentasDetalle Where VentaId = {venta.VentaId}");
-                foreach (var auxiliar in venta.VentasDetalle)
+                foreach (var item in anterior.VentasDetalle)
                 {
-                    contexto.Entry(auxiliar).State = EntityState.Added;
+                    if(venta.VentasDetalle.Exists(o => o.VentasDetalleId == item.VentasDetalleId))
+                    {
+                        contexto.Entry(item).State = EntityState.Deleted;
+                    }
+                }
+
+                foreach (var item in venta.VentasDetalle)
+                {
+                    if(item.VentasDetalleId == 0)
+                    {
+                        contexto.Entry(item).State = EntityState.Added;
+                    }
+                    else
+                    {
+                        contexto.Entry(item).State = EntityState.Modified;
+                    }
                 }
 
                 contexto.Entry(venta).State = EntityState.Modified;
