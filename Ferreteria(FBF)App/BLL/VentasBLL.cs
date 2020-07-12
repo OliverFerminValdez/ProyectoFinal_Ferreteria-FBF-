@@ -79,8 +79,11 @@ namespace Ferreteria_FBF_App.BLL
             {
                 foreach (var item in anterior.VentasDetalle)
                 {
-                    if(venta.VentasDetalle.Exists(o => o.VentasDetalleId == item.VentasDetalleId))
+                    if(!venta.VentasDetalle.Exists(o => o.VentasDetalleId == item.VentasDetalleId))
                     {
+                        var producto = ProductosBLL.Buscar(item.ProductoId);
+                        producto.Inventario += item.Cantidad;
+                        ProductosBLL.Modificar(producto);
                         contexto.Entry(item).State = EntityState.Deleted;
                     }
                 }
@@ -90,10 +93,17 @@ namespace Ferreteria_FBF_App.BLL
                     if(item.VentasDetalleId == 0)
                     {
                         contexto.Entry(item).State = EntityState.Added;
+                        var producto = ProductosBLL.Buscar(item.ProductoId);
+                        producto.Inventario += item.Cantidad;
+                        ProductosBLL.Modificar(producto);
                     }
                     else
                     {
-                        contexto.Entry(item).State = EntityState.Modified;
+                        contexto.Entry(item).State = EntityState.Modified;  
+                        var Producto = ProductosBLL.Buscar(item.ProductoId);
+                        Producto.Inventario -= item.Cantidad;
+                        ProductosBLL.Modificar(Producto);
+
                     }
                 }
 
@@ -149,6 +159,12 @@ namespace Ferreteria_FBF_App.BLL
 
                 if (venta != null)
                 {
+                    foreach (var item in venta.VentasDetalle)
+                    {
+                        contexto.Entry(item).State = EntityState.Modified;
+                        var Producto = ProductosBLL.Buscar(item.ProductoId);
+                        Producto.Inventario -= item.Cantidad;
+                    }
                     contexto.Ventas.Remove(venta);
                     paso = (contexto.SaveChanges() > 0);
                 }

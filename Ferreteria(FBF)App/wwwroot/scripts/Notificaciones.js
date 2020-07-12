@@ -6,8 +6,8 @@
         var notification = new Notification(
             "Ferreteria FBF",
             {
-                icon: "Resources/Logo.png",
-                body: "mensaje"
+                icon: "Resources/FBF.png",
+                body: mensaje
             }
         );
     }

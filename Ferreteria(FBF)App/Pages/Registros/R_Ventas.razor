@@ -284,7 +284,15 @@
                 toast.ShowWarning("Venta no encontrada");
         }
     }
-
+    public Productos PocoStock()
+    {
+        foreach (var item in ProductosBLL.GetList(p=>true))
+        {
+            if (item.Inventario <= 3)
+                return item;
+        }
+        return null;
+    }
     public async void Guardar()
     {
         bool guardo;
@@ -295,7 +303,8 @@
 
             if (guardo)
             {
-                await js.InvokeVoidAsync("NotificarGuardado","Se ha guardado una venta en el sistema");
+                if (PocoStock()!=null)
+                    await js.InvokeVoidAsync("Notificar","Hay articulos que estan en reorden");
                 Nuevo();
                 toast.ShowSuccess("Guardo correctamente");
             }
