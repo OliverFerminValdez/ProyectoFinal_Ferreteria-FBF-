@@ -38,8 +38,7 @@ namespace Ferreteria_FBF_App.Models
         [Required(ErrorMessage = "Debe introducir el limite de credito")]
         public double LimiteCredito { get; set; }
         public double Balance { get; set; }
-        [ForeignKey("ClienteId")]
-        public virtual List<CobroDetalle> Cobros { get; set; } = new List<CobroDetalle>();
+
         [ForeignKey("UsuarioId")]
         public int UsuarioId { get; set; }
     }

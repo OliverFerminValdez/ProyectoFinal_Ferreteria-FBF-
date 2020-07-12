@@ -1,0 +1,56 @@
+﻿@page "/DetalleCobro/{ClienteId:int}"
+
+
+@using Models
+@using BLL
+
+<div class="card border-dark">
+    <div class="card-header-pills text-lg-center">
+        <h2 style="font-family:'Segoe UI'" class="col-form-label-lg">Historial de cobros</h2>
+    </div>
+
+    @*Tabla del detalle*@
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Cobro Id</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Monto</th>
+                <th scope="col">Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var auxiliar in listaCobros)
+            {
+                <tr>
+                    <td>@auxiliar.CobroId</td>
+                    <td>@auxiliar.Fecha</td>
+                    <td>@auxiliar.Monto</td>
+                    <td>@auxiliar.Balance</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+
+@code {
+    [Parameter]
+    public int ClienteId { get; set; }
+
+    public List<Cobros> listaCobros { get; set; }
+
+    protected override void OnInitialized()
+    {
+        LlenarListaCobros();
+    }
+
+    public void LlenarListaCobros()
+    {
+
+        listaCobros = CobrosBLL.GetList(c => c.ClienteId == ClienteId);
+
+    }
+
+}

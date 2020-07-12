@@ -284,6 +284,7 @@
                 toast.ShowWarning("Venta no encontrada");
         }
     }
+
     public Productos PocoStock()
     {
         foreach (var item in ProductosBLL.GetList(p=>true))
@@ -293,6 +294,7 @@
         }
         return null;
     }
+
     public async void Guardar()
     {
         bool guardo;
