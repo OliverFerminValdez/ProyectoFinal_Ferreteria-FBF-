@@ -1,12 +1,14 @@
 ﻿@page "/Productos"
+@page "/productos/{ProductoId:int}"
 
 @using BLL
 @using Models
 @inject IToastService toast
 @inject IJSRuntime js
+@inject NavigationManager Navigation
 
 <EditForm Model="Producto" OnValidSubmit="Guardar">
-    <DataAnnotationsValidator  />
+    <DataAnnotationsValidator />
     <div class="card border-danger">
         <div class="card-header bg-danger text-lg-center">
             <h2 style="font-family :'Segoe UI'">Registro de Productos</h2>
@@ -43,8 +45,8 @@
                     @*Unidad*@
                     <div class="col-6">
                         <label>Unidad</label>
-                        <InputText @bind-Value="Producto.Unidad" class="form-control"/>
-                        <ValidationMessage For="@(() => Producto.Unidad)"/>
+                        <InputText @bind-Value="Producto.Unidad" class="form-control" />
+                        <ValidationMessage For="@(() => Producto.Unidad)" />
                     </div>
 
                     @*Marca*@
@@ -56,21 +58,21 @@
                             {
                                 <option value="@auxiliar.MarcaId">@auxiliar.Descripcion</option>
                             }
-                        </InputSelectNumber>   
+                        </InputSelectNumber>
                     </div>
                 </div>
 
                 @*Precio unitario*@
                 <div class="form-group">
                     <label>Precio unitario</label>
-                    <InputNumber @bind-Value="Producto.PrecioUnitario" class="form-control" @onfocusout="ActualizarValorInventario"/>
+                    <InputNumber @bind-Value="Producto.PrecioUnitario" class="form-control" @onfocusout="ActualizarValorInventario" />
                     <ValidationMessage For="@(() => Producto.PrecioUnitario)" />
                 </div>
 
                 @*Inventario*@
                 <div class="form-group">
                     <label>Inventario</label>
-                    <InputNumber @bind-Value="Producto.Inventario" class="form-control" @onfocusout="ActualizarValorInventario"/>
+                    <InputNumber @bind-Value="Producto.Inventario" class="form-control" @onfocusout="ActualizarValorInventario" />
                     <ValidationMessage For="@(() => Producto.Inventario)" />
                 </div>
 
@@ -80,7 +82,7 @@
                     <InputNumber @bind-Value="Producto.ValorInventario" class="form-control" readonly />
                     <ValidationMessage For="@(() => Producto.ValorInventario)" />
                 </div>
-            </div> 
+            </div>
         </div>
 
         <div class="card-footer text-center" display: inline-block>
@@ -104,8 +106,8 @@
 </EditForm>
 
 @code {
-        [Parameter]
-        public int ProductoId { get; set; }
+    [Parameter]
+    public int ProductoId { get; set; }
 
     private Productos Producto = new Productos();
 
@@ -114,8 +116,19 @@
         Nuevo();
         Buscar();
         LlenarComboMarcas();
-    }
+        if (ProductoId > 0)
+        {
+            Buscar(ProductoId);
+        }
 
+    }
+    public void Buscar(int id)
+    {
+        var encontrado = ProductosBLL.Buscar(id);
+        this.Producto = encontrado;
+        ActualizarValorInventario();
+
+    }
     public void Nuevo()
     {
         Producto = new Productos();
@@ -123,13 +136,15 @@
 
     public void Buscar()
     {
-
         if (Producto.ProductoId > 0)
         {
             var encontrado = ProductosBLL.Buscar(Producto.ProductoId);
 
             if (encontrado != null)
+            {
                 this.Producto = encontrado;
+                ActualizarValorInventario();
+            }
             else
                 toast.ShowWarning("Producto no encontrada");
         }
@@ -139,12 +154,16 @@
     {
         bool guardo = false;
 
-        if(Producto.ProductoId >= 0)
+        if (Producto.ProductoId >= 0)
         {
             guardo = ProductosBLL.Guardar(Producto);
 
             if (guardo)
             {
+                ActualizarValorInventario();
+                if (ProductoId > 0)
+                    Navigation.NavigateTo("consultaproductos", true);
+
                 Nuevo();
                 toast.ShowSuccess("Guardado exitosamente");
             }

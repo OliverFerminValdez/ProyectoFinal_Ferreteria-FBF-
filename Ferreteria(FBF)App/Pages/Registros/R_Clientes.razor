@@ -3,8 +3,10 @@
 
 @using BLL
 @using Models
-@inject IToastService toast 
+@inject IToastService toast
+@inject IModalService modal 
 @inject IJSRuntime js
+@inject NavigationManager Navigation
 
 <EditForm Model="Cliente" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -16,14 +18,14 @@
         <div class="card-body">
             <div class="form">
 
-                <div class="form-group form-row align-items-center">
+                <div class="form-row align-items-center">
 
                     @*Cliente Id*@
-                    <div class="col-md-4">
+                    <div class="col-auto mr-auto">
                         <div class="form-group">
                             <label>Cliente Id</label>
                             <div class="input-group">
-                                <InputNumber @bind-Value="Cliente.ClienteId" class="form-control col-3" />
+                                <InputNumber @bind-Value="Cliente.ClienteId" class="form-control col-4" />
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
                                         <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
@@ -34,8 +36,8 @@
                     </div>
 
                     @*Cantidad*@
-                    <div class="col-md-2 offset-md-5">
-                        <a class="btn btn-lg btn-info" href="DetalleCobro/@Cliente.ClienteId" role="button">Listado de cobros</a>
+                    <div class="col-auto">
+                        <a class="btn btn-lg btn-info" @onclick="@(()=>MostrarCobros(Cliente.ClienteId))" role="button">Listado de cobros</a>
                     </div>
                 </div>
                 
@@ -140,13 +142,19 @@
     {
         Nuevo();
         Buscar();
+        if (ClienteId > 0)
+            Buscar(ClienteId);
     }
 
     public void Nuevo()
     {
         Cliente = new Clientes();
     }
-
+    public void Buscar(int id)
+    {
+        var encontrado = ClientesBLL.Buscar(id);
+        this.Cliente = encontrado;
+    }
     public void Buscar()
     {
 
@@ -167,10 +175,12 @@
 
         if (Cliente.ClienteId >= 0)
         {
+
             guardo = ClientesBLL.Guardar(Cliente);
 
             if (guardo)
             {
+                if (ClienteId > 0) { Navigation.NavigateTo("consultaclientes", true); }
                 Nuevo();
                 toast.ShowSuccess("Guardado exitosamente");
             }
@@ -195,6 +205,14 @@
             else
                 toast.ShowError("!No fue posible eliminar!");
         }
+    }
+    public void MostrarCobros(int id)
+    {
+        var parametros = new ModalParameters();
+        parametros.Add(nameof(Cliente.ClienteId), id);
+
+        modal.Show<Herramientas.H_CobrosCliente>("Cobros del cliente", parametros);
+
     }
 
 }

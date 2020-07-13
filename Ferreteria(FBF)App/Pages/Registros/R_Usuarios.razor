@@ -6,6 +6,7 @@
 
 @inject IToastService toast
 @inject IJSRuntime js
+@inject NavigationManager nav
 
 <EditForm Model="Usuario" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -99,8 +100,8 @@
 </EditForm>
 
 @code {
-        [Parameter]
-        public int UsuarioId { get; set; }
+    [Parameter]
+    public int UsuarioId { get; set; }
 
     private Usuarios Usuario = new Usuarios();
 
@@ -108,13 +109,20 @@
     {
         Nuevo();
         Buscar();
+        if (UsuarioId > 0)
+            Buscar(UsuarioId);
     }
 
     public void Nuevo()
     {
         Usuario = new Usuarios();
     }
-
+    public void Buscar(int id)
+    {
+        var encontrado = UsuariosBLL.Buscar(id);
+        if (encontrado!=null)
+            this.Usuario = encontrado;
+    }
     public void Buscar()
     {
 
@@ -139,6 +147,9 @@
 
             if (guardo)
             {
+                if (UsuarioId > 0)
+                    nav.NavigateTo("consultausuarios", true);
+
                 Nuevo();
                 toast.ShowSuccess("Guardado exitosamente");
             }

@@ -2,6 +2,7 @@
 
 @using Models
 @using BLL
+@inject IModalService Modal
 
 <div class="card rounded" style="border-color:#dc3545">
     <div class="card-header text-lg-center" style="background-color: #dc3545">
@@ -66,7 +67,7 @@
                             <td>@item.Email</td> 
                             <td>@item.LimiteCredito</td>
                             <td>@item.Balance</td>
-                            <td><a href="#" class="btn btn-dark "><strong>Editar</strong></a></td>
+                            <td><a class="btn btn-dark" href="@($"Clientes/{item.ClienteId}")">Editar</a></td>
                         </tr>
                         }
 
@@ -236,10 +237,11 @@
     public void CalcularInventario()
     {
         TotalDeuda = 0;
-        foreach (var item in ItemsList)
+        foreach (var item in Items)
         {
             TotalDeuda += item.Balance;
         }
 
     }
+
 }

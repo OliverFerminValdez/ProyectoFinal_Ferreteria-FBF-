@@ -39,15 +39,21 @@ namespace Ferreteria_FBF_App.BLL
 
             return encontrado;
         }
-
         public static bool Insertar(Ventas venta)
         {
             Contexto contexto = new Contexto();
             bool paso = false;
+            Clientes cliente = ClientesBLL.Buscar(venta.ClienteId);
 
             try
             {
-                foreach (var item in venta.VentasDetalle)
+                if (venta != null) //Afecta el balance del cliente
+                {
+                    cliente.Balance += venta.TotalGeneral;
+                    ClientesBLL.Modificar(cliente);
+                }
+
+                foreach (var item in venta.VentasDetalle) //Afecta el inventario
                 {
                     var Producto = ProductosBLL.Buscar(item.ProductoId);
                     Producto.Inventario -= item.Cantidad;
@@ -74,9 +80,25 @@ namespace Ferreteria_FBF_App.BLL
             Contexto contexto = new Contexto();
             bool paso = false;
             var anterior = Buscar(venta.VentaId);
+            Clientes cliente = ClientesBLL.Buscar(anterior.ClienteId);
+            Clientes NuevoCliente = ClientesBLL.Buscar(venta.ClienteId);
 
             try
             {
+                if (anterior.ClienteId == venta.ClienteId)
+                {
+                    cliente.Balance += anterior.TotalGeneral - venta.TotalGeneral;
+                    ClientesBLL.Modificar(cliente);
+                }
+                else
+                {
+                    NuevoCliente.Balance = venta.TotalGeneral;
+                    ClientesBLL.Modificar(NuevoCliente);
+
+                    cliente.Balance -= venta.TotalGeneral;
+                    ClientesBLL.Modificar(cliente);
+                }
+
                 foreach (var item in anterior.VentasDetalle)
                 {
                     if(!venta.VentasDetalle.Exists(o => o.VentasDetalleId == item.VentasDetalleId))
@@ -154,12 +176,20 @@ namespace Ferreteria_FBF_App.BLL
             bool paso = false;
 
             try
-            {
+            {   
                 var venta = contexto.Ventas.Find(id);
+                Clientes cliente = ClientesBLL.Buscar(venta.ClienteId);
+
+                if (venta != null) //Afecta el balance del cliente
+                {
+                    cliente.Balance += venta.TotalGeneral;
+                    ClientesBLL.Modificar(cliente);
+                }
+
 
                 if (venta != null)
                 {
-                    foreach (var item in venta.VentasDetalle)
+                    foreach (var item in venta.VentasDetalle) //Afecta el inventario
                     {
                         contexto.Entry(item).State = EntityState.Modified;
                         var Producto = ProductosBLL.Buscar(item.ProductoId);

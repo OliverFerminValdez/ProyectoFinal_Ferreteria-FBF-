@@ -1,4 +1,4 @@
-﻿@page "/DetalleCobro/{ClienteId:int}"
+﻿@*@page "/DetalleCobro/{ClienteId:int}"*@
 
 
 @using Models
@@ -39,6 +39,10 @@
     [Parameter]
     public int ClienteId { get; set; }
 
+    [CascadingParameter]
+    BlazoredModalInstance blazoredModal { get; set; }
+    
+
     public List<Cobros> listaCobros { get; set; }
 
     protected override void OnInitialized()
@@ -48,9 +52,7 @@
 
     public void LlenarListaCobros()
     {
-
         listaCobros = CobrosBLL.GetList(c => c.ClienteId == ClienteId);
-
     }
 
 }

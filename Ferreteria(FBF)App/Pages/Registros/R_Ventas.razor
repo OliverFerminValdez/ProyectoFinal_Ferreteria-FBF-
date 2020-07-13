@@ -6,6 +6,7 @@
 
 @inject IJSRuntime js
 @inject IToastService toast
+@inject NavigationManager nav
 
 <EditForm Model="Venta" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -39,6 +40,7 @@
                             <option value="Credito">Credito</option>
                             <option value="Contado">Contado</option>
                         </select>
+                        <ValidationMessage For="@(() => Venta.Tipo)" />
                     </div>
                 </div>
 
@@ -59,6 +61,7 @@
                             <option value="@auxiliar.ClienteId">@auxiliar.Nombre</option>
                         }
                     </InputSelectNumber>
+                    <ValidationMessage For="@(() => Venta.ClienteId)" />
                 </div>
 
                 @*Detalle*@
@@ -84,7 +87,7 @@
 
                             <div class="form-group col-2">
                                 <label>Cantidad</label>
-                                <InputNumber @bind-Value="cantidadProducto" class="form-control" @onfocusout="CalcularImporte" />
+                                <InputNumber min="@MinValue()" max="@maxValue()" @bind-Value="cantidadProducto" class="form-control" @onfocusout="CalcularImporte"/>
                             </div>
 
                             <div class="form-group col-2">
@@ -94,7 +97,7 @@
 
                             <div class="form-group col-2">
                                 <label>Precio unitario</label>
-                                <InputNumber @bind-Value="precioProducto" class="form-control" readOnly />
+                                <InputNumber @bind-Value="precioProducto" class="form-control" readonly />
                             </div>
 
                             <div class="form-group col-md-3">
@@ -236,29 +239,47 @@
         Buscar();
         LlenarComboCliente();
         LlenarComboProductos();
+
+        if (VentaId > 0)
+            Buscar(VentaId);
+    }
+    public void Buscar(int id)
+    {
+        var encontrado = VentasBLL.Buscar(VentaId);
+
+        if (encontrado != null)
+            this.Venta = encontrado;
     }
 
     private void AgregarDetalle()
     {
         if (VerificoDetalle())
         {
-
-            Venta.VentasDetalle.Add(new VentasDetalle
+            if (VerificoStock())
             {
-                VentaId = Venta.VentaId,
-                ProductoId = productoSeleccionado,
-                Cantidad = cantidadProducto,
-                Precio = precioProducto
-            });
+                CalcularImporte();
+                
+                Venta.VentasDetalle.Add(new VentasDetalle
+                {
+                    VentaId = Venta.VentaId,
+                    ProductoId = productoSeleccionado,
+                    Cantidad = cantidadProducto,
+                    Precio = precioProducto
+                });
 
-            Venta.CantidadProductos = Venta.VentasDetalle.Count;
+                Venta.CantidadProductos = Venta.VentasDetalle.Count;
 
-            CalcularTotal();
-            CalcularITBIS();
-            CalcularTotalGeneral();
+                CalcularTotal();
+                CalcularITBIS();
+                CalcularTotalGeneral();
+            }
+            else
+                toast.ShowWarning("Solo hay " + maxValue() + " Unidades de este articulo");
         }
         else
             toast.ShowWarning("Tienes que selecionar un producto y llenar los campos");
+
+        Limits();
 
     }
 
@@ -287,7 +308,7 @@
 
     public Productos PocoStock()
     {
-        foreach (var item in ProductosBLL.GetList(p=>true))
+        foreach (var item in ProductosBLL.GetList(p => true))
         {
             if (item.Inventario <= 3)
                 return item;
@@ -301,14 +322,23 @@
 
         if (Venta.VentasDetalle.Count > 0)
         {
+            CalcularTotal();
+            CalcularITBIS();
+            CalcularTotalGeneral();
+
             guardo = VentasBLL.Guardar(Venta);
 
             if (guardo)
             {
-                if (PocoStock()!=null)
-                    await js.InvokeVoidAsync("Notificar","Hay articulos que estan en reorden");
+                if (VentaId > 0)
+                    nav.NavigateTo("consultaventas", true);
+
                 Nuevo();
                 toast.ShowSuccess("Guardo correctamente");
+
+                if (PocoStock() != null)
+                    await js.InvokeVoidAsync("Notificar", "Hay articulos que estan en reorden");
+
             }
             else
                 toast.ShowError("No fue posible guardar");
@@ -322,7 +352,7 @@
 
     public async void Eliminar()
     {
-        if (await js.InvokeAsync<bool>("ConfirmationPrumpt","Confirmacion", "¿Esta seguro que desea eliminar esta venta?", "question"))
+        if (await js.InvokeAsync<bool>("ConfirmationPrumpt", "Confirmacion", "¿Esta seguro que desea eliminar esta venta?", "question"))
         {
             bool elimino;
             elimino = VentasBLL.Eliminar(Venta.VentaId);
@@ -389,6 +419,7 @@
     public void CalcularImporte()
     {
         importe = (cantidadProducto * precioProducto);
+
     }
 
     public void EliminarDetalle(VentasDetalle ventasDetalle)
@@ -424,6 +455,17 @@
         }
 
         return "Error...";
+    }
+    public bool VerificoStock()
+    {
+        bool paso = true;
+
+        if (VerificarProducto() == 0)
+        {
+            paso = false;
+        }
+
+        return paso;
     }
 
     public bool VerificoDetalle()
@@ -465,5 +507,56 @@
         Venta.TotalGeneral = ((Venta.Total + Venta.ITBIS) - Venta.Descuentos);
     }
 
+    public int maxValue()//Devuelve el valor del inventario
+    {
+        if (ProductosBLL.Buscar(productoSeleccionado) != null)
+            return ProductosBLL.Buscar(productoSeleccionado).Inventario;
+        else
+        {
+            return 0;
+        }
+    }
+    public int VerificarProducto() //Vefirica el inventario del producto
+    {
+        var ProductoElegido = ProductosBLL.Buscar(productoSeleccionado);
+        int maximo = ProductoElegido.Inventario;
+        int MaxInventario = 0;
+
+        if (ProductoElegido.Inventario < cantidadProducto)
+            return 0;
+        else
+        {
+            foreach (var item in Venta.VentasDetalle)
+            {
+                if (item.ProductoId == ProductoElegido.ProductoId)
+                {
+                    MaxInventario += item.Cantidad;
+                    if (MaxInventario+cantidadProducto > maximo || ProductoElegido.Inventario < cantidadProducto)
+                    {
+                        return 0;
+                    }
+
+                }
+            }
+        }
+
+        return 1;
+    }
+    public int MinValue() //Devuelve el valor minimo de la cantidad
+    {
+        if (maxValue() > 0)
+            return 1;
+        else
+            return 0;
+    }
+    public void Limits() //No deja que el input de cantidad baje de 0
+    {
+        if (cantidadProducto < 0)
+        {
+            cantidadProducto = 1;
+        }
+        return;
+
+    }
 }
 

@@ -45,9 +45,15 @@ namespace Ferreteria_FBF_App.BLL
         {
             bool paso = false;
             Contexto contexto = new Contexto();
+            Clientes cliente = ClientesBLL.Buscar(cobro.ClienteId);
 
             try
             {
+                if (cobro != null)
+                {
+                    cliente.Balance -= cobro.Monto;
+                    ClientesBLL.Modificar(cliente);
+                }
                 contexto.Cobros.Add(cobro);
                 paso = contexto.SaveChanges() > 0;
             }
@@ -67,9 +73,27 @@ namespace Ferreteria_FBF_App.BLL
         {
             bool paso = false;
             Contexto contexto = new Contexto();
+            var anterior = CobrosBLL.Buscar(cobro.CobroId);
+            var MontoAnterior = anterior.Monto;
+            Clientes cliente = ClientesBLL.Buscar(anterior.ClienteId);
+            Clientes NuevoCliente = ClientesBLL.Buscar(cobro.ClienteId);
 
             try
             {
+                if (anterior.ClienteId == cobro.ClienteId)
+                {
+                    cliente.Balance += anterior.Monto - cobro.Monto;
+                    ClientesBLL.Modificar(cliente);
+                }
+                else
+                {
+                    NuevoCliente.Balance = cobro.Monto;
+                    ClientesBLL.Modificar(NuevoCliente);
+
+                    cliente.Balance -= cobro.Monto;
+                    ClientesBLL.Modificar(cliente);
+                }
+                   
                 contexto.Entry(cobro).State = EntityState.Modified;
                 paso = contexto.SaveChanges() > 0;
             }
@@ -110,14 +134,22 @@ namespace Ferreteria_FBF_App.BLL
         {
             bool paso = false;
             Contexto contexto = new Contexto();
+            Cobros cobro = CobrosBLL.Buscar(id);
+            Clientes cliente = ClientesBLL.Buscar(cobro.ClienteId);
 
             try
             {
-                var cobro = contexto.Cobros.Find(id);
-
                 if (cobro != null)
                 {
-                    contexto.Cobros.Remove(cobro);
+                    cliente.Balance += cobro.Monto;
+                    ClientesBLL.Modificar(cliente);
+                }
+
+                var cobrodelete = contexto.Cobros.Find(id);
+
+                if (cobrodelete != null)
+                {
+                    contexto.Cobros.Remove(cobrodelete);
                     paso = contexto.SaveChanges() > 0;
                 }
             }

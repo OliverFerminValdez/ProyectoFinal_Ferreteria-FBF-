@@ -1,6 +1,8 @@
 ﻿@page "/consultausuarios"
 
-
+@using Models
+@using BLL 
+ 
 <div class="card rounded" style="border-color:#dc3545">
     <div class="card-header text-lg-center" style="background-color: #dc3545">
         <h3><strong>Consulta de usuarios</strong></h3>
@@ -12,21 +14,27 @@
                     <div class="input-group col-12">
                         <div class="form-group col-3">
                             <label><strong>Filtro: </strong></label>
-                            <select class="form-control">
+                            <select class="form-control" @bind="Filtro">
                                 <option value="0">Eliga un filtro</option>
+                                <option value=1>ID</option>
+                                <option value=2>Nombre</option>
+                                <option value=3>Apellido</option>
                             </select>
                         </div>
                         <div class="form-group col-4">
                             <label><strong>Criterio: </strong></label>
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Criterio" />
-                                <button type="button" class="btn btn-danger input-group-append">Consultar</button>
+                                <input type="text" class="form-control" placeholder="Criterio" @bind="Criterio"/>
+                                <button type="button" class="btn btn-danger input-group-append" @onclick="@(c => Consultar(0))">Consultar</button>
                             </div>
                         </div>
                         <div class="form-group col-2 col-md-4 ml-auto">
                             <label><strong>Ordenar por: </strong></label>
-                            <select class="form-control">
+                            <select class="form-control" @bind="Order" @onclick="Ordenar">
                                 <option value="value">Eliga una opcion</option>
+                                <option value=1>Nombre</option>
+                                <option value=2>Apellido</option>
+                                <option value=3>Usuario</option>
                             </select>
                         </div>
                     </div>
@@ -36,28 +44,25 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th scope="col">Descripcion</th>
-                            <th scope="col">Almacen</th>
-                            <th scope="col">Costo</th>
-                            <th scope="col">Importe</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Apellido</th>
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Email</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach (var item in ItemsList)
+                        {
                         <tr>
-                            <td>Martillo</td>
-                            <td>4</td>
-                            <td>25</td>
-                            <td>100</td>
-                            <td><a href="#" class="btn btn-dark "><strong>Editar</strong></a></td>
+                            <td>@item.Nombre</td>
+                            <td>@item.Apellido</td>
+                            <td>@item.Usuario</td>
+                            <td>@item.Email</td>
+                            <td><a class="btn btn-dark" href="@($"Usuarios/{item.UsuarioId}")">Editar</a></td>
                         </tr>
-                        <tr>
-                            <td>Cemento</td>
-                            <td>20</td>
-                            <td>20</td>
-                            <td>400</td>
-                            <td><a href="#" class="btn btn-dark "><strong>Editar</strong></a></td>
-                        </tr>
+                        }
+
                     </tbody>
                 </table>
             </div>
@@ -65,7 +70,7 @@
                 <div class="row">
                     <div class="form-group col-4">
                         <label><strong>Numero de usuarios</strong></label>
-                        <input type="number" class="form-control" />
+                        <input type="number" class="form-control" @bind="UserNumber"/>
                     </div>
                     <div class="form-group col-2 col-md-2 ml-auto">
                         <label><strong>Imprimir </strong></label>
@@ -80,14 +85,26 @@
         <div class="form-group text-center" display: inline-block>
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
                     <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
+                        <button class="page-link btn btn-danger"
+                                @onclick="@(e => NavegateTo("Previous"))" tabindex="-1">
+                            Previous
+                        </button>
+                    </li>
+
+                    @for (int i = 0; i < TotalPages; i++)
+                    {
+                        var pageNumber = i;
+                        <li class="page-item">
+                            <button class="@(CurrentPage == pageNumber ? "page-link btn btn-dark" : "page-link btn btn-danger")"
+                                    @onclick="@(u => Consultar(pageNumber))">
+                                @(i + 1)
+                            </button>
+                        </li>
+                    }
+
+                    <li class="page-item">
+                        <button type="button" class="page-link btn btn-danger" @onclick="@(e => NavegateTo("Next"))" tabindex="-1">Next</button>
                     </li>
                 </ul>
             </nav>
@@ -96,5 +113,117 @@
 </div>
 
 @code {
+    public List<Usuarios> ItemsList { get; set; } = new List<Usuarios>();
+    public List<Usuarios> Items { get; set; }
 
+    public string Criterio { get; set; }
+    public int Numeracion { get; set; }
+    public int PageSize { get; set; }
+    public int TotalPages { get; set; }
+    public int CurrentPage { get; set; }
+    public int Filtro { get; set; }
+    public int Order { get; set; }
+    public double TotalDeuda { get; set; }
+    public int UserNumber { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        // Items = UsuariosBLL.GetList(p => true);
+        PageSize = 4;
+        // ItemsList = Items.Take(PageSize).ToList();
+        // TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+        //  CalcularInventario();
+
+        base.OnInitialized();
+    }
+
+    public void Consultar(int omite)
+    {
+        if (Criterio != string.Empty)
+        {
+            switch (Filtro)
+            {
+                case 0:
+                    Items = UsuariosBLL.GetList(p => true);
+                    TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+                    UpdateList(omite);
+                    break;
+                case 1:
+                    int id = Convert.ToInt32(Criterio);
+                    Items = UsuariosBLL.GetList(a => a.UsuarioId == id);
+                    TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+                    UpdateList(omite);
+                    break;
+                case 2:
+                    Items = UsuariosBLL.GetList(a => a.Nombre.Contains(Criterio));
+                    TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+                    UpdateList(omite);
+                    break;
+                case 3:
+                    
+                    Items = UsuariosBLL.GetList(a => a.Apellido.Contains(Criterio));
+                    TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+                    UpdateList(omite);
+                    break;
+            }
+        }
+        else
+        {
+            Items = UsuariosBLL.GetList(a => true);
+            TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+            UpdateList(omite);
+        }
+        CalcularInventario();
+    }
+
+    private void UpdateList(int pageNumber)
+    {
+        ItemsList = Items.Skip(pageNumber * PageSize).Take(PageSize).ToList();
+        CurrentPage = pageNumber;
+        CalcularInventario();
+    }
+
+    private void NavegateTo(string direction)
+    {
+        if (direction == "Previous" && CurrentPage != 0)
+            CurrentPage -= 1;
+        if (direction == "Next" && CurrentPage != TotalPages)
+            CurrentPage += 1;
+
+        UpdateList(CurrentPage);
+    }
+
+    private void Ordenar()
+    {
+        if (Order == 1)
+        {
+            ItemsList = new List<Usuarios>();
+            UpdateList(CurrentPage);
+            ItemsList = ItemsList.OrderBy(x => x.Nombre).ToList();
+        }
+        if (Order == 2)
+        {
+            ItemsList = new List<Usuarios>();
+            UpdateList(CurrentPage);
+            ItemsList = ItemsList.OrderBy(x => x.Apellido).ToList();
+        }
+        if (Order == 3)
+        {
+            ItemsList = new List<Usuarios>();
+            UpdateList(CurrentPage);
+            ItemsList = ItemsList.OrderBy(x => x.Usuario).ToList();
+        }
+
+
+    }
+    public void CalcularInventario()
+    {
+        UserNumber = 0;
+        foreach (var item in Items)
+        {
+            UserNumber += 1;
+        }
+
+    }
 }

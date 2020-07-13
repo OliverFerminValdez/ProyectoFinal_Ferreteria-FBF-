@@ -3,6 +3,9 @@
 @using Models
 @using BLL
 
+@inject IModalService Modal 
+@inject NavigationManager Navigation 
+
 <div class="card rounded" style="border-color:#dc3545">
     <div class="card-header text-lg-center" style="background-color: #dc3545">
         <h3><strong>Consulta de productos</strong></h3>
@@ -59,7 +62,7 @@
                                 <td>@item.PrecioUnitario</td>
                                 <td>@item.Inventario</td>
                                 <td>@item.ValorInventario</td>
-                                <td><a href="#" class="btn btn-dark "><strong>Editar</strong></a></td>
+                                <td><a class="btn btn-danger" href="@($"ProductoId/{item.ProductoId}")">Editar</a></td>
                             </tr>
                         }
 
@@ -117,6 +120,8 @@
 </div>
 
 @code {
+    [Parameter]
+    public int ProductoId { get; set; }
 
     public List<Productos> ItemsList { get; set; } = new List<Productos>();
     public List<Productos> Items { get; set; }
@@ -141,7 +146,6 @@
 
         base.OnInitialized();
     }
-
     public void Consultar(int omite)
     {
         if (Criterio != string.Empty)
@@ -224,10 +228,18 @@
     public void CalcularInventario()
     {
         TotalInventario = 0;
-        foreach (var item in ItemsList)
+        foreach (var item in Items)
         {
             TotalInventario += item.Inventario * item.PrecioUnitario;
         }
+
+    }
+    public void EditProducts(Productos item, int productoId)
+    {
+        var parametros = new ModalParameters();
+        parametros.Add(nameof(item.ProductoId), productoId);
+
+        Modal.Show<Registros.R_Productos>("",parametros);
 
     }
 }

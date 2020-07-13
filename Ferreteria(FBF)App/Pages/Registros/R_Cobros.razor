@@ -5,6 +5,7 @@
 @using Models
 @inject IToastService toast
 @inject IJSRuntime js
+@inject NavigationManager nav
 
 <EditForm Model="Cobro" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -36,11 +37,11 @@
                 @*Cliente Id*@
                 <div class="form-group">
                     <label>Cliente Id</label>
-                    <InputSelectNumber class="form-control" @bind-Value="Cobro.ClienteId">
-                        <option disabled="disabled" selected="selected" >Elija una opción</option>
+                    <InputSelectNumber class="form-control" @bind-Value="Cobro.ClienteId" @onclick="pullBalance">
+                        <option disabled="disabled" selected="selected">Elija una opción</option>
                         @foreach (var auxiliar in LlenarComboCliente())
                         {
-                            <option value="@auxiliar.ClienteId">@auxiliar.Nombre</option>
+                            <option value="@auxiliar.ClienteId">@auxiliar.Nombre @auxiliar.Apellido</option>
                         }
                     </InputSelectNumber>
                 </div>
@@ -55,14 +56,14 @@
                 @*Monto*@
                 <div class="form-group">
                     <label>Monto</label>
-                    <InputNumber @bind-Value="Cobro.Monto" class="form-control" />
+                    <InputNumber @bind-Value="Cobro.Monto" @onfocusin="CalcularBalance" class="form-control" />
                     <ValidationMessage For="@(() => Cobro.Monto)" />
                 </div>
 
                 @*Balance*@
                 <div class="form-group">
-                    <label>Balance</label>
-                    <InputNumber @bind-Value="Cobro.Balance" class="form-control" readonly/>
+                    <label>Balance cliente</label>
+                    <InputNumber @bind-Value="BalanceCobro" class="form-control" readonly/>
                 </div>
             </div>
         </div>
@@ -92,19 +93,29 @@
     public int CobroId { get; set; }
 
     private Cobros Cobro = new Cobros();
+    public double BalanceCobro { get; set; }
 
     protected override void OnInitialized()
     {
         Nuevo();
         Buscar();
         LlenarComboCliente();
+        if (CobroId > 0)
+            Buscar(CobroId);
     }
 
     public void Nuevo()
     {
+        BalanceCobro = 0;
         Cobro = new Cobros();
     }
+    public void Buscar(int id)
+    {
+        var encontrado = CobrosBLL.Buscar(id);
 
+        if (encontrado != null)
+            this.Cobro = encontrado;
+    }
     public void Buscar()
     {
 
@@ -129,6 +140,9 @@
 
             if (guardo)
             {
+                if (CobroId > 0)
+                    nav.NavigateTo("consultacobros", true);
+
                 Nuevo();
                 toast.ShowSuccess("Guardado exitosamente");
             }
@@ -169,5 +183,17 @@
         }
 
         return listaClientes;
+    }
+
+    public void pullBalance()
+    {
+        if(ClientesBLL.Buscar(Cobro.ClienteId)!=null)
+            BalanceCobro = ClientesBLL.Buscar(Cobro.ClienteId).Balance;
+    }
+
+    public void CalcularBalance()
+    {
+        BalanceCobro = ClientesBLL.Buscar(Cobro.ClienteId).Balance;
+        BalanceCobro -= Cobro.Monto;
     }
 }
