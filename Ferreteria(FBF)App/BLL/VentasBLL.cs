@@ -49,8 +49,11 @@ namespace Ferreteria_FBF_App.BLL
             {
                 if (venta != null) //Afecta el balance del cliente
                 {
-                    cliente.Balance += venta.TotalGeneral;
-                    ClientesBLL.Modificar(cliente);
+                    if (venta.Tipo == "Credito")
+                    {
+                        cliente.Balance += venta.TotalGeneral;
+                        ClientesBLL.Modificar(cliente);
+                    }
                 }
 
                 foreach (var item in venta.VentasDetalle) //Afecta el inventario
@@ -79,27 +82,56 @@ namespace Ferreteria_FBF_App.BLL
         {
             Contexto contexto = new Contexto();
             bool paso = false;
-            var anterior = Buscar(venta.VentaId);
-            Clientes cliente = ClientesBLL.Buscar(anterior.ClienteId);
+            var ventaAnterior = Buscar(venta.VentaId);
+            Clientes cliente = ClientesBLL.Buscar(ventaAnterior.ClienteId);
             Clientes NuevoCliente = ClientesBLL.Buscar(venta.ClienteId);
 
             try
             {
-                if (anterior.ClienteId == venta.ClienteId)
+                if (ventaAnterior.ClienteId == venta.ClienteId)
                 {
-                    cliente.Balance += anterior.TotalGeneral - venta.TotalGeneral;
-                    ClientesBLL.Modificar(cliente);
+                    if (venta.Tipo == "Credito")
+                    {
+                        if(ventaAnterior.Tipo == "Contado")
+                        {
+                            cliente.Balance += venta.TotalGeneral;
+                            ClientesBLL.Modificar(cliente);
+                        }
+                        else
+                        {
+                            cliente.Balance += (cliente.Balance - ventaAnterior.TotalGeneral) + venta.TotalGeneral;
+                            ClientesBLL.Modificar(cliente);
+                        }
+
+                    }
+                    else
+                    {
+                        if (ventaAnterior.Tipo == "Credito")
+                        {
+                            cliente.Balance -= ventaAnterior.TotalGeneral;
+                            ClientesBLL.Modificar(cliente);
+                        }
+                        
+                    }
                 }
                 else
                 {
-                    NuevoCliente.Balance = venta.TotalGeneral;
-                    ClientesBLL.Modificar(NuevoCliente);
 
-                    cliente.Balance -= venta.TotalGeneral;
-                    ClientesBLL.Modificar(cliente);
+                    if (ventaAnterior.Tipo == "Credito")
+                    {
+                        cliente.Balance -= venta.TotalGeneral;
+                        ClientesBLL.Modificar(cliente);
+                    }
+
+                    if (venta.Tipo == "Credito")
+                    {
+                        NuevoCliente.Balance += venta.TotalGeneral;
+                        ClientesBLL.Modificar(NuevoCliente);
+                    }
+
                 }
 
-                foreach (var item in anterior.VentasDetalle)
+                foreach (var item in ventaAnterior.VentasDetalle)
                 {
                     if(!venta.VentasDetalle.Exists(o => o.VentasDetalleId == item.VentasDetalleId))
                     {
@@ -178,12 +210,17 @@ namespace Ferreteria_FBF_App.BLL
             try
             {   
                 var venta = contexto.Ventas.Find(id);
+
                 Clientes cliente = ClientesBLL.Buscar(venta.ClienteId);
 
                 if (venta != null) //Afecta el balance del cliente
                 {
-                    cliente.Balance += venta.TotalGeneral;
-                    ClientesBLL.Modificar(cliente);
+                    if (venta.Tipo == "Credito")
+                    {
+                        cliente.Balance -= venta.TotalGeneral;
+                        ClientesBLL.Modificar(cliente);
+                    }
+                    
                 }
 
 

@@ -243,6 +243,7 @@
         if (VentaId > 0)
             Buscar(VentaId);
     }
+
     public void Buscar(int id)
     {
         var encontrado = VentasBLL.Buscar(VentaId);
@@ -258,7 +259,7 @@
             if (VerificoStock())
             {
                 CalcularImporte();
-                
+
                 Venta.VentasDetalle.Add(new VentasDetalle
                 {
                     VentaId = Venta.VentaId,
@@ -326,22 +327,27 @@
             CalcularITBIS();
             CalcularTotalGeneral();
 
-            guardo = VentasBLL.Guardar(Venta);
-
-            if (guardo)
+            if (VerificarLimiteCredito())
             {
-                if (VentaId > 0)
-                    nav.NavigateTo("consultaventas", true);
+                guardo = VentasBLL.Guardar(Venta);
 
-                Nuevo();
-                toast.ShowSuccess("Guardo correctamente");
+                if (guardo)
+                {
+                    if (VentaId > 0)
+                        nav.NavigateTo("consultaventas", true);
 
-                if (PocoStock() != null)
-                    await js.InvokeVoidAsync("Notificar", "Hay articulos que estan en reorden");
+                    Nuevo();
+                    toast.ShowSuccess("Guardo correctamente");
 
+                    if (PocoStock() != null)
+                        await js.InvokeVoidAsync("Notificar", "Hay articulos que estan en reorden");
+
+                }
+                else
+                    toast.ShowError("No fue posible guardar");
             }
-            else
-                toast.ShowError("No fue posible guardar");
+
+
         }
         else
         {
@@ -456,6 +462,7 @@
 
         return "Error...";
     }
+
     public bool VerificoStock()
     {
         bool paso = true;
@@ -542,6 +549,7 @@
 
         return 1;
     }
+
     public int MinValue() //Devuelve el valor minimo de la cantidad
     {
         if (maxValue() > 0)
@@ -549,6 +557,7 @@
         else
             return 0;
     }
+
     public void Limits() //No deja que el input de cantidad baje de 0
     {
         if (cantidadProducto < 0)
@@ -557,6 +566,31 @@
         }
         return;
 
+    }
+
+    public bool VerificarLimiteCredito()
+    {
+        bool paso = false;
+
+        Clientes cliente = ClientesBLL.Buscar(Venta.ClienteId);
+
+        if(cliente != null)
+        {
+            if (Venta.TotalGeneral > cliente.LimiteCredito && Venta.Tipo == "Credito")
+            {
+                toast.ShowWarning("El cliente " + cliente.Nombre + " tiene un limite de credito de " + cliente.LimiteCredito + " , no puede hacer una compra con un valor mayor");
+            }
+            else
+            {
+                paso = true;
+            }
+        }
+        else
+        {
+            toast.ShowWarning("Debes de elegir un cliente valido");
+        }
+
+        return paso;
     }
 }
 
