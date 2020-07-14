@@ -2,7 +2,9 @@
 
 @using Models
 @using BLL
+@inject IToastService toast
 @inject IModalService Modal
+@inject IJSRuntime js
 
 <div class="card rounded" style="border-color:#dc3545">
     <div class="card-header text-lg-center" style="background-color: #dc3545">
@@ -82,11 +84,11 @@
                     </div>
                     <div class="form-group col-3 col-md-2 ml-md-auto">
                         <label><strong>Reporte </strong></label>
-                        <button type="button" class="btn btn-danger form-control"><span class="oi oi-print"></span> Clientes en reorden</button>
+                        <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdfOwe"><span class="oi oi-print"></span> Clientes en con deuda</button>
                     </div>
                     <div class="form-group col-2 col-md-2 ml-auto">
                         <label><strong>Imprimir </strong></label>
-                        <button type="button" class="btn btn-danger form-control"><span class="oi oi-print"></span> Consulta</button>
+                        <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdf"><span class="oi oi-print"></span> Consulta</button>
                     </div>
                 </div>
             </div>
@@ -127,9 +129,9 @@
 
 @code {
     public List<Clientes> ItemsList { get; set; } = new List<Clientes>();
-    public List<Clientes> Items { get; set; }
+    public List<Clientes> Items { get; set; } = new List<Clientes>();
 
-    public string Criterio { get; set; }
+    public string Criterio { get; set; } = string.Empty;
     public int Numeracion { get; set; }
     public int PageSize { get; set; }
     public int TotalPages { get; set; }
@@ -157,29 +159,28 @@
             switch (Filtro)
             {
                 case 0:
-                    Items = repo.GetList(p => true);
+                    Items = ClientesBLL.GetList(p => true);
                     TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
                     UpdateList(omite);
                     break;
                 case 1:
                     int id = Convert.ToInt32(Criterio);
-                    Items = repo.GetList(a => a.ClienteId == id);
+                    Items = ClientesBLL.GetList(a => a.ClienteId == id);
                     TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
                     UpdateList(omite);
                     break;
                 case 2:
-                    Items = repo.GetList(a => a.Nombre.Contains(Criterio));
+                    Items = ClientesBLL.GetList(a => a.Nombre.Contains(Criterio));
                     TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
                     UpdateList(omite);
                     break;
                 case 3:
-                    double costo = Convert.ToDouble(Criterio);
-                    Items = repo.GetList(a => a.Apellido.Contains(Criterio));
+                    Items = ClientesBLL.GetList(a => a.Apellido.Contains(Criterio));
                     TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
                     UpdateList(omite);
                     break;
                 case 4:
-                    Items = repo.GetList(a => a.Cedula.Contains(Criterio));
+                    Items = ClientesBLL.GetList(a => a.Cedula.Contains(Criterio));
                     TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
                     UpdateList(omite);
                     break;
@@ -240,6 +241,33 @@
         foreach (var item in Items)
         {
             TotalDeuda += item.Balance;
+        }
+
+    }
+    public async void GeneratePdf()
+    {
+        CustomersReport rpt = new CustomersReport();
+
+        if (Items.Count > 0)
+            await js.InvokeAsync<Clientes>("SaveAsFile", "Reporte de Clientes.pdf", Convert.ToBase64String(rpt.Report(Items)));
+        else
+            toast.ShowWarning("No hay datos para imprimir, debe hacer una consulta");
+    }
+    public async void GeneratePdfOwe()
+    {
+        CustomersReport rpt = new CustomersReport();
+
+        List<Clientes> listaClientes = new List<Clientes>();
+
+        if(ClientesBLL.GetList(p => p.Balance > 0) != null)
+        {
+            listaClientes = ClientesBLL.GetList(p => p.Balance > 0);
+
+            await js.InvokeAsync<Clientes>("SaveAsFile", "Productos En Reorden.pdf", Convert.ToBase64String(rpt.Report(listaClientes)));
+        }
+        else
+        {
+            toast.ShowWarning("No hay clientes con deuda");
         }
 
     }

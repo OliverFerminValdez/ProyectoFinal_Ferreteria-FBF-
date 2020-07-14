@@ -5,6 +5,8 @@
 
 @inject IModalService Modal 
 @inject NavigationManager Navigation 
+@inject IJSRuntime js
+@inject IToastService toast
 
 <div class="card rounded" style="border-color:#dc3545">
     <div class="card-header text-lg-center" style="background-color: #dc3545">
@@ -73,16 +75,19 @@
                 <div class="row">
                     <div class="form-group col-4">
                         <label><strong>Total inventario</strong></label>
-                        <input type="number" class="form-control" @bind="TotalInventario" readonly/>
+                        <input type="number" class="form-control" @bind="TotalInventario" readonly />
                     </div>
+
                     <div class="form-group col-3 col-md-2 ml-md-auto">
                         <label><strong>Reporte </strong></label>
-                        <button type="button" class="btn btn-danger form-control"><span class="oi oi-print"></span> Productos en reorden</button>
+                        <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdfReorder"><span class="oi oi-print"></span> Productos en reorden</button>
                     </div>
+
                     <div class="form-group col-2 col-md-2 ml-auto">
                         <label><strong>Imprimir </strong></label>
-                        <button type="button" class="btn btn-danger form-control"><span class="oi oi-print"></span> Consulta</button>
+                        <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdf"><span class="oi oi-print"></span> Consulta</button>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -124,7 +129,7 @@
     public int ProductoId { get; set; }
 
     public List<Productos> ItemsList { get; set; } = new List<Productos>();
-    public List<Productos> Items { get; set; }
+    public List<Productos> Items { get; set; } = new List<Productos>();
 
     public string Criterio { get; set; }
     public int Numeracion { get; set; }
@@ -241,8 +246,35 @@
 
         Modal.Show<Registros.R_Productos>("",parametros);
 
-        
+
     }
-    
-    
+    public async void GeneratePdf()
+    {
+        ProductosReport rpt = new ProductosReport();
+
+        if (Items.Count > 0)
+            await js.InvokeAsync<Productos>("SaveAsFile", "Reporte de productos.pdf", Convert.ToBase64String(rpt.Report(Items)));
+        else
+            toast.ShowWarning("No hay datos para imprimir, debe hacer una consulta");
+    }
+    public async void GeneratePdfReorder()
+    {
+        ProductosReport rpt = new ProductosReport();
+
+        List<Productos> listaReorden = new List<Productos>();
+
+        if(ProductosBLL.GetList(p => p.Inventario < 4) != null)
+        {
+            listaReorden = ProductosBLL.GetList(p => p.Inventario < 4);
+
+            await js.InvokeAsync<Productos>("SaveAsFile", "Productos En Reorden.pdf", Convert.ToBase64String(rpt.Report(listaReorden)));
+        }
+        else
+        {
+            toast.ShowWarning("No hay productos en reorden");
+        }
+
+    }
+
+
 }

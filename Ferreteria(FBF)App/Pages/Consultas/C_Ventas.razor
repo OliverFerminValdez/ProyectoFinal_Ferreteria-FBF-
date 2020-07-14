@@ -2,6 +2,8 @@
 
 @using BLL
 @using Models
+@inject IJSRuntime js
+@inject IToastService toast
 
 <div class="card rounded" style="border-color:#dc3545">
     <div class="card-header text-lg-center" style="background-color: #dc3545">
@@ -23,7 +25,7 @@
                         <div class="form-group col-3">
                             <label><strong>Filtro: </strong></label>
                             <select class="form-control" @bind="Filtro">
-                                <option value="0">Eliga un filtro</option>
+                                <option value=0>Eliga un filtro</option>
                                 <option value=1>ID</option>
                             </select>
                         </div>
@@ -82,17 +84,17 @@
             </div>
             <div class="card-footer" style="background-color:#CDCBCB">
                 <div class="row">
-                    <div class="form-group col-4">
+                    <div class="form-group col-4 mr-auto">
                         <label><strong>Total de ventas consultadas</strong></label>
                         <input type="number" class="form-control" @bind="TotalVentas"/>
                     </div>
                     <div class="form-group col-2 col-md-2 ml-md-auto">
                         <label><strong>Reporte </strong></label>
-                        <button type="button" class="btn btn-danger form-control"><span class="oi oi-print"></span> Ventas del dia</button>
+                        <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdfToday"><span class="oi oi-print"></span> Ventas del dia</button>
                     </div>
                     <div class="form-group col-2 col-md-2 ml-auto">
                         <label><strong>Imprimir </strong></label>
-                        <button type="button" class="btn btn-danger form-control"><span class="oi oi-print"></span> Consulta</button>
+                        <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdf"><span class="oi oi-print"></span> Consulta</button>
                     </div>
                 </div>
             </div>
@@ -131,7 +133,7 @@
 </div>
 @code {
     public List<Ventas> ItemsList { get; set; } = new List<Ventas>();
-    public List<Ventas> Items { get; set; }
+    public List<Ventas> Items { get; set; } = new List<Ventas>();
 
     public DateTime Desde { get; set; }
     public DateTime Hasta { get; set; }
@@ -147,6 +149,7 @@
 
     protected override void OnInitialized()
     {
+
         // Items = repo.GetList(p => true);
         PageSize = 4;
         // ItemsList = Items.Take(PageSize).ToList();
@@ -195,7 +198,9 @@
             Items = VentasBLL.GetList(a => true);
             TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
             UpdateList(omite);
+
         }
+
         TotalDeVentas();
     }
 
@@ -242,7 +247,7 @@
     public void CalcularInventario()
     {
         TotalDeuda = 0;
-        foreach (var item in ItemsList)
+        foreach (var item in Items)
         {
             TotalDeuda += item.TotalGeneral;
         }
@@ -254,7 +259,34 @@
         foreach (var item in Items)
         {
             TotalVentas += item.TotalGeneral;
+            TotalVentas = Math.Round(TotalVentas,2);
         }
+    }
+    public async void GeneratePdf()
+    {
+        VentasReport rpt = new VentasReport();
+
+        if (Items.Count > 0)
+            await js.InvokeAsync<Ventas>("SaveAsFile", "Reporte de Ventas.pdf", Convert.ToBase64String(rpt.Report(Items)));
+        else
+            toast.ShowWarning("No hay datos para imprimir, debe hacer una consulta");
+    }
+    public async void GeneratePdfToday()
+    {
+        VentasReport rpt = new VentasReport();
+
+        List<Ventas> listaVentas = new List<Ventas>();
+
+        if(VentasBLL.GetList(p => p.Fecha == DateTime.Today) != null)
+        {
+            listaVentas = VentasBLL.GetList(p => p.Fecha == DateTime.Today);
+            await js.InvokeAsync<Ventas>("SaveAsFile", "Ventas del dia.pdf", Convert.ToBase64String(rpt.Report(listaVentas)));
+        }
+        else
+        {
+            toast.ShowWarning("No se ha realizado ninguna venta hoy");
+        }
+
     }
 
 }

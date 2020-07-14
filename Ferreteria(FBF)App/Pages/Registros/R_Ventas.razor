@@ -511,7 +511,7 @@
     {
         Venta.TotalGeneral = 0;
 
-        Venta.TotalGeneral = ((Venta.Total + Venta.ITBIS) - Venta.Descuentos);
+        Venta.TotalGeneral = Math.Round(((Venta.Total + Venta.ITBIS) - Venta.Descuentos),2);
     }
 
     public int maxValue()//Devuelve el valor del inventario
