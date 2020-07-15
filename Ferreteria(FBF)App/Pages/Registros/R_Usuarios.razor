@@ -71,11 +71,11 @@
                 </div>
 
                 @*Contraseña*@
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <InputText @bind-Value="Usuario.Contraseña" class="form-control" />
-                    <ValidationMessage For="@(() => Usuario.Contraseña)" />
-                </div>
+            <div class="form-group">
+                <label>Contraseña</label>
+                <InputText @bind-Value="Usuario.Contraseña" class="form-control" />
+                <ValidationMessage For="@(() => Usuario.Contraseña)" />
+            </div>
             </div>
         </div>
 
@@ -105,6 +105,8 @@
 
     private Usuarios Usuario = new Usuarios();
 
+    public string contrasena { get; set; }
+
     protected override void OnInitialized()
     {
         Nuevo();
@@ -117,12 +119,17 @@
     {
         Usuario = new Usuarios();
     }
+
     public void Buscar(int id)
     {
         var encontrado = UsuariosBLL.Buscar(id);
         if (encontrado!=null)
+        {
             this.Usuario = encontrado;
+            Usuario.Contraseña = DesEncriptar();
+        }
     }
+
     public void Buscar()
     {
 
@@ -131,7 +138,10 @@
             var encontrado = UsuariosBLL.Buscar(Usuario.UsuarioId);
 
             if (encontrado != null)
+            {
                 this.Usuario = encontrado;
+                Usuario.Contraseña = DesEncriptar();
+            }
             else
                 toast.ShowWarning("Producto no encontrada");
         }
@@ -143,6 +153,7 @@
 
         if (Usuario.UsuarioId >= 0)
         {
+            Usuario.Contraseña = Encriptar();
             guardo = UsuariosBLL.Guardar(Usuario);
 
             if (guardo)
@@ -174,5 +185,21 @@
             else
                 toast.ShowError("!No fue posible eliminar!");
         }
+    }
+
+    public string Encriptar()//Esta función encripta la cadena que se le pasa por parámentro
+    {
+        string resultado = string.Empty;
+        byte[] encryted = System.Text.Encoding.Unicode.GetBytes(Usuario.Contraseña);
+        resultado = Convert.ToBase64String(encryted);
+        return resultado;
+    }
+
+    public string DesEncriptar()//Esta función desencripta la cadena que se le pasa por parámentro
+    {
+        string resultado = string.Empty;
+        byte[] decryted = Convert.FromBase64String(Usuario.Contraseña);
+        resultado = System.Text.Encoding.Unicode.GetString(decryted);
+        return resultado;
     }
 }

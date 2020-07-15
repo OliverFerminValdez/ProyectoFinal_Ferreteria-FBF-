@@ -1,0 +1,38 @@
+﻿@page "/Login"
+        
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+                <div class="card-body">
+                    <img class="img-responsive login-img" src="Resources/Logo.PNG" height="100" />
+                    <br />
+                    <h5 class="card-title text-center">Login</h5>
+
+                    <form class="form-signin">
+                        @*Usuario*@
+                        <div class="form-label-group">
+                            <input type="text" id="inputUsuario" class="form-control" placeholder="Usuario" autofocus /> 
+                            <label for="inputUsuario">Usuario</label>
+                        </div>
+
+                        @*Contraseña*@
+                        <div class="form-label-group">
+                            <input type="password" id="inputContraseña" class="form-control" placeholder="Contraseña" />
+                            <label for="inputContraseña">Contraseña</label>
+                        </div>
+
+                        @*Boton login*@
+                        <button class="btn btn-lg btn-danger btn-block text-lg-center" type="button" style="font-size:larger">Ingresar</button>
+                        <a class="form-label-group text-center" href="#">¿Olvidaste tu contraseña?</a>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+}
