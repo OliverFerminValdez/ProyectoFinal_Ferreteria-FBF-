@@ -214,6 +214,10 @@
                 <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
                     <span class="oi oi-circle-x"></span> Eliminar
                 </button>
+
+                <button type="button" class="btn btn-lg btn-warning" @onclick="Imprimir">
+                    <span class="oi oi-print"></span> Imprimir
+                </button>
             </div>
         </div>
 
@@ -589,6 +593,30 @@
         {
             toast.ShowWarning("Debes de elegir un cliente valido");
         }
+
+        return paso;
+    }
+
+    public async void Imprimir()
+    {
+        FacturaDeVenta rpt = new FacturaDeVenta();
+
+        if (Venta != null || Validar())
+            await js.InvokeAsync<Ventas>("SaveAsFile", "Factura.pdf", Convert.ToBase64String(rpt.Report(Venta)));
+        else
+            toast.ShowWarning("No hay datos para imprimir la factura");
+    }
+
+    public bool Validar()
+    {
+        bool paso = true;
+
+        if (Venta.ClienteId == 0)
+            paso = false;
+        if (Venta.Tipo == string.Empty)
+            paso = false;
+        if (Venta.VentasDetalle.Count == 0)
+            paso = false;
 
         return paso;
     }
