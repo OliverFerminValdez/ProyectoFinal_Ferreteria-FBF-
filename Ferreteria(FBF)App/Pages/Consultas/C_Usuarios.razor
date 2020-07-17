@@ -2,6 +2,8 @@
 
 @using Models
 @using BLL 
+@inject IJSRuntime js
+@inject IToastService toast
  
 <div class="card rounded" style="border-color:#dc3545">
     <div class="card-header text-lg-center" style="background-color: #dc3545">
@@ -74,7 +76,7 @@
                     </div>
                     <div class="form-group col-2 col-md-2 ml-auto">
                         <label><strong>Imprimir </strong></label>
-                        <button type="button" class="btn btn-danger form-control"><span class="oi oi-print"></span> Consulta</button>
+                        <button type="button" class="btn btn-danger btn-block" @onclick="GenerarPDF"><span class="oi oi-print"></span> Consulta</button>
                     </div>
                 </div>
             </div>
@@ -114,7 +116,7 @@
 
 @code {
     public List<Usuarios> ItemsList { get; set; } = new List<Usuarios>();
-    public List<Usuarios> Items { get; set; }
+    public List<Usuarios> Items { get; set; } = new List<Usuarios>();
 
     public string Criterio { get; set; }
     public int Numeracion { get; set; }
@@ -161,7 +163,7 @@
                     UpdateList(omite);
                     break;
                 case 3:
-                    
+
                     Items = UsuariosBLL.GetList(a => a.Apellido.Contains(Criterio));
                     TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
                     UpdateList(omite);
@@ -225,5 +227,14 @@
             UserNumber += 1;
         }
 
+    }
+    public async void GenerarPDF()
+    {
+        UserReports rpt = new UserReports();
+
+        if (Items.Count > 0)
+            await js.InvokeAsync<Usuarios>("SaveAsFile", "Reporte de usuarios.pdf", Convert.ToBase64String(rpt.Report(Items)));
+        else
+            toast.ShowWarning("No hay datos para imprimir, debe hacer una consulta");
     }
 }

@@ -10,23 +10,24 @@ using System.Threading.Tasks;
 
 namespace Ferreteria_FBF_App.Pages
 {
-    public class FacturaDeVenta
+    public class CobrosReport
     {
         #region Declaration
-        int maxColumn = 6;
+        int maxColumn = 4;
         Document document;
-        PdfPTable pdfPTable = new PdfPTable(6);
+        PdfPTable pdfPTable = new PdfPTable(4);
         PdfPCell pdfCell;
         Font fontStyle;
         Font fontFecha;
         Font Titulo;
         MemoryStream memoryStream = new MemoryStream();
-        Ventas venta = new Ventas();
+        List<Cobros> lista = new List<Cobros>();
         #endregion
 
-        public byte[] Report(Ventas ventas)
+        public byte[] Report(List<Cobros> Cobros)
         {
-            venta = ventas;
+            lista = Cobros;
+
             document = new Document(PageSize.A4, 25f, 25f, 20f, 30f);
             pdfPTable.WidthPercentage = 100;
             pdfPTable.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -46,7 +47,6 @@ namespace Ferreteria_FBF_App.Pages
             pdfPTable.SetWidths(sizes);
 
             this.ReportHeader();
-            this.FacturaHeader();
             this.ReportBody();
 
             pdfPTable.HeaderRows = 1;
@@ -72,20 +72,6 @@ namespace Ferreteria_FBF_App.Pages
             pdfPTable.CompleteRow();
 
         }
-        public void FacturaHeader()
-        {
-            PdfPTable pdfPTable = new PdfPTable(4);
-
-            pdfCell = new PdfPCell(new Phrase(venta.Tipo, fontFecha));
-            pdfCell.Colspan = 1;
-            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            pdfCell.Border = 0;
-            pdfPTable.AddCell(pdfCell);
-
-
-            pdfPTable.CompleteRow();
-        }
-
         private PdfPTable AddLogo()
         {
             int maxColumn = 1;
@@ -123,11 +109,7 @@ namespace Ferreteria_FBF_App.Pages
 
             pdfPTable.CompleteRow();
 
-            if(venta.Tipo == "Credito")
-                pdfCell = new PdfPCell(new Phrase("Factura de venta a credito", fontStyle));
-            else
-                pdfCell = new PdfPCell(new Phrase("Factura de venta al contado", fontStyle));
-
+            pdfCell = new PdfPCell(new Phrase("Reporte de Cobros", fontStyle));
             pdfCell.Colspan = maxColumn;
             pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
             pdfCell.Border = 0;
@@ -162,39 +144,27 @@ namespace Ferreteria_FBF_App.Pages
             var _fontStyle = FontFactory.GetFont("Calibri", 9f, 0);
 
             #region Table Header
-            pdfCell = new PdfPCell(new Phrase("No.     ", fontStyle));
+            pdfCell = new PdfPCell(new Phrase("ID", fontStyle));
             pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
             pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
             pdfCell.BackgroundColor = BaseColor.LightGray;
             pdfPTable.AddCell(pdfCell);
 
-            pdfCell = new PdfPCell(new Phrase("Descripcion", fontStyle));
-            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-            pdfCell.BackgroundColor = BaseColor.LightGray;
-            pdfPTable.AddCell(pdfCell);
-
-
-            pdfCell = new PdfPCell(new Phrase("Marca", fontStyle));
+            pdfCell = new PdfPCell(new Phrase("Cliente", fontStyle));
             pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
             pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
             pdfCell.BackgroundColor = BaseColor.LightGray;
             pdfPTable.AddCell(pdfCell);
 
 
-            pdfCell = new PdfPCell(new Phrase("Cantidad", fontStyle));
+            pdfCell = new PdfPCell(new Phrase("Fecha", fontStyle));
             pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
             pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
             pdfCell.BackgroundColor = BaseColor.LightGray;
             pdfPTable.AddCell(pdfCell);
 
-            pdfCell = new PdfPCell(new Phrase("Precio", fontStyle));
-            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-            pdfCell.BackgroundColor = BaseColor.LightGray;
-            pdfPTable.AddCell(pdfCell);
 
-            pdfCell = new PdfPCell(new Phrase("Importe", fontStyle));
+            pdfCell = new PdfPCell(new Phrase("Monto", fontStyle));
             pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
             pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
             pdfCell.BackgroundColor = BaseColor.LightGray;
@@ -206,152 +176,73 @@ namespace Ferreteria_FBF_App.Pages
             #region Table Body
             int num = 0;
 
-            foreach (var item in venta.VentasDetalle)
+
+            foreach (var item in lista)
             {
                 num++;
-                pdfCell = new PdfPCell(new Phrase(num.ToString(), _fontStyle));
+                pdfCell = new PdfPCell(new Phrase(item.CobroId.ToString(), _fontStyle));
                 pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
                 pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                 pdfCell.BackgroundColor = BaseColor.White;
                 pdfPTable.AddCell(pdfCell);
 
-                pdfCell = new PdfPCell(new Phrase(ProductosBLL.Buscar(item.ProductoId).Descripción, _fontStyle));
+                pdfCell = new PdfPCell(new Phrase(ClientesBLL.Buscar(item.ClienteId).Nombre +" "+ ClientesBLL.Buscar(item.ClienteId).Apellido, _fontStyle));
                 pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
                 pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                 pdfCell.BackgroundColor = BaseColor.White;
                 pdfPTable.AddCell(pdfCell);
 
-                pdfCell = new PdfPCell(new Phrase(MarcasBLL.Buscar(ProductosBLL.Buscar(item.ProductoId).MarcaId).Descripcion.ToString(), _fontStyle));
+
+                pdfCell = new PdfPCell(new Phrase(item.Fecha.ToString("MM/dd/yyyy H:mm tt"), _fontStyle));
                 pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
                 pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                 pdfCell.BackgroundColor = BaseColor.White;
                 pdfPTable.AddCell(pdfCell);
 
-                pdfCell = new PdfPCell(new Phrase(item.Cantidad.ToString(), _fontStyle));
+
+                pdfCell = new PdfPCell(new Phrase(item.Monto.ToString(), _fontStyle));
                 pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
                 pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                 pdfCell.BackgroundColor = BaseColor.White;
                 pdfPTable.AddCell(pdfCell);
 
-                pdfCell = new PdfPCell(new Phrase(item.Precio.ToString(), _fontStyle));
-                pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                pdfCell.BackgroundColor = BaseColor.White;
-                pdfPTable.AddCell(pdfCell);
-
-                pdfCell = new PdfPCell(new Phrase((item.Precio * item.Cantidad).ToString(), _fontStyle));
-                pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                pdfCell.BackgroundColor = BaseColor.White;
-                pdfPTable.AddCell(pdfCell);
 
                 pdfPTable.CompleteRow();
 
             }
-            TableRows("", "", fontStyle, "");
-            TableRows("", "", fontStyle, "");
-            TableRows("", "", fontStyle, "");
-            TableRows("", "", fontStyle, "");
-            Totales("Total: ", venta.Total.ToString(), "Total Generales: ", venta.TotalGeneral.ToString(), _fontStyle);
-            Totales("ITBIS: ", venta.ITBIS.ToString(), "", "", _fontStyle);
-            Totales("Descuentos: ", venta.Descuentos.ToString(), "", "", _fontStyle);
 
-            TableRows("", "", fontStyle, "");
-            TableRows("", "", fontStyle, "");
+            pdfCell = new PdfPCell(new Phrase(num++.ToString(), fontStyle));
+            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
+            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+            pdfCell.BackgroundColor = BaseColor.White;
+            pdfCell.Border = 0;
+            pdfPTable.AddCell(pdfCell);
 
-            Totales("Despachado por:", "Oliver", "Cliente: ", ClientesBLL.Buscar(venta.ClienteId).Nombre + " " + ClientesBLL.Buscar(venta.ClienteId).Apellido, _fontStyle);/*+ UsuariosBLL.Buscar(venta.UsuarioId).Nombre + " " + UsuariosBLL.Buscar(venta.UsuarioId).Apellido, fontStyle, ""*/
+            pdfCell = new PdfPCell(new Phrase(" ", fontStyle));
+            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
+            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+            pdfCell.BackgroundColor = BaseColor.White;
+            pdfCell.Border = 0;
+            pdfPTable.AddCell(pdfCell);
+
+            pdfCell = new PdfPCell(new Phrase(" ", fontStyle));
+            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
+            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+            pdfCell.BackgroundColor = BaseColor.White;
+            pdfCell.Border = 0;
+            pdfPTable.AddCell(pdfCell);
+
+            pdfCell = new PdfPCell(new Phrase(" ", fontStyle));
+            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
+            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+            pdfCell.BackgroundColor = BaseColor.White;
+            pdfCell.Border = 0;
+            pdfPTable.AddCell(pdfCell);
+
+
+            pdfPTable.CompleteRow();
             #endregion
         }
-        public void Totales(string num, string col2, string total, string restotal, Font _fontStyle)
-        {
-            pdfCell = new PdfPCell(new Phrase(" ", fontStyle));
-            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-            pdfCell.BackgroundColor = BaseColor.White;
-            pdfCell.Border = 0;
-            pdfPTable.AddCell(pdfCell);
 
-            pdfCell = new PdfPCell(new Phrase(num, fontStyle));
-            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-            pdfCell.BackgroundColor = BaseColor.White;
-            pdfPTable.AddCell(pdfCell);
-
-            pdfCell = new PdfPCell(new Phrase(col2, _fontStyle));
-            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-            pdfCell.BackgroundColor = BaseColor.White;
-            pdfPTable.AddCell(pdfCell);
-
-            pdfCell = new PdfPCell(new Phrase(" ", fontStyle));
-            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-            pdfCell.BackgroundColor = BaseColor.White;
-            pdfCell.Border = 0;
-            pdfPTable.AddCell(pdfCell);
-
-            pdfCell = new PdfPCell(new Phrase(total, fontStyle));
-            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-            if (total == "") { pdfCell.Border = 0; }
-            pdfCell.BackgroundColor = BaseColor.White;
-            pdfPTable.AddCell(pdfCell);
-
-            pdfCell = new PdfPCell(new Phrase(restotal, _fontStyle));
-            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-            if (restotal == "") { pdfCell.Border = 0; }
-            pdfCell.BackgroundColor = BaseColor.White;
-            pdfPTable.AddCell(pdfCell);
-
-            pdfPTable.CompleteRow();
-        }
-
-        public void TableRows(string num, string col2, Font fontStyle, string total)
-        {
-            pdfCell = new PdfPCell(new Phrase(" ", fontStyle));
-            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-            pdfCell.BackgroundColor = BaseColor.White;
-            pdfCell.Border = 0;
-            pdfPTable.AddCell(pdfCell);
-
-            pdfCell = new PdfPCell(new Phrase(num, fontStyle));
-            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-            pdfCell.BackgroundColor = BaseColor.White;
-            pdfCell.Border = 0;
-            pdfPTable.AddCell(pdfCell);
-
-            pdfCell = new PdfPCell(new Phrase(col2, fontStyle));
-            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-            pdfCell.BackgroundColor = BaseColor.White;
-            pdfCell.Border = 0;
-            pdfPTable.AddCell(pdfCell);
-
-            pdfCell = new PdfPCell(new Phrase(" ", fontStyle));
-            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-            pdfCell.BackgroundColor = BaseColor.White;
-            pdfCell.Border = 0;
-            pdfPTable.AddCell(pdfCell);
-
-            pdfCell = new PdfPCell(new Phrase(" ", fontStyle));
-            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-            pdfCell.BackgroundColor = BaseColor.White;
-            pdfCell.Border = 0;
-            pdfPTable.AddCell(pdfCell);
-
-            pdfCell = new PdfPCell(new Phrase(total, fontStyle));
-            pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-            pdfCell.BackgroundColor = BaseColor.White;
-            pdfCell.Border = 0;
-            pdfPTable.AddCell(pdfCell);
-
-            pdfPTable.CompleteRow();
-        }
     }
 }

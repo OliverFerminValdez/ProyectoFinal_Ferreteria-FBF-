@@ -47,7 +47,7 @@ namespace Ferreteria_FBF_App.BLL
 
             try
             {
-                if (venta != null) //Afecta el balance del cliente
+                if (venta!=null) //Afecta el balance del cliente
                 {
                     if (venta.Tipo == "Credito")
                     {

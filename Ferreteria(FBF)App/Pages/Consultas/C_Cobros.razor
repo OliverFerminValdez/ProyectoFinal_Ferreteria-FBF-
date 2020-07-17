@@ -2,6 +2,8 @@
 
 @using Models
 @using BLL
+@inject IJSRuntime js
+@inject IToastService toast
 
 <div class="card rounded" style="border-color:#dc3545">
     <div class="card-header text-lg-center" style="background-color: #dc3545">
@@ -69,7 +71,7 @@
                 <div class="row">
                     <div class="form-group col-2 col-md-2 ml-auto">
                         <label><strong>Imprimir </strong></label>
-                        <button type="button" class="btn btn-danger form-control"><span class="oi oi-print"></span> Consulta</button>
+                        <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePDF"><span class="oi oi-print"></span> Consulta</button>
                     </div>
                 </div>
             </div>
@@ -109,7 +111,7 @@
 
 @code {
     public List<Cobros> ItemsList { get; set; } = new List<Cobros>();
-    public List<Cobros> Items { get; set; }
+    public List<Cobros> Items { get; set; } = new List<Cobros>();
 
     public string Criterio { get; set; }
     public int Numeracion { get; set; }
@@ -214,5 +216,14 @@
 
 
     }
-    
+    public async void GeneratePDF()
+    {
+        CobrosReport rpt = new CobrosReport();
+
+        if (Items.Count > 0)
+            await js.InvokeAsync<Cobros>("SaveAsFile", "Reporte de Clientes.pdf", Convert.ToBase64String(rpt.Report(Items)));
+        else
+            toast.ShowWarning("No hay datos para imprimir, debe hacer una consulta");
+    }
+
 }

@@ -601,10 +601,24 @@
     {
         FacturaDeVenta rpt = new FacturaDeVenta();
 
-        if (Venta != null || Validar())
-            await js.InvokeAsync<Ventas>("SaveAsFile", "Factura.pdf", Convert.ToBase64String(rpt.Report(Venta)));
+        if(Venta.VentaId == 0)
+        {
+
+            if (Validar())
+                await js.InvokeAsync<Ventas>("SaveAsFile", "Factura.pdf", Convert.ToBase64String(rpt.Report(Venta)));
+            else
+                toast.ShowWarning("Faltan datos para poder imprimir la factura");
+
+            Guardar();
+        }
         else
-            toast.ShowWarning("No hay datos para imprimir la factura");
+        {
+            if (Venta != null)
+                await js.InvokeAsync<Ventas>("SaveAsFile", "Factura.pdf", Convert.ToBase64String(rpt.Report(Venta)));
+            else
+                toast.ShowWarning("No hay datos para imprimir la factura");
+        }
+
     }
 
     public bool Validar()
