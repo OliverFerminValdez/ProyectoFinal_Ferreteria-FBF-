@@ -85,11 +85,20 @@
                     </div>
 
                     @*Contraseña*@
-                    <div class="form-group">
+                <div class="form-row">
+                    <div class="col form-group">
                         <label>Contraseña</label>
-                        <InputText @bind-Value="Usuario.Contraseña" class="form-control" />
+                        <input type="password" @bind="Usuario.Contraseña" class="form-control" />
                         <ValidationMessage For="@(() => Usuario.Contraseña)" />
                     </div>
+                    <div class="col-6 form-group">
+                        <label>Confirmar contraseña</label>
+                        <div class="input-group">
+                            <input type="password" @bind="ConfirmarContrasena" class="form-control" />
+                            <button type="button" class="input-group-append btn btn-danger btn-block col-1" @onclick="PasswordCoincide"><span class="oi oi-chevron-left"></span></button>
+                        </div>
+                    </div>
+                </div>
                 </div>
             </div>
 
@@ -126,6 +135,8 @@ else
     public int UsuarioId { get; set; }
 
     private Usuarios UsuarioLogeado = new Usuarios();
+    public string ConfirmarContrasena { get; set; }
+    public bool Verificado { get; set; } = false;
 
     private Usuarios Usuario = new Usuarios();
 
@@ -173,9 +184,10 @@ else
 
     public void Guardar()
     {
+        PasswordCoincide();
         bool guardo = false;
 
-        if (Usuario.UsuarioId >= 0)
+        if (Usuario.UsuarioId >= 0 && Verificado)
         {
             guardo = UsuariosBLL.Guardar(Usuario);
 
@@ -189,6 +201,10 @@ else
             }
             else
                 toast.ShowError("No fue posible guardar");
+        }
+        else
+        {
+            toast.ShowWarning("Las contraseñas no coinciden");
         }
     }
 
@@ -245,5 +261,17 @@ else
             paso = true;
 
         return paso;
+    }
+    public void PasswordCoincide()
+    {
+        if (Usuario.Contraseña != ConfirmarContrasena)
+        {
+            toast.ShowWarning("Las contraseñas no coinciden");
+        }
+        else
+        {
+            Verificado = true;
+            toast.ShowSuccess("Las contraseñas coinciden");
+        }
     }
 }
