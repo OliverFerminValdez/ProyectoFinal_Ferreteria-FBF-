@@ -4,133 +4,143 @@
 @using Models
 @inject IJSRuntime js
 @inject IToastService toast
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-<div class="card rounded" style="border-color:#dc3545">
-    <div class="card-header text-lg-center" style="background-color: #dc3545">
-        <h3><strong>Consulta de Ventas</strong></h3>
-    </div>
-    <div class="card-body">
-        <div class="card">
-            <div class="card-header" style="background-color:#CDCBCB">
-                <div class="row">
-                    <div class="input-group col-12">
-                        <div class="form-group col-2">
-                            <label><strong>Desde: </strong></label>
-                            <input type="date" class="form-control" @bind="Desde"/>
-                        </div>
-                        <div class="form-group col-2">
-                            <label><strong>Hasta: </strong></label>
-                            <input type="date" class="form-control" @bind="Hasta"/>
-                        </div>
-                        <div class="form-group col-3">
-                            <label><strong>Filtro: </strong></label>
-                            <select class="form-control" @bind="Filtro">
-                                <option value=0>Eliga un filtro</option>
-                                <option value=1>ID</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-3">
-                            <label><strong>Criterio: </strong></label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Criterio" @bind="Criterio"/>
-                                <button type="button" class="btn btn-danger input-group-append" @onclick="@(c => Consultar(0))">Consultar</button>
+@if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
+{
+    <div class="card rounded" style="border-color:#dc3545">
+        <div class="card-header text-lg-center" style="background-color: #dc3545">
+            <h3><strong>Consulta de Ventas</strong></h3>
+        </div>
+        <div class="card-body">
+            <div class="card">
+                <div class="card-header" style="background-color:#CDCBCB">
+                    <div class="row">
+                        <div class="input-group col-12">
+                            <div class="form-group col-2">
+                                <label><strong>Desde: </strong></label>
+                                <input type="date" class="form-control" @bind="Desde" />
+                            </div>
+                            <div class="form-group col-2">
+                                <label><strong>Hasta: </strong></label>
+                                <input type="date" class="form-control" @bind="Hasta" />
+                            </div>
+                            <div class="form-group col-3">
+                                <label><strong>Filtro: </strong></label>
+                                <select class="form-control" @bind="Filtro">
+                                    <option value=0>Eliga un filtro</option>
+                                    <option value=1>ID</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-3">
+                                <label><strong>Criterio: </strong></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Criterio" @bind="Criterio" />
+                                    <button type="button" class="btn btn-danger input-group-append" @onclick="@(c => Consultar(0))">Consultar</button>
+                                </div>
+                            </div>
+                            <div class="form-group col-2 col-md-2 ml-auto">
+                                <label><strong>Ordenar por: </strong></label>
+                                <select class="form-control" @bind="Order" @onclick="Ordenar">
+                                    <option value=0>Eliga una opcion</option>
+                                    <option value=1>Total general</option>
+                                    <option value=2>Credito</option>
+                                    <option value=3>al contado</option>
+                                </select>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">No.</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Cliente</th>
+                                <th scope="col">SubTotal</th>
+                                <th scope="col">ITBIS</th>
+                                <th scope="col">Descuentos</th>
+                                <th scope="col">Total General</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ItemsList)
+                            {
+                                <tr>
+                                    <td>@item.VentaId</td>
+                                    <td>@item.Fecha</td>
+                                    <td>@item.Tipo</td>
+                                    <td>@ClientesBLL.Buscar(item.ClienteId).Nombre @ClientesBLL.Buscar(item.ClienteId).Apellido</td>
+                                    <td>@item.Total</td>
+                                    <td>@item.ITBIS</td>
+                                    <td>@item.Descuentos</td>
+                                    <td>@item.TotalGeneral</td>
+                                    <td><a class="btn btn-dark" href="@($"Ventas/{item.VentaId}")">Editar</a></td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer" style="background-color:#CDCBCB">
+                    <div class="row">
+                        <div class="form-group col-4 mr-auto">
+                            <label><strong>Total de ventas consultadas</strong></label>
+                            <input type="number" class="form-control" @bind="TotalVentas" />
+                        </div>
+                        <div class="form-group col-2 col-md-2 ml-md-auto">
+                            <label><strong>Reporte </strong></label>
+                            <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdfToday"><span class="oi oi-print"></span> Ventas del dia</button>
+                        </div>
                         <div class="form-group col-2 col-md-2 ml-auto">
-                            <label><strong>Ordenar por: </strong></label>
-                            <select class="form-control" @bind="Order" @onclick="Ordenar">
-                                <option value=0>Eliga una opcion</option>
-                                <option value=1>Total general</option>
-                                <option value=2>Credito</option>
-                                <option value=3>al contado</option>
-                            </select>
+                            <label><strong>Imprimir </strong></label>
+                            <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdf"><span class="oi oi-print"></span> Consulta</button>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">No.</th>
-                            <th scope="col">Fecha</th>
-                            <th scope="col">Tipo</th>
-                            <th scope="col">Cliente</th>
-                            <th scope="col">SubTotal</th>
-                            <th scope="col">ITBIS</th>
-                            <th scope="col">Descuentos</th>
-                            <th scope="col">Total General</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in ItemsList)
-                        {
-                        <tr>
-                            <td>@item.VentaId</td>
-                            <td>@item.Fecha</td>
-                            <td>@item.Tipo</td>
-                            <td>@ClientesBLL.Buscar(item.ClienteId).Nombre @ClientesBLL.Buscar(item.ClienteId).Apellido</td>
-                            <td>@item.Total</td>
-                            <td>@item.ITBIS</td>
-                            <td>@item.Descuentos</td>
-                            <td>@item.TotalGeneral</td>
-                            <td><a class="btn btn-dark" href="@($"Ventas/{item.VentaId}")">Editar</a></td>
-                        </tr>
-                        }
 
-                    </tbody>
-                    </table>
             </div>
-            <div class="card-footer" style="background-color:#CDCBCB">
-                <div class="row">
-                    <div class="form-group col-4 mr-auto">
-                        <label><strong>Total de ventas consultadas</strong></label>
-                        <input type="number" class="form-control" @bind="TotalVentas"/>
-                    </div>
-                    <div class="form-group col-2 col-md-2 ml-md-auto">
-                        <label><strong>Reporte </strong></label>
-                        <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdfToday"><span class="oi oi-print"></span> Ventas del dia</button>
-                    </div>
-                    <div class="form-group col-2 col-md-2 ml-auto">
-                        <label><strong>Imprimir </strong></label>
-                        <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdf"><span class="oi oi-print"></span> Consulta</button>
-                    </div>
-                </div>
-            </div>
-
-    </div>
-        <div class="card-footer" style="background-color: #dc3545">
-            <div class="form-group text-center" display: inline-block>
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item">
-                            <button class="page-link btn btn-danger"
-                                    @onclick="@(e => NavegateTo("Previous"))" tabindex="-1">
-                                Previous
-                            </button>
-                        </li>
-
-                        @for (int i = 0; i < TotalPages; i++)
-                        {
-                            var pageNumber = i;
+            <div class="card-footer" style="background-color: #dc3545">
+                <div class="form-group text-center" display: inline-block>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
                             <li class="page-item">
-                                <button class="@(CurrentPage == pageNumber ? "page-link btn btn-dark" : "page-link btn btn-danger")"
-                                        @onclick="@(u => Consultar(pageNumber))">
-                                    @(i + 1)
+                                <button class="page-link btn btn-danger"
+                                        @onclick="@(e => NavegateTo("Previous"))" tabindex="-1">
+                                    Previous
                                 </button>
                             </li>
-                        }
 
-                        <li class="page-item">
-                            <button type="button" class="page-link btn btn-danger" @onclick="@(e => NavegateTo("Next"))" tabindex="-1">Next</button>
-                        </li>
-                    </ul>
-                </nav>
+                            @for (int i = 0; i < TotalPages; i++)
+                            {
+                                var pageNumber = i;
+                                <li class="page-item">
+                                    <button class="@(CurrentPage == pageNumber ? "page-link btn btn-dark" : "page-link btn btn-danger")"
+                                            @onclick="@(u => Consultar(pageNumber))">
+                                        @(i + 1)
+                                    </button>
+                                </li>
+                            }
+
+                            <li class="page-item">
+                                <button type="button" class="page-link btn btn-danger" @onclick="@(e => NavegateTo("Next"))" tabindex="-1">Next</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
-</div>
-</div>
+    </div>
+}
+else
+{
+    <LoginControl />
+}
+
+
 @code {
     public List<Ventas> ItemsList { get; set; } = new List<Ventas>();
     public List<Ventas> Items { get; set; } = new List<Ventas>();
@@ -259,7 +269,7 @@
         foreach (var item in Items)
         {
             TotalVentas += item.TotalGeneral;
-            TotalVentas = Math.Round(TotalVentas,2);
+            TotalVentas = Math.Round(TotalVentas, 2);
         }
     }
     public async void GeneratePdf()
@@ -277,7 +287,7 @@
 
         List<Ventas> listaVentas = new List<Ventas>();
 
-        if(VentasBLL.GetList(p => p.Fecha == DateTime.Today) != null)
+        if (VentasBLL.GetList(p => p.Fecha == DateTime.Today) != null)
         {
             listaVentas = VentasBLL.GetList(p => p.Fecha == DateTime.Today);
             await js.InvokeAsync<Ventas>("SaveAsFile", "Ventas del dia.pdf", Convert.ToBase64String(rpt.Report(listaVentas)));

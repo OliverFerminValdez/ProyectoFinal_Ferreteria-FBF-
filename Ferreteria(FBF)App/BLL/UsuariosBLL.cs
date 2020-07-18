@@ -48,6 +48,7 @@ namespace Ferreteria_FBF_App.BLL
 
             try
             {
+                usuario.Contraseña = Usuarios.Encriptar(usuario.Contraseña);
                 contexto.Usuarios.Add(usuario);
                 paso = contexto.SaveChanges() > 0;
             }
@@ -70,6 +71,7 @@ namespace Ferreteria_FBF_App.BLL
 
             try
             {
+                usuario.Contraseña = Usuarios.Encriptar(usuario.Contraseña);
                 contexto.Entry(usuario).State = EntityState.Modified;
                 paso = contexto.SaveChanges() > 0;
             }
@@ -93,6 +95,7 @@ namespace Ferreteria_FBF_App.BLL
             try
             {
                 usuario = contexto.Usuarios.Find(id);
+                usuario.Contraseña = Usuarios.DesEncriptar(usuario.Contraseña);
             }
             catch (Exception)
             {
@@ -152,6 +155,72 @@ namespace Ferreteria_FBF_App.BLL
             }
 
             return listaUsuarios;
+        }
+
+        public static bool ComprobarUsuario(string Usuario, string contraseña)
+        {
+            bool paso = false;
+            Contexto contexto = new Contexto();
+            string ContraseñaEncriptada = Usuarios.Encriptar(contraseña);
+
+            try
+            {
+                if (contexto.Usuarios.Any(U => U.Usuario == Usuario && U.Contraseña == (ContraseñaEncriptada)))
+                    paso = true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                contexto.Dispose();
+            }
+
+            return paso;
+        }
+
+        public static string GetNivelAcceso(string Usuario)
+        {
+            string nivel = "Empleado";
+            Contexto contexto = new Contexto();
+
+            try
+            {
+                nivel = contexto.Usuarios.Where(U => U.Usuario.Equals(Usuario)).Select(U => U.NivelAcceso).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                contexto.Dispose();
+            }
+
+            return nivel;
+        }
+
+        public static Usuarios Buscar(string usuario)
+        {
+            Usuarios Usuario;
+            Contexto contexto = new Contexto();
+
+            try
+            {
+                Usuario = contexto.Usuarios.Where(U => U.Usuario == usuario).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                contexto.Dispose();
+            }
+
+            return Usuario;
         }
     }
 }

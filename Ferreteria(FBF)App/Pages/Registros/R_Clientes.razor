@@ -3,138 +3,151 @@
 
 @using BLL
 @using Models
+
 @inject IToastService toast
-@inject IModalService modal 
+@inject IModalService modal
 @inject IJSRuntime js
 @inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-<EditForm Model="Cliente" OnValidSubmit="Guardar">
-    <DataAnnotationsValidator />
-    <div class="card border-danger">
-        <div class="card-header bg-danger text-lg-center">
-            <h2 style="font-family :'Segoe UI'">Registro de Clientes</h2>
-        </div>
-         
-        <div class="card-body">
-            <div class="form">
 
-                <div class="form-row align-items-center">
+@if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
+{
+    <EditForm Model="Cliente" OnValidSubmit="Guardar">
+        <DataAnnotationsValidator />
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-lg-center">
+                <h2 style="font-family :'Segoe UI'">Registro de Clientes</h2>
+            </div>
 
-                    @*Cliente Id*@
-                    <div class="col-auto mr-auto">
-                        <div class="form-group">
-                            <label>Cliente Id</label>
-                            <div class="input-group">
-                                <InputNumber @bind-Value="Cliente.ClienteId" class="form-control col-4" />
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
-                                        <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
-                                    </button>
+            <div class="card-body">
+                <div class="form">
+
+                    <div class="form-row align-items-center">
+
+                        @*Cliente Id*@
+                        <div class="col-auto mr-auto">
+                            <div class="form-group">
+                                <label>Cliente Id</label>
+                                <div class="input-group">
+                                    <InputNumber @bind-Value="Cliente.ClienteId" class="form-control col-4" />
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
+                                            <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        @*Cantidad*@
+                        <div class="col-auto">
+                            <a class="btn btn-lg btn-info" @onclick="@(()=>MostrarCobros(Cliente.ClienteId))" role="button">Listado de cobros</a>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group form-row">
+
+                        @*Nombre*@
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                <InputText @bind-Value="Cliente.Nombre" class="form-control" />
+                                <ValidationMessage For="@(() => Cliente.Nombre)" />
+                            </div>
+                        </div>
+
+                        @*Apellido*@
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>Apellido</label>
+                                <InputText @bind-Value="Cliente.Apellido" class="form-control" />
+                                <ValidationMessage For="@(() => Cliente.Apellido)" />
                             </div>
                         </div>
                     </div>
 
-                    @*Cantidad*@
-                    <div class="col-auto">
-                        <a class="btn btn-lg btn-info" @onclick="@(()=>MostrarCobros(Cliente.ClienteId))" role="button">Listado de cobros</a>
-                    </div>
-                </div>
-                
+                    <div class="form-group form-row">
+                        @*Cedula*@
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>Cedula</label>
+                                <InputText @bind-Value="Cliente.Cedula" class="form-control" />
+                                <ValidationMessage For="@(() => Cliente.Cedula)" />
+                            </div>
+                        </div>
 
-                <div class="form-group form-row">
-
-                    @*Nombre*@
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label>Nombre</label>
-                            <InputText @bind-Value="Cliente.Nombre" class="form-control" />
-                            <ValidationMessage For="@(() => Cliente.Nombre)" />
+                        @*Telefono*@
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>Telefono</label>
+                                <InputText @bind-Value="Cliente.Telefono" class="form-control" />
+                                <ValidationMessage For="@(() => Cliente.Telefono)" />
+                            </div>
                         </div>
                     </div>
 
-                    @*Apellido*@
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label>Apellido</label>
-                            <InputText @bind-Value="Cliente.Apellido" class="form-control" />
-                            <ValidationMessage For="@(() => Cliente.Apellido)" />
-                        </div>
+                    @*Dirección*@
+                    <div class="form-group">
+                        <label>Dirección</label>
+                        <InputText @bind-Value="Cliente.Dirección" class="form-control" />
+                        <ValidationMessage For="@(() => Cliente.Dirección)" />
+                    </div>
+
+                    @*Email*@
+                    <div class="form-group">
+                        <label>Email</label>
+                        <InputText @bind-Value="Cliente.Email" class="form-control" />
+                        <ValidationMessage For="@(() => Cliente.Email)" />
+                    </div>
+
+                    @*Limite de credito*@
+                    <div class="form-group">
+                        <label>Limite de Credito</label>
+                        <InputNumber @bind-Value="Cliente.LimiteCredito" class="form-control" />
+                        <ValidationMessage For="@(() => Cliente.LimiteCredito)" />
+                    </div>
+
+                    @*Balance*@
+                    <div class="form-group">
+                        <label>Balance</label>
+                        <InputNumber @bind-Value="Cliente.Balance" class="form-control" readonly />
                     </div>
                 </div>
 
-                <div class="form-group form-row">
-                    @*Cedula*@
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label>Cedula</label>
-                            <InputText @bind-Value="Cliente.Cedula" class="form-control" />
-                            <ValidationMessage For="@(() => Cliente.Cedula)" />
-                        </div>
-                    </div>
+                <div class="card-footer text-center" display: inline-block>
+                    <div class="form-group">
 
-                    @*Telefono*@
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label>Telefono</label>
-                            <InputText @bind-Value="Cliente.Telefono" class="form-control" />
-                            <ValidationMessage For="@(() => Cliente.Telefono)" />
-                        </div>
+                        <button type="button" class="btn btn-lg btn-secondary" @onclick="Nuevo">
+                            <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
+                        </button>
+
+                        <button type="submit" class="btn btn-lg btn-info">
+                            <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
+                        </button>
+
+                        <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
+                            <span class="oi oi-circle-x"></span> Eliminar
+                        </button>
                     </div>
                 </div>
 
-                @*Dirección*@
-                <div class="form-group">
-                    <label>Dirección</label>
-                    <InputText @bind-Value="Cliente.Dirección" class="form-control" />
-                    <ValidationMessage For="@(() => Cliente.Dirección)" />
-                </div>
-
-                @*Email*@
-                <div class="form-group">
-                    <label>Email</label>
-                    <InputText @bind-Value="Cliente.Email" class="form-control" />
-                    <ValidationMessage For="@(() => Cliente.Email)" />
-                </div>
-
-                @*Limite de credito*@
-                <div class="form-group">
-                    <label>Limite de Credito</label>
-                    <InputNumber @bind-Value="Cliente.LimiteCredito" class="form-control" />
-                    <ValidationMessage For="@(() => Cliente.LimiteCredito)" />
-                </div>
-
-                @*Balance*@
-                <div class="form-group">
-                    <label>Balance</label>
-                    <InputNumber @bind-Value="Cliente.Balance" class="form-control" readonly />
-                </div>
             </div>
-
-            <div class="card-footer text-center" display: inline-block>
-                <div class="form-group">
-
-                    <button type="button" class="btn btn-lg btn-secondary" @onclick="Nuevo">
-                        <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
-                    </button>
-
-                    <button type="submit" class="btn btn-lg btn-info">
-                        <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
-                    </button>
-
-                    <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
-                        <span class="oi oi-circle-x"></span> Eliminar
-                    </button>
-                </div>
-            </div>
-
         </div>
-    </div>
-</EditForm>
+    </EditForm>
+}
+else
+{
+    <LoginControl/>
+}
+
 
 @code {
     [Parameter]
     public int ClienteId { get; set; }
+
+    private Usuarios Usuario = new Usuarios();
 
     private Clientes Cliente = new Clientes();
 
@@ -142,19 +155,24 @@
     {
         Nuevo();
         Buscar();
+
         if (ClienteId > 0)
             Buscar(ClienteId);
+
+        ObtenerUsuarioLogeado();
     }
 
     public void Nuevo()
     {
         Cliente = new Clientes();
     }
+
     public void Buscar(int id)
     {
         var encontrado = ClientesBLL.Buscar(id);
         this.Cliente = encontrado;
     }
+
     public void Buscar()
     {
 
@@ -175,6 +193,7 @@
 
         if (Cliente.ClienteId >= 0)
         {
+            Cliente.UsuarioId = Usuario.UsuarioId;
 
             guardo = ClientesBLL.Guardar(Cliente);
 
@@ -191,21 +210,29 @@
 
     public async void Eliminar()
     {
-        if (await js.InvokeAsync<bool>("ConfirmationPrumpt", "Confirmacion", "¿Esta seguro que desea eliminar este cliente?", "question"))
+        if (VerificarNivelAcceso())
         {
-            bool eliminar = false;
-
-            eliminar = ClientesBLL.Eliminar(Cliente.ClienteId);
-
-            if (eliminar)
+            if (await js.InvokeAsync<bool>("ConfirmationPrumpt", "Confirmacion", "¿Esta seguro que desea eliminar este cliente?", "question"))
             {
-                Nuevo();
-                toast.ShowSuccess("Eliminado correctamente");
+                bool eliminar = false;
+
+                eliminar = ClientesBLL.Eliminar(Cliente.ClienteId);
+
+                if (eliminar)
+                {
+                    Nuevo();
+                    toast.ShowSuccess("Eliminado correctamente");
+                }
+                else
+                    toast.ShowError("!No fue posible eliminar!");
             }
-            else
-                toast.ShowError("!No fue posible eliminar!");
+        }
+        else
+        {
+            toast.ShowError("No puedes eliminar clientes. !Solo los administradores pueden eliminar!");
         }
     }
+
     public void MostrarCobros(int id)
     {
         var parametros = new ModalParameters();
@@ -215,4 +242,23 @@
 
     }
 
+    public void ObtenerUsuarioLogeado()
+    {
+        Usuarios usuario = UsuariosBLL.Buscar(AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name);
+
+        if (usuario != null)
+        {
+            Usuario = usuario;
+        }
+    }
+
+    public bool VerificarNivelAcceso()
+    {
+        bool paso = false;
+
+        if (Usuario.NivelAcceso == "Administrador")
+            paso = true;
+
+        return paso;
+    }
 }

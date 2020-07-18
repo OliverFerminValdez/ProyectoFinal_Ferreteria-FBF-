@@ -1,20 +1,27 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="sidebar">
-    <NavMenu />
-</div>
+    <AuthorizeView>
+        <Authorized>
 
-<div class="main">
+            <div class="sidebar">
+                <NavMenu />
+            </div>
 
-    <div class="content px-4">
-        @Body
-    </div>
-</div>
+            <div class="main">
 
-<BlazoredModal
-               HideCloseButton="false"
-               DisableBackgroundCancel=true
-               Class="modal-dialog-scrollable"
-               
-               />
-<BlazoredToasts/>
+                <div class="content px-4">
+                    @Body
+                </div>
+            </div>
+
+            <BlazoredModal HideCloseButton="false"
+                           DisableBackgroundCancel=true
+                           Class="modal-dialog-scrollable" />
+            <BlazoredToasts />
+
+        </Authorized>
+        <NotAuthorized>
+            <LoginControl/>
+        </NotAuthorized>
+    </AuthorizeView>
+

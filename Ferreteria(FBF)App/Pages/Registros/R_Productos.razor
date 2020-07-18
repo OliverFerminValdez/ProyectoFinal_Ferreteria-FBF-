@@ -6,108 +6,119 @@
 @inject IToastService toast
 @inject IJSRuntime js
 @inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-<EditForm Model="Producto" OnValidSubmit="Guardar">
-    <DataAnnotationsValidator />
-    <div class="card border-danger">
-        <div class="card-header bg-danger text-lg-center">
-            <h2 style="font-family :'Segoe UI'">Registro de Productos</h2>
-        </div>
 
-        <div class="card-body">
-            <div class="form">
+@if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
+{
+    <EditForm Model="Producto" OnValidSubmit="Guardar">
+        <DataAnnotationsValidator />
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-lg-center">
+                <h2 style="font-family :'Segoe UI'">Registro de Productos</h2>
+            </div>
 
-                @*Producto Id*@
-                <div class="form-row align-items-center">
-                    <div class="col">
-                        <div class="form-group">
-                            <label>Producto Id</label>
-                            <div class="input-group">
-                                <InputNumber @bind-Value="Producto.ProductoId" class="form-control col-3" />
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
-                                        <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
-                                    </button>
+            <div class="card-body">
+                <div class="form">
+
+                    @*Producto Id*@
+                    <div class="form-row align-items-center">
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Producto Id</label>
+                                <div class="input-group">
+                                    <InputNumber @bind-Value="Producto.ProductoId" class="form-control col-3" />
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
+                                            <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                @*Descripción*@
-                <div class="form-group">
-                    <label>Descripción</label>
-                    <InputText @bind-Value="Producto.Descripción" class="form-control" />
-                    <ValidationMessage For="@(() => Producto.Descripción)" />
-                </div>
-
-                <div class="form-group form-row">
-                    @*Unidad*@
-                    <div class="col-6">
-                        <label>Unidad</label>
-                        <InputText @bind-Value="Producto.Unidad" class="form-control" />
-                        <ValidationMessage For="@(() => Producto.Unidad)" />
+                    @*Descripción*@
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <InputText @bind-Value="Producto.Descripción" class="form-control" />
+                        <ValidationMessage For="@(() => Producto.Descripción)" />
                     </div>
 
-                    @*Marca*@
-                    <div class="col-6">
-                        <label>Marcas</label>
-                        <InputSelectNumber class="form-control" @bind-Value="Producto.MarcaId">
-                            <option disabled="disabled" selected="selected">Elija una opción</option>
-                            @foreach (var auxiliar in LlenarComboMarcas())
-                            {
-                                <option value="@auxiliar.MarcaId">@auxiliar.Descripcion</option>
-                            }
-                        </InputSelectNumber>
+                    <div class="form-group form-row">
+                        @*Unidad*@
+                        <div class="col-6">
+                            <label>Unidad</label>
+                            <InputText @bind-Value="Producto.Unidad" class="form-control" />
+                            <ValidationMessage For="@(() => Producto.Unidad)" />
+                        </div>
+
+                        @*Marca*@
+                        <div class="col-6">
+                            <label>Marcas</label>
+                            <InputSelectNumber class="form-control" @bind-Value="Producto.MarcaId">
+                                <option disabled="disabled" selected="selected">Elija una opción</option>
+                                @foreach (var auxiliar in LlenarComboMarcas())
+                                {
+                                    <option value="@auxiliar.MarcaId">@auxiliar.Descripcion</option>
+                                }
+                            </InputSelectNumber>
+                        </div>
+                    </div>
+
+                    @*Precio unitario*@
+                    <div class="form-group">
+                        <label>Precio unitario</label>
+                        <InputNumber @bind-Value="Producto.PrecioUnitario" class="form-control" @onfocusout="ActualizarValorInventario" />
+                        <ValidationMessage For="@(() => Producto.PrecioUnitario)" />
+                    </div>
+
+                    @*Inventario*@
+                    <div class="form-group">
+                        <label>Inventario</label>
+                        <InputNumber @bind-Value="Producto.Inventario" class="form-control" @onfocusout="ActualizarValorInventario" />
+                        <ValidationMessage For="@(() => Producto.Inventario)" />
+                    </div>
+
+                    @*Valor inventario*@
+                    <div class="form-group">
+                        <label>Valor inventario</label>
+                        <InputNumber @bind-Value="Producto.ValorInventario" class="form-control" readonly />
+                        <ValidationMessage For="@(() => Producto.ValorInventario)" />
                     </div>
                 </div>
+            </div>
 
-                @*Precio unitario*@
+            <div class="card-footer text-center" display: inline-block>
                 <div class="form-group">
-                    <label>Precio unitario</label>
-                    <InputNumber @bind-Value="Producto.PrecioUnitario" class="form-control" @onfocusout="ActualizarValorInventario" />
-                    <ValidationMessage For="@(() => Producto.PrecioUnitario)" />
-                </div>
 
-                @*Inventario*@
-                <div class="form-group">
-                    <label>Inventario</label>
-                    <InputNumber @bind-Value="Producto.Inventario" class="form-control" @onfocusout="ActualizarValorInventario" />
-                    <ValidationMessage For="@(() => Producto.Inventario)" />
-                </div>
+                    <button type="button" class="btn btn-lg btn-secondary" @onclick="Nuevo">
+                        <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
+                    </button>
 
-                @*Valor inventario*@
-                <div class="form-group">
-                    <label>Valor inventario</label>
-                    <InputNumber @bind-Value="Producto.ValorInventario" class="form-control" readonly />
-                    <ValidationMessage For="@(() => Producto.ValorInventario)" />
+                    <button type="submit" class="btn btn-lg btn-info">
+                        <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
+                    </button>
+
+                    <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
+                        <span class="oi oi-circle-x"></span> Eliminar
+                    </button>
                 </div>
             </div>
+
         </div>
-
-        <div class="card-footer text-center" display: inline-block>
-            <div class="form-group">
-
-                <button type="button" class="btn btn-lg btn-secondary" @onclick="Nuevo">
-                    <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
-                </button>
-
-                <button type="submit" class="btn btn-lg btn-info">
-                    <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
-                </button>
-
-                <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
-                    <span class="oi oi-circle-x"></span> Eliminar
-                </button>
-            </div>
-        </div>
-
-    </div>
-</EditForm>
+    </EditForm>
+}
+else
+{
+    <LoginControl/>
+}
 
 @code {
     [Parameter]
     public int ProductoId { get; set; }
+
+    private Usuarios Usuario = new Usuarios();
 
     private Productos Producto = new Productos();
 
@@ -116,6 +127,8 @@
         Nuevo();
         Buscar();
         LlenarComboMarcas();
+        ObtenerUsuarioLogeado();
+
         if (ProductoId > 0)
         {
             Buscar(ProductoId);
@@ -156,6 +169,8 @@
 
         if (Producto.ProductoId >= 0)
         {
+            Producto.UsuarioId = Usuario.UsuarioId;
+
             guardo = ProductosBLL.Guardar(Producto);
 
             if (guardo)
@@ -174,19 +189,26 @@
 
     public async void Eliminar()
     {
-        if (await js.InvokeAsync<bool>("ConfirmationPrumpt", "Confirmacion", "¿Esta seguro que desea eliminar este producto?", "question"))
+        if (VerificarNivelAcceso())
         {
-            bool eliminar = false;
-
-            eliminar = ProductosBLL.Eliminar(Producto.ProductoId);
-
-            if (eliminar)
+            if (await js.InvokeAsync<bool>("ConfirmationPrumpt", "Confirmacion", "¿Esta seguro que desea eliminar este producto?", "question"))
             {
-                Nuevo();
-                toast.ShowSuccess("Eliminado correctamente");
+                bool eliminar = false;
+
+                eliminar = ProductosBLL.Eliminar(Producto.ProductoId);
+
+                if (eliminar)
+                {
+                    Nuevo();
+                    toast.ShowSuccess("Eliminado correctamente");
+                }
+                else
+                    toast.ShowError("!No fue posible eliminar!");
             }
-            else
-                toast.ShowError("!No fue posible eliminar!");
+        }
+        else
+        {
+            toast.ShowError("No puedes eliminar productos. !Solo los administradores pueden eliminar!");
         }
     }
 
@@ -211,6 +233,26 @@
     public void ActualizarValorInventario()
     {
         Producto.ValorInventario = (Producto.Inventario * Producto.PrecioUnitario);
+    }
+
+    public void ObtenerUsuarioLogeado()
+    {
+        Usuarios usuario = UsuariosBLL.Buscar(AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name);
+
+        if (usuario != null)
+        {
+            Usuario = usuario;
+        }
+    }
+
+    public bool VerificarNivelAcceso()
+    {
+        bool paso = false;
+
+        if (Usuario.NivelAcceso == "Administrador")
+            paso = true;
+
+        return paso;
     }
 
 }

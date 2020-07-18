@@ -89,25 +89,6 @@ namespace Ferreteria_FBF_App.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Ferreteria_FBF_App.Models.CobroDetalle", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Monto")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClienteId");
-
-                    b.ToTable("CobroDetalle");
-                });
-
             modelBuilder.Entity("Ferreteria_FBF_App.Models.Cobros", b =>
                 {
                     b.Property<int>("CobroId")
@@ -205,6 +186,10 @@ namespace Ferreteria_FBF_App.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("NivelAcceso")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -221,6 +206,19 @@ namespace Ferreteria_FBF_App.Migrations
                     b.HasKey("UsuarioId");
 
                     b.ToTable("Usuarios");
+
+                    b.HasData(
+                        new
+                        {
+                            UsuarioId = 1,
+                            Apellido = "veras",
+                            Contraseña = "YQBkAG0AaQBuADEAMgAzAA==",
+                            Email = "martinsito@Ucne.edu.do",
+                            NivelAcceso = "admin",
+                            Nombre = "admin",
+                            Telefono = "8092128159",
+                            Usuario = "admin"
+                        });
                 });
 
             modelBuilder.Entity("Ferreteria_FBF_App.Models.Ventas", b =>
@@ -297,7 +295,7 @@ namespace Ferreteria_FBF_App.Migrations
                             CantidadProductos = 2,
                             ClienteId = 2,
                             Descuentos = 0.0,
-                            Fecha = new DateTime(2020, 7, 9, 22, 10, 53, 896, DateTimeKind.Local).AddTicks(4634),
+                            Fecha = new DateTime(2020, 7, 17, 17, 38, 26, 820, DateTimeKind.Local).AddTicks(8600),
                             ITBIS = 18.0,
                             Tipo = "Credito",
                             Total = 100.0,
@@ -329,15 +327,6 @@ namespace Ferreteria_FBF_App.Migrations
                     b.HasIndex("VentaId");
 
                     b.ToTable("VentasDetalle");
-                });
-
-            modelBuilder.Entity("Ferreteria_FBF_App.Models.CobroDetalle", b =>
-                {
-                    b.HasOne("Ferreteria_FBF_App.Models.Clientes", null)
-                        .WithMany("Cobros")
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Ferreteria_FBF_App.Models.VentasDetalle", b =>

@@ -6,91 +6,102 @@
 @inject IToastService toast
 @inject IJSRuntime js
 @inject NavigationManager nav
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-<EditForm Model="Cobro" OnValidSubmit="Guardar">
-    <DataAnnotationsValidator />
-    <div class="card border-danger">
-        <div class="card-header bg-danger text-lg-center">
-            <h2 style="font-family :'Segoe UI'">Registro de Cobros</h2>
-        </div>
 
-        <div class="card-body">
-            <div class="form">
+@if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
+{
+    <EditForm Model="Cobro" OnValidSubmit="Guardar">
+        <DataAnnotationsValidator />
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-lg-center">
+                <h2 style="font-family :'Segoe UI'">Registro de Cobros</h2>
+            </div>
 
-                @*Cobro Id*@
-                <div class="form-row align-items-center">
-                    <div class="col">
-                        <div class="form-group">
-                            <label>Cobro Id</label>
-                            <div class="input-group">
-                                <InputNumber @bind-Value="Cobro.CobroId" class="form-control col-3" />
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
-                                        <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
-                                    </button>
+            <div class="card-body">
+                <div class="form">
+
+                    @*Cobro Id*@
+                    <div class="form-row align-items-center">
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Cobro Id</label>
+                                <div class="input-group">
+                                    <InputNumber @bind-Value="Cobro.CobroId" class="form-control col-3" />
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
+                                            <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                @*Cliente Id*@
-                <div class="form-group">
-                    <label>Cliente Id</label>
-                    <InputSelectNumber class="form-control" @bind-Value="Cobro.ClienteId" @onclick="pullBalance">
-                        <option disabled="disabled" selected="selected">Elija una opción</option>
-                        @foreach (var auxiliar in LlenarComboCliente())
-                        {
-                            <option value="@auxiliar.ClienteId">@auxiliar.Nombre @auxiliar.Apellido</option>
-                        }
-                    </InputSelectNumber>
-                </div>
+                    @*Cliente Id*@
+                    <div class="form-group">
+                        <label>Cliente Id</label>
+                        <InputSelectNumber class="form-control" @bind-Value="Cobro.ClienteId" @onclick="pullBalance">
+                            <option disabled="disabled" selected="selected">Elija una opción</option>
+                            @foreach (var auxiliar in LlenarComboCliente())
+                                {
+                                <option value="@auxiliar.ClienteId">@auxiliar.Nombre @auxiliar.Apellido</option>
+                                }
+                        </InputSelectNumber>
+                    </div>
 
-                @*Fecha*@
-                <div class="form-group date">
-                    <label>Fecha</label>
-                    <InputDate @bind-Value="Cobro.Fecha" class="form-control" />
-                    <ValidationMessage For="@(() => Cobro.Fecha)" />
-                </div>
+                    @*Fecha*@
+                    <div class="form-group date">
+                        <label>Fecha</label>
+                        <InputDate @bind-Value="Cobro.Fecha" class="form-control" />
+                        <ValidationMessage For="@(() => Cobro.Fecha)" />
+                    </div>
 
-                @*Monto*@
-                <div class="form-group">
-                    <label>Monto</label>
-                    <InputNumber @bind-Value="Cobro.Monto" @onfocusin="CalcularBalance" class="form-control" />
-                    <ValidationMessage For="@(() => Cobro.Monto)" />
-                </div>
+                    @*Monto*@
+                    <div class="form-group">
+                        <label>Monto</label>
+                        <InputNumber @bind-Value="Cobro.Monto" @onfocusin="CalcularBalance" class="form-control" />
+                        <ValidationMessage For="@(() => Cobro.Monto)" />
+                    </div>
 
-                @*Balance*@
-                <div class="form-group">
-                    <label>Balance cliente</label>
-                    <InputNumber @bind-Value="BalanceCobro" class="form-control" readonly/>
+                    @*Balance*@
+                    <div class="form-group">
+                        <label>Balance cliente</label>
+                        <InputNumber @bind-Value="BalanceCobro" class="form-control" readonly />
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="card-footer text-center" display: inline-block>
-            <div class="form-group">
+            <div class="card-footer text-center" display: inline-block>
+                <div class="form-group">
 
-                <button type="button" class="btn btn-lg btn-secondary" @onclick="Nuevo">
-                    <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
-                </button>
+                    <button type="button" class="btn btn-lg btn-secondary" @onclick="Nuevo">
+                        <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
+                    </button>
 
-                <button type="submit" class="btn btn-lg btn-info">
-                    <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
-                </button>
+                    <button type="submit" class="btn btn-lg btn-info">
+                        <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
+                    </button>
 
-                <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
-                    <span class="oi oi-circle-x"></span> Eliminar
-                </button>
+                    <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
+                        <span class="oi oi-circle-x"></span> Eliminar
+                    </button>
+                </div>
             </div>
-        </div>
 
-    </div>
-</EditForm>
+        </div>
+    </EditForm>
+}
+else
+{
+    <LoginControl />
+}
 
 @code{
     [Parameter]
     public int CobroId { get; set; }
+
+    private Usuarios Usuario = new Usuarios();
 
     private Cobros Cobro = new Cobros();
     public double BalanceCobro { get; set; }
@@ -100,6 +111,8 @@
         Nuevo();
         Buscar();
         LlenarComboCliente();
+        ObtenerUsuarioLogeado();
+
         if (CobroId > 0)
             Buscar(CobroId);
     }
@@ -109,6 +122,7 @@
         BalanceCobro = 0;
         Cobro = new Cobros();
     }
+
     public void Buscar(int id)
     {
         var encontrado = CobrosBLL.Buscar(id);
@@ -116,6 +130,7 @@
         if (encontrado != null)
             this.Cobro = encontrado;
     }
+
     public void Buscar()
     {
 
@@ -136,6 +151,8 @@
 
         if (Cobro.CobroId >= 0)
         {
+            Cobro.UsuarioId = Usuario.UsuarioId;
+
             guardo = CobrosBLL.Guardar(Cobro);
 
             if (guardo)
@@ -153,19 +170,26 @@
 
     public async void Eliminar()
     {
-        if (await js.InvokeAsync<bool>("ConfirmationPrumpt", "Confirmacion", "¿Esta seguro que desea eliminar este cobro?", "question"))
+        if (VerificarNivelAcceso())
         {
-            bool eliminar = false;
-
-            eliminar = CobrosBLL.Eliminar(Cobro.CobroId);
-
-            if (eliminar)
+            if (await js.InvokeAsync<bool>("ConfirmationPrumpt", "Confirmacion", "¿Esta seguro que desea eliminar este cobro?", "question"))
             {
-                Nuevo();
-                toast.ShowSuccess("Eliminado correctamente");
+                bool eliminar = false;
+
+                eliminar = CobrosBLL.Eliminar(Cobro.CobroId);
+
+                if (eliminar)
+                {
+                    Nuevo();
+                    toast.ShowSuccess("Eliminado correctamente");
+                }
+                else
+                    toast.ShowError("!No fue posible eliminar!");
             }
-            else
-                toast.ShowError("!No fue posible eliminar!");
+        }
+        else
+        {
+            toast.ShowError("No puedes eliminar cobros. !Solo los administradores pueden eliminar!");
         }
     }
 
@@ -187,7 +211,7 @@
 
     public void pullBalance()
     {
-        if(ClientesBLL.Buscar(Cobro.ClienteId)!=null)
+        if (ClientesBLL.Buscar(Cobro.ClienteId) != null)
             BalanceCobro = ClientesBLL.Buscar(Cobro.ClienteId).Balance;
     }
 
@@ -196,4 +220,25 @@
         BalanceCobro = ClientesBLL.Buscar(Cobro.ClienteId).Balance;
         BalanceCobro -= Cobro.Monto;
     }
-}
+
+
+    public void ObtenerUsuarioLogeado()
+    {
+        Usuarios usuario = UsuariosBLL.Buscar(AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name);
+
+        if (usuario != null)
+        {
+            Usuario = usuario;
+        }
+    }
+
+    public bool VerificarNivelAcceso()
+    {
+        bool paso = false;
+
+        if (Usuario.NivelAcceso == "Administrador")
+            paso = true;
+
+        return paso;
+    }
+    }

@@ -5,127 +5,135 @@
 @inject IToastService toast
 @inject IModalService Modal
 @inject IJSRuntime js
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-<div class="card rounded" style="border-color:#dc3545">
-    <div class="card-header text-lg-center" style="background-color: #dc3545">
-        <h3><strong>Consulta de Clientes</strong></h3>
-    </div>
-    <div class="card-body">
-        <div class="card">
-            <div class="card-header" style="background-color:#CDCBCB">
-                <div class="row">
-                    <div class="input-group col-12">
-                        <div class="form-group col-3">
-                            <label><strong>Filtro: </strong></label>
-                            <select class="form-control" @bind="Filtro">
-                                <option value=0>Eliga un filtro</option>
-                                <option value=1>ID</option>
-                                <option value=2>Nombre</option>
-                                <option value=3>Apellido</option>
-                                <option value=4>Cedula</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-4">
-                            <label><strong>Criterio: </strong></label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" @bind="Criterio" placeholder="Criterio" />
-                                <button type="button" class="btn btn-danger input-group-append" @onclick="@(c => Consultar(0))">Consultar</button>
+
+@if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
+{
+    <div class="card rounded" style="border-color:#dc3545">
+        <div class="card-header text-lg-center" style="background-color: #dc3545">
+            <h3><strong>Consulta de Clientes</strong></h3>
+        </div>
+        <div class="card-body">
+            <div class="card">
+                <div class="card-header" style="background-color:#CDCBCB">
+                    <div class="row">
+                        <div class="input-group col-12">
+                            <div class="form-group col-3">
+                                <label><strong>Filtro: </strong></label>
+                                <select class="form-control" @bind="Filtro">
+                                    <option value=0>Eliga un filtro</option>
+                                    <option value=1>ID</option>
+                                    <option value=2>Nombre</option>
+                                    <option value=3>Apellido</option>
+                                    <option value=4>Cedula</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-4">
+                                <label><strong>Criterio: </strong></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" @bind="Criterio" placeholder="Criterio" />
+                                    <button type="button" class="btn btn-danger input-group-append" @onclick="@(c => Consultar(0))">Consultar</button>
+                                </div>
+                            </div>
+                            <div class="form-group col-2 col-md-4 ml-auto">
+                                <label><strong>Ordenar por: </strong></label>
+                                <select class="form-control" @bind="Order" @onclick="Ordenar">
+                                    <option value=0>Eliga una opcion</option>
+                                    <option value=1>Nombre</option>
+                                    <option value=2>Apellido</option>
+                                    <option value=3>Balance</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="form-group col-2 col-md-4 ml-auto">
-                            <label><strong>Ordenar por: </strong></label>
-                            <select class="form-control" @bind="Order" @onclick="Ordenar">
-                                <option value=0>Eliga una opcion</option>
-                                <option value=1>Nombre</option>
-                                <option value=2>Apellido</option>
-                                <option value=3>Balance</option>
-                            </select>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Apellido</th>
+                                <th scope="col">Cedula</th>
+                                <th scope="col">Direccion</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Limite de credito</th>
+                                <th scope="col">Balance</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ItemsList)
+                            {
+                                <tr>
+                                    <td>@item.Nombre</td>
+                                    <td>@item.Apellido</td>
+                                    <td>@item.Cedula</td>
+                                    <td>@item.Dirección</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.LimiteCredito</td>
+                                    <td>@item.Balance</td>
+                                    <td><a class="btn btn-dark" href="@($"Clientes/{item.ClienteId}")">Editar</a></td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer" style="background-color:#CDCBCB">
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label><strong>Total deuda</strong></label>
+                            <input type="number" class="form-control" @bind="TotalDeuda" readonly />
+                        </div>
+                        <div class="form-group col-3 col-md-2 ml-md-auto">
+                            <label><strong>Reporte </strong></label>
+                            <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdfOwe"><span class="oi oi-print"></span> Clientes en con deuda</button>
+                        </div>
+                        <div class="form-group col-2 col-md-2 ml-auto">
+                            <label><strong>Imprimir </strong></label>
+                            <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdf"><span class="oi oi-print"></span> Consulta</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Apellido</th>
-                            <th scope="col">Cedula</th>
-                            <th scope="col">Direccion</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Limite de credito</th>
-                            <th scope="col">Balance</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in ItemsList)
-                        {
-                        <tr>
-                            <td>@item.Nombre</td>
-                            <td>@item.Apellido</td>
-                            <td>@item.Cedula</td>
-                            <td>@item.Dirección</td>
-                            <td>@item.Email</td> 
-                            <td>@item.LimiteCredito</td>
-                            <td>@item.Balance</td>
-                            <td><a class="btn btn-dark" href="@($"Clientes/{item.ClienteId}")">Editar</a></td>
-                        </tr>
-                        }
 
-                    </tbody>
-                </table>
-            </div>
-            <div class="card-footer" style="background-color:#CDCBCB">
-                <div class="row">
-                    <div class="form-group col-4">
-                        <label><strong>Total deuda</strong></label>
-                        <input type="number" class="form-control" @bind="TotalDeuda" readonly />
-                    </div>
-                    <div class="form-group col-3 col-md-2 ml-md-auto">
-                        <label><strong>Reporte </strong></label>
-                        <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdfOwe"><span class="oi oi-print"></span> Clientes en con deuda</button>
-                    </div>
-                    <div class="form-group col-2 col-md-2 ml-auto">
-                        <label><strong>Imprimir </strong></label>
-                        <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdf"><span class="oi oi-print"></span> Consulta</button>
-                    </div>
-                </div>
-            </div>
         </div>
-
-    </div>
-    <div class="card-footer" style="background-color: #dc3545">
-        <div class="form-group text-center" display: inline-block>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                        <button class="page-link btn btn-danger"
-                                @onclick="@(e => NavegateTo("Previous"))" tabindex="-1">
-                            Previous
-                        </button>
-                    </li>
-
-                    @for (int i = 0; i < TotalPages; i++)
-                    {
-                        var pageNumber = i;
+        <div class="card-footer" style="background-color: #dc3545">
+            <div class="form-group text-center" display: inline-block>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
                         <li class="page-item">
-                            <button class="@(CurrentPage == pageNumber ? "page-link btn btn-dark" : "page-link btn btn-danger")"
-                                    @onclick="@(u => Consultar(pageNumber))">
-                                @(i + 1)
+                            <button class="page-link btn btn-danger"
+                                    @onclick="@(e => NavegateTo("Previous"))" tabindex="-1">
+                                Previous
                             </button>
                         </li>
-                    }
 
-                    <li class="page-item">
-                        <button type="button" class="page-link btn btn-danger" @onclick="@(e => NavegateTo("Next"))" tabindex="-1">Next</button>
-                    </li>
-                </ul>
-            </nav>
+                        @for (int i = 0; i < TotalPages; i++)
+                        {
+                            var pageNumber = i;
+                            <li class="page-item">
+                                <button class="@(CurrentPage == pageNumber ? "page-link btn btn-dark" : "page-link btn btn-danger")"
+                                        @onclick="@(u => Consultar(pageNumber))">
+                                    @(i + 1)
+                                </button>
+                            </li>
+                        }
+
+                        <li class="page-item">
+                            <button type="button" class="page-link btn btn-danger" @onclick="@(e => NavegateTo("Next"))" tabindex="-1">Next</button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
-</div>
-
+}
+else
+{
+    <LoginControl/>
+}
 
 @code {
     public List<Clientes> ItemsList { get; set; } = new List<Clientes>();
@@ -259,7 +267,7 @@
 
         List<Clientes> listaClientes = new List<Clientes>();
 
-        if(ClientesBLL.GetList(p => p.Balance > 0) != null)
+        if (ClientesBLL.GetList(p => p.Balance > 0) != null)
         {
             listaClientes = ClientesBLL.GetList(p => p.Balance > 0);
 
@@ -272,4 +280,4 @@
 
     }
 
-}
+    }

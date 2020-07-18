@@ -3,126 +3,135 @@
 @using Models
 @using BLL
 
-@inject IModalService Modal 
-@inject NavigationManager Navigation 
+@inject IModalService Modal
+@inject NavigationManager Navigation
 @inject IJSRuntime js
 @inject IToastService toast
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-<div class="card rounded" style="border-color:#dc3545">
-    <div class="card-header text-lg-center" style="background-color: #dc3545">
-        <h3><strong>Consulta de productos</strong></h3>
-    </div>
-    <div class="card-body">
-        <div class="card">
-            <div class="card-header" style="background-color:#CDCBCB">
-                <div class="row">
-                    <div class="input-group col-12">
-                        <div class="form-group col-3">
-                            <label><strong>Filtro: </strong></label>
-                            <select class="form-control" @bind="Filtro">
-                                <option value=0>Eliga un filtro</option>
-                                <option value=1>ID</option>
-                                <option value=2>Descripcion</option>
-                                <option value=3>Precio Unitario</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-4">
-                            <label><strong>Criterio: </strong></label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" @bind="Criterio" placeholder="Criterio" />
-                                <button type="button" class="btn btn-danger input-group-append" @onclick="@(c => Consultar(0))">Consultar</button>
+
+@if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
+{
+    <div class="card rounded" style="border-color:#dc3545">
+        <div class="card-header text-lg-center" style="background-color: #dc3545">
+            <h3><strong>Consulta de productos</strong></h3>
+        </div>
+        <div class="card-body">
+            <div class="card">
+                <div class="card-header" style="background-color:#CDCBCB">
+                    <div class="row">
+                        <div class="input-group col-12">
+                            <div class="form-group col-3">
+                                <label><strong>Filtro: </strong></label>
+                                <select class="form-control" @bind="Filtro">
+                                    <option value=0>Eliga un filtro</option>
+                                    <option value=1>ID</option>
+                                    <option value=2>Descripcion</option>
+                                    <option value=3>Precio Unitario</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-4">
+                                <label><strong>Criterio: </strong></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" @bind="Criterio" placeholder="Criterio" />
+                                    <button type="button" class="btn btn-danger input-group-append" @onclick="@(c => Consultar(0))">Consultar</button>
+                                </div>
+                            </div>
+                            <div class="form-group col-2 col-md-4 ml-auto">
+                                <label><strong>Ordenar por: </strong></label>
+                                <select class="form-control" @bind="Order" @onclick="Ordenar">
+                                    <option value=0>Eliga una opcion</option>
+                                    <option value=1>Descripcion</option>
+                                    <option value=2>Precio Unitario</option>
+                                    <option value=3>Inventario</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="form-group col-2 col-md-4 ml-auto">
-                            <label><strong>Ordenar por: </strong></label>
-                            <select class="form-control" @bind="Order" @onclick="Ordenar" >
-                                <option value=0>Eliga una opcion</option>
-                                <option value=1>Descripcion</option>
-                                <option value=2>Precio Unitario</option>
-                                <option value=3>Inventario</option>
-                            </select>
-                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">Descripcion</th>
-                            <th scope="col">Precio Unitario</th>
-                            <th scope="col">Inventario</th>
-                            <th scope="col">Valor inventario</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in ItemsList)
-                        {
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td>@item.Descripción</td>
-                                <td>@item.PrecioUnitario</td>
-                                <td>@item.Inventario</td>
-                                <td>@item.ValorInventario</td>
-                                <td><a class="btn btn-danger" href="@($"ProductoId/{item.ProductoId}")">Editar</a></td>
+                                <th scope="col">Descripcion</th>
+                                <th scope="col">Precio Unitario</th>
+                                <th scope="col">Inventario</th>
+                                <th scope="col">Valor inventario</th>
+                                <th scope="col"></th>
                             </tr>
-                        }
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ItemsList)
+                            {
+                                <tr>
+                                    <td>@item.Descripción</td>
+                                    <td>@item.PrecioUnitario</td>
+                                    <td>@item.Inventario</td>
+                                    <td>@item.ValorInventario</td>
+                                    <td><a class="btn btn-danger" href="@($"ProductoId/{item.ProductoId}")">Editar</a></td>
+                                </tr>
+                            }
 
-                    </tbody>
-                </table>
-            </div>
-            <div class="card-footer" style="background-color:#CDCBCB">
-                <div class="row">
-                    <div class="form-group col-4">
-                        <label><strong>Total inventario</strong></label>
-                        <input type="number" class="form-control" @bind="TotalInventario" readonly />
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer" style="background-color:#CDCBCB">
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label><strong>Total inventario</strong></label>
+                            <input type="number" class="form-control" @bind="TotalInventario" readonly />
+                        </div>
+
+                        <div class="form-group col-3 col-md-2 ml-md-auto">
+                            <label><strong>Reporte </strong></label>
+                            <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdfReorder"><span class="oi oi-print"></span> Productos en reorden</button>
+                        </div>
+
+                        <div class="form-group col-2 col-md-2 ml-auto">
+                            <label><strong>Imprimir </strong></label>
+                            <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdf"><span class="oi oi-print"></span> Consulta</button>
+                        </div>
+
                     </div>
-
-                    <div class="form-group col-3 col-md-2 ml-md-auto">
-                        <label><strong>Reporte </strong></label>
-                        <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdfReorder"><span class="oi oi-print"></span> Productos en reorden</button>
-                    </div>
-
-                    <div class="form-group col-2 col-md-2 ml-auto">
-                        <label><strong>Imprimir </strong></label>
-                        <button type="button" class="btn btn-danger btn-block" @onclick="GeneratePdf"><span class="oi oi-print"></span> Consulta</button>
-                    </div>
-
                 </div>
             </div>
+
         </div>
-
-    </div>
-    <div class="card-footer" style="background-color: #dc3545">
-        <div class="form-group text-center" display: inline-block>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                        <button class="page-link btn btn-danger"
-                                @onclick="@(e => NavegateTo("Previous"))" tabindex="-1">
-                            Previous
-                        </button>
-                    </li>
-
-                    @for (int i = 0; i < TotalPages; i++)
-                    {
-                        var pageNumber = i;
+        <div class="card-footer" style="background-color: #dc3545">
+            <div class="form-group text-center" display: inline-block>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
                         <li class="page-item">
-                            <button class="@(CurrentPage == pageNumber ? "page-link btn btn-dark" : "page-link btn btn-danger")"
-                                    @onclick="@(u => Consultar(pageNumber))">
-                                @(i + 1)
+                            <button class="page-link btn btn-danger"
+                                    @onclick="@(e => NavegateTo("Previous"))" tabindex="-1">
+                                Previous
                             </button>
                         </li>
-                    }
 
-                    <li class="page-item">
-                         <button type="button" class="page-link btn btn-danger" @onclick="@(e => NavegateTo("Next"))" tabindex="-1">Next</button>
-                    </li>
-                </ul>
-            </nav>
+                        @for (int i = 0; i < TotalPages; i++)
+                        {
+                            var pageNumber = i;
+                            <li class="page-item">
+                                <button class="@(CurrentPage == pageNumber ? "page-link btn btn-dark" : "page-link btn btn-danger")"
+                                        @onclick="@(u => Consultar(pageNumber))">
+                                    @(i + 1)
+                                </button>
+                            </li>
+                        }
+
+                        <li class="page-item">
+                            <button type="button" class="page-link btn btn-danger" @onclick="@(e => NavegateTo("Next"))" tabindex="-1">Next</button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
-</div>
+}
+else
+{
+    <LoginControl />
+}
 
 @code {
     [Parameter]
@@ -221,7 +230,7 @@
             UpdateList(CurrentPage);
             ItemsList = ItemsList.OrderBy(x => x.PrecioUnitario).ToList();
         }
-        if(Order == 3)
+        if (Order == 3)
         {
             ItemsList = new List<Productos>();
             UpdateList(CurrentPage);
@@ -244,7 +253,7 @@
         var parametros = new ModalParameters();
         parametros.Add(nameof(item.ProductoId), productoId);
 
-        Modal.Show<Registros.R_Productos>("",parametros);
+        Modal.Show<Registros.R_Productos>("", parametros);
 
 
     }
@@ -263,7 +272,7 @@
 
         List<Productos> listaReorden = new List<Productos>();
 
-        if(ProductosBLL.GetList(p => p.Inventario < 4) != null)
+        if (ProductosBLL.GetList(p => p.Inventario < 4) != null)
         {
             listaReorden = ProductosBLL.GetList(p => p.Inventario < 4);
 

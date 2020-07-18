@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ferreteria_FBF_App.Migrations
 {
-    public partial class Migracioninicial : Migration
+    public partial class Migracion : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -87,6 +87,7 @@ namespace Ferreteria_FBF_App.Migrations
                     Nombre = table.Column<string>(nullable: false),
                     Apellido = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: false),
+                    NivelAcceso = table.Column<string>(nullable: false),
                     Telefono = table.Column<string>(maxLength: 10, nullable: false),
                     Usuario = table.Column<string>(nullable: false),
                     Contraseña = table.Column<string>(maxLength: 50, nullable: false)
@@ -116,26 +117,6 @@ namespace Ferreteria_FBF_App.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ventas", x => x.VentaId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CobroDetalle",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ClienteId = table.Column<int>(nullable: false),
-                    Monto = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CobroDetalle", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CobroDetalle_Clientes_ClienteId",
-                        column: x => x.ClienteId,
-                        principalTable: "Clientes",
-                        principalColumn: "ClienteId",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -171,6 +152,11 @@ namespace Ferreteria_FBF_App.Migrations
                 values: new object[] { 2, "Rodriguez", 2000.0, "00000000000", "Castillo", "Correo.com", 5000.0, "Antonio", "0000000000", 1 });
 
             migrationBuilder.InsertData(
+                table: "Usuarios",
+                columns: new[] { "UsuarioId", "Apellido", "Contraseña", "Email", "NivelAcceso", "Nombre", "Telefono", "Usuario" },
+                values: new object[] { 1, "veras", "YQBkAG0AaQBuADEAMgAzAA==", "martinsito@Ucne.edu.do", "admin", "admin", "8092128159", "admin" });
+
+            migrationBuilder.InsertData(
                 table: "Ventas",
                 columns: new[] { "VentaId", "CantidadProductos", "ClienteId", "Comentario", "Descuentos", "Fecha", "ITBIS", "Tipo", "Total", "TotalGeneral", "UsuarioId" },
                 values: new object[] { 1, 2, 1, null, 0.0, new DateTime(2020, 6, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 18.0, "Credito", 100.0, 200.0, 1 });
@@ -183,12 +169,7 @@ namespace Ferreteria_FBF_App.Migrations
             migrationBuilder.InsertData(
                 table: "Ventas",
                 columns: new[] { "VentaId", "CantidadProductos", "ClienteId", "Comentario", "Descuentos", "Fecha", "ITBIS", "Tipo", "Total", "TotalGeneral", "UsuarioId" },
-                values: new object[] { 3, 2, 2, null, 0.0, new DateTime(2020, 7, 9, 22, 10, 53, 896, DateTimeKind.Local).AddTicks(4634), 18.0, "Credito", 100.0, 200.0, 1 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CobroDetalle_ClienteId",
-                table: "CobroDetalle",
-                column: "ClienteId");
+                values: new object[] { 3, 2, 2, null, 0.0, new DateTime(2020, 7, 17, 17, 38, 26, 820, DateTimeKind.Local).AddTicks(8600), 18.0, "Credito", 100.0, 200.0, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_VentasDetalle_VentaId",
@@ -199,7 +180,7 @@ namespace Ferreteria_FBF_App.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CobroDetalle");
+                name: "Clientes");
 
             migrationBuilder.DropTable(
                 name: "Cobros");
@@ -215,9 +196,6 @@ namespace Ferreteria_FBF_App.Migrations
 
             migrationBuilder.DropTable(
                 name: "VentasDetalle");
-
-            migrationBuilder.DropTable(
-                name: "Clientes");
 
             migrationBuilder.DropTable(
                 name: "Ventas");

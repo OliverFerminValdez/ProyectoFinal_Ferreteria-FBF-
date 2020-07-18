@@ -7,101 +7,125 @@
 @inject IToastService toast
 @inject IJSRuntime js
 @inject NavigationManager nav
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-<EditForm Model="Usuario" OnValidSubmit="Guardar">
-    <DataAnnotationsValidator />
-    <div class="card border-danger">
-        <div class="card-header bg-danger text-lg-center">
-            <h2 style="font-family :'Segoe UI'">Registro de Usuarios</h2>
-        </div>
+@if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated && ComprobarAdministrador())
+{
+    <EditForm Model="Usuario" OnValidSubmit="Guardar">
+        <DataAnnotationsValidator />
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-lg-center">
+                <h2 style="font-family :'Segoe UI'">Registro de Usuarios</h2>
+            </div>
 
-        <div class="card-body">
-            <div class="form">
+            <div class="card-body">
+                <div class="form">
 
-                @*Usuario Id*@
-                <div class="form-row align-items-center">
-                    <div class="col">
-                        <div class="form-group">
-                            <label>Usuario Id</label>
-                            <div class="input-group">
-                                <InputNumber @bind-Value="Usuario.UsuarioId" class="form-control col-3" />
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
-                                        <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
-                                    </button>
+                    @*Usuario Id*@
+                    <div class="form-row align-items-center">
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Usuario Id</label>
+                                <div class="input-group">
+                                    <InputNumber @bind-Value="Usuario.UsuarioId" class="form-control col-3" />
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
+                                            <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                @*Nombre*@
-                <div class="form-group">
-                    <label>Nombre</label>
-                    <InputText @bind-Value="Usuario.Nombre" class="form-control" />
-                    <ValidationMessage For="@(() => Usuario.Nombre)"/>
-                </div>
+                    @*Nombre*@
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <InputText @bind-Value="Usuario.Nombre" class="form-control" />
+                        <ValidationMessage For="@(() => Usuario.Nombre)" />
+                    </div>
 
-                @*Apellido*@
-                <div class="form-group">
-                    <label>Apellido</label>
-                    <InputText @bind-Value="Usuario.Apellido" class="form-control" />
-                    <ValidationMessage For="@(() => Usuario.Apellido)" />
-                </div>
+                    @*Apellido*@
+                    <div class="form-group">
+                        <label>Apellido</label>
+                        <InputText @bind-Value="Usuario.Apellido" class="form-control" />
+                        <ValidationMessage For="@(() => Usuario.Apellido)" />
+                    </div>
 
-                @*Email*@
-                <div class="form-group">
-                    <label class="label">Email</label>
-                    <InputText @bind-Value="Usuario.Email" class="form-control" />
-                    <ValidationMessage For="@(() => Usuario.Email)" />
-                </div>
+                    @*Email*@
+                    <div class="form-group">
+                        <label class="label">Email</label>
+                        <InputText @bind-Value="Usuario.Email" class="form-control" />
+                        <ValidationMessage For="@(() => Usuario.Email)" />
+                    </div>
 
-                @*Telefono*@
-                <div class="form-group">
-                    <label>Telefono</label>
-                    <InputText @bind-Value="Usuario.Telefono" class="form-control" />
-                    <ValidationMessage For="@(() => Usuario.Telefono)" />
-                </div>
+                    @*Telefono*@
+                    <div class="form-group">
+                        <label>Telefono</label>
+                        <InputText @bind-Value="Usuario.Telefono" class="form-control" />
+                        <ValidationMessage For="@(() => Usuario.Telefono)" />
+                    </div>
 
-                @*Usuario*@
-                <div class="form-group">
-                    <label>Usuario</label>
-                    <InputText @bind-Value="Usuario.Usuario" class="form-control" />
-                    <ValidationMessage For="@(() => Usuario.Usuario)" />
-                </div>
+                    @*Nivel acceso*@
+                    <div class="form-group">
+                        <label>Nivel acceso</label>
+                        <InputSelect @bind-Value="Usuario.NivelAcceso" class="form-control">
+                            <option disabled="disabled" selected="selected">Elija una opción</option>
+                            <option value="Empleado">Empleado</option>
+                            <option value="Administrador">Administrador</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => Usuario.NivelAcceso)" />
+                    </div>
 
-                @*Contraseña*@
-            <div class="form-group">
-                <label>Contraseña</label>
-                <InputText @bind-Value="Usuario.Contraseña" class="form-control" />
-                <ValidationMessage For="@(() => Usuario.Contraseña)" />
+                    @*Usuario*@
+                    <div class="form-group">
+                        <label>Usuario</label>
+                        <InputText @bind-Value="Usuario.Usuario" class="form-control" />
+                        <ValidationMessage For="@(() => Usuario.Usuario)" />
+                    </div>
+
+                    @*Contraseña*@
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <InputText @bind-Value="Usuario.Contraseña" class="form-control" />
+                        <ValidationMessage For="@(() => Usuario.Contraseña)" />
+                    </div>
+                </div>
             </div>
+
+            <div class="card-footer text-center" display: inline-block>
+                <div class="form-group">
+
+                    <button type="button" class="btn btn-lg btn-secondary" @onclick="Nuevo">
+                        <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
+                    </button>
+
+                    <button type="submit" class="btn btn-lg btn-info">
+                        <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
+                    </button>
+
+                    <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
+                        <span class="oi oi-circle-x"></span> Eliminar
+                    </button>
+                </div>
             </div>
+
         </div>
-
-        <div class="card-footer text-center" display: inline-block>
-            <div class="form-group">
-
-                <button type="button" class="btn btn-lg btn-secondary" @onclick="Nuevo">
-                    <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
-                </button>
-
-                <button type="submit" class="btn btn-lg btn-info">
-                    <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
-                </button>
-
-                <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
-                    <span class="oi oi-circle-x"></span> Eliminar
-                </button>
-            </div>
-        </div>
-
-    </div>
-</EditForm>
+    </EditForm>
+}
+else
+{
+    @if (!@ComprobarAdministrador())
+    {
+        toast.ShowWarning("Solo los administradores tienen acceso a interactuar con los usuarios");
+    }
+}
 
 @code {
     [Parameter]
     public int UsuarioId { get; set; }
+
+    private Usuarios UsuarioLogeado = new Usuarios();
 
     private Usuarios Usuario = new Usuarios();
 
@@ -111,6 +135,8 @@
     {
         Nuevo();
         Buscar();
+        ObtenerUsuarioLogeado();
+
         if (UsuarioId > 0)
             Buscar(UsuarioId);
     }
@@ -123,10 +149,9 @@
     public void Buscar(int id)
     {
         var encontrado = UsuariosBLL.Buscar(id);
-        if (encontrado!=null)
+        if (encontrado != null)
         {
             this.Usuario = encontrado;
-            Usuario.Contraseña = DesEncriptar();
         }
     }
 
@@ -140,7 +165,6 @@
             if (encontrado != null)
             {
                 this.Usuario = encontrado;
-                Usuario.Contraseña = DesEncriptar();
             }
             else
                 toast.ShowWarning("Producto no encontrada");
@@ -153,7 +177,6 @@
 
         if (Usuario.UsuarioId >= 0)
         {
-            Usuario.Contraseña = Encriptar();
             guardo = UsuariosBLL.Guardar(Usuario);
 
             if (guardo)
@@ -171,35 +194,56 @@
 
     public async void Eliminar()
     {
-        if (await js.InvokeAsync<bool>("ConfirmationPrumpt", "Confirmacion", "¿Esta seguro que desea eliminar este usuario?", "question"))
+        if (!VerificoUsuarioActual())
         {
-            bool eliminar = false;
-
-            eliminar = UsuariosBLL.Eliminar(Usuario.UsuarioId);
-
-            if (eliminar)
+            if (await js.InvokeAsync<bool>("ConfirmationPrumpt", "Confirmacion", "¿Esta seguro que desea eliminar este usuario?", "question"))
             {
-                Nuevo();
-                toast.ShowSuccess("Eliminado correctamente");
+                bool eliminar = false;
+
+                eliminar = UsuariosBLL.Eliminar(Usuario.UsuarioId);
+
+                if (eliminar)
+                {
+                    Nuevo();
+                    toast.ShowSuccess("Eliminado correctamente");
+                }
+                else
+                    toast.ShowError("!No fue posible eliminar!");
             }
-            else
-                toast.ShowError("!No fue posible eliminar!");
+        }
+        else
+        {
+            toast.ShowError("No se puede eliminar este usuario, debido a que esta logeado.");
         }
     }
 
-    public string Encriptar()//Esta función encripta la cadena que se le pasa por parámentro
+    public void ObtenerUsuarioLogeado()
     {
-        string resultado = string.Empty;
-        byte[] encryted = System.Text.Encoding.Unicode.GetBytes(Usuario.Contraseña);
-        resultado = Convert.ToBase64String(encryted);
-        return resultado;
+        Usuarios usuario = UsuariosBLL.Buscar(AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name);
+
+        if (usuario != null)
+        {
+            UsuarioLogeado = usuario;
+        }
     }
 
-    public string DesEncriptar()//Esta función desencripta la cadena que se le pasa por parámentro
+    public bool ComprobarAdministrador()
     {
-        string resultado = string.Empty;
-        byte[] decryted = Convert.FromBase64String(Usuario.Contraseña);
-        resultado = System.Text.Encoding.Unicode.GetString(decryted);
-        return resultado;
+        bool paso = false;
+
+        if (UsuarioLogeado.NivelAcceso.Equals("Administrador"))
+            paso = true;
+
+        return paso;
+    }
+
+    private bool VerificoUsuarioActual()
+    {
+        bool paso = false;
+
+        if (UsuarioLogeado.UsuarioId == Usuario.UsuarioId)
+            paso = true;
+
+        return paso;
     }
 }

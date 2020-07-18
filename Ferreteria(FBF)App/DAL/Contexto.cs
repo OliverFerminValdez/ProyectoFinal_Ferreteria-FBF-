@@ -24,75 +24,25 @@ namespace Ferreteria_FBF_App.DAL
 
         protected override void OnModelCreating(ModelBuilder model)
         {
-            model.Entity<Ventas>().HasData(new Ventas
-            {
-                VentaId = 1,
-                Fecha = Convert.ToDateTime("4-6-2020"),
-                ClienteId = 1,
-                Total = 100,
-                ITBIS = 100 * .18,
-                TotalGeneral = 200,
-                Tipo = "Credito",
-                Descuentos = 0,
+            model.Entity<Usuarios>().HasData(new Usuarios {
                 UsuarioId = 1,
-                CantidadProductos = 2
-            });
+                Nombre = "Soluciones",
+                Apellido = "FB",
+                Usuario = "Admin",
+                Contraseña = Encriptar("123456789"),
+                Email = "FerreteriaFBF@gmail.com",
+                NivelAcceso = "Administrador",
+                Telefono = "8095883505"
+            }); 
+            
+        }
 
-            model.Entity<Ventas>().HasData(new Ventas
-            {
-                VentaId = 2,
-                Fecha = Convert.ToDateTime("25-6-2020"),
-                ClienteId = 1,
-                Total = 100,
-                ITBIS = 100 * .18,
-                TotalGeneral = 200,
-                Tipo = "Credito",
-                Descuentos = 0,
-                UsuarioId = 1,
-                CantidadProductos = 2
-            });
-
-            model.Entity<Ventas>().HasData(new Ventas
-            {
-                VentaId = 3,
-                Fecha = DateTime.Now,
-                ClienteId = 2,
-                Total = 100,
-                ITBIS = 100 * .18,
-                TotalGeneral = 200,
-                Tipo = "Credito",
-                Descuentos = 0,
-                UsuarioId = 1,
-                CantidadProductos = 2
-            });
-
-            model.Entity<Clientes>().HasData(new Clientes
-            {
-                ClienteId = 1,
-                Nombre = "Oliver",
-                Apellido = "Fermin",
-                Cedula = "00000000000",
-                LimiteCredito = 5000,
-                Balance = 2000,
-                Email = "Correo.com",
-                Dirección = "Castillo",
-                Telefono = "0000000000",
-                UsuarioId = 1
-            });
-
-            model.Entity<Clientes>().HasData(new Clientes
-            {
-                ClienteId = 2,
-                Nombre = "Antonio",
-                Apellido = "Rodriguez",
-                Cedula = "00000000000",
-                LimiteCredito = 5000,
-                Balance = 2000,
-                Email = "Correo.com",
-                Dirección = "Castillo",
-                Telefono = "0000000000",
-                UsuarioId = 1
-            });
+        public static string Encriptar(string contraseña)//Esta función encripta la cadena que se le pasa por parámentro
+        {
+            string resultado = string.Empty;
+            byte[] encryted = System.Text.Encoding.Unicode.GetBytes(contraseña);
+            resultado = Convert.ToBase64String(encryted);
+            return resultado;
         }
     }
 }

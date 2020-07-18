@@ -1,118 +1,130 @@
 ﻿@page "/consultausuarios"
 
 @using Models
-@using BLL 
+@using BLL
 @inject IJSRuntime js
 @inject IToastService toast
- 
-<div class="card rounded" style="border-color:#dc3545">
-    <div class="card-header text-lg-center" style="background-color: #dc3545">
-        <h3><strong>Consulta de usuarios</strong></h3>
-    </div>
-    <div class="card-body">
-        <div class="card">
-            <div class="card-header" style="background-color:#CDCBCB">
-                <div class="row">
-                    <div class="input-group col-12">
-                        <div class="form-group col-3">
-                            <label><strong>Filtro: </strong></label>
-                            <select class="form-control" @bind="Filtro">
-                                <option value="0">Eliga un filtro</option>
-                                <option value=1>ID</option>
-                                <option value=2>Nombre</option>
-                                <option value=3>Apellido</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-4">
-                            <label><strong>Criterio: </strong></label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Criterio" @bind="Criterio"/>
-                                <button type="button" class="btn btn-danger input-group-append" @onclick="@(c => Consultar(0))">Consultar</button>
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+
+@if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated && ComprobarAdministrador())
+{
+    <div class="card rounded" style="border-color:#dc3545">
+        <div class="card-header text-lg-center" style="background-color: #dc3545">
+            <h3><strong>Consulta de usuarios</strong></h3>
+        </div>
+        <div class="card-body">
+            <div class="card">
+                <div class="card-header" style="background-color:#CDCBCB">
+                    <div class="row">
+                        <div class="input-group col-12">
+                            <div class="form-group col-3">
+                                <label><strong>Filtro: </strong></label>
+                                <select class="form-control" @bind="Filtro">
+                                    <option value="0">Eliga un filtro</option>
+                                    <option value=1>ID</option>
+                                    <option value=2>Nombre</option>
+                                    <option value=3>Apellido</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-4">
+                                <label><strong>Criterio: </strong></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Criterio" @bind="Criterio" />
+                                    <button type="button" class="btn btn-danger input-group-append" @onclick="@(c => Consultar(0))">Consultar</button>
+                                </div>
+                            </div>
+                            <div class="form-group col-2 col-md-4 ml-auto">
+                                <label><strong>Ordenar por: </strong></label>
+                                <select class="form-control" @bind="Order" @onclick="Ordenar">
+                                    <option value="value">Eliga una opcion</option>
+                                    <option value=1>Nombre</option>
+                                    <option value=2>Apellido</option>
+                                    <option value=3>Usuario</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="form-group col-2 col-md-4 ml-auto">
-                            <label><strong>Ordenar por: </strong></label>
-                            <select class="form-control" @bind="Order" @onclick="Ordenar">
-                                <option value="value">Eliga una opcion</option>
-                                <option value=1>Nombre</option>
-                                <option value=2>Apellido</option>
-                                <option value=3>Usuario</option>
-                            </select>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Apellido</th>
+                                <th scope="col">Usuario</th>
+                                <th scope="col">Email</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ItemsList)
+                            {
+                                <tr>
+                                    <td>@item.Nombre</td>
+                                    <td>@item.Apellido</td>
+                                    <td>@item.Usuario</td>
+                                    <td>@item.Email</td>
+                                    <td><a class="btn btn-dark" href="@($"Usuarios/{item.UsuarioId}")">Editar</a></td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer" style="background-color:#CDCBCB">
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label><strong>Numero de usuarios</strong></label>
+                            <input type="number" class="form-control" @bind="UserNumber" />
+                        </div>
+                        <div class="form-group col-2 col-md-2 ml-auto">
+                            <label><strong>Imprimir </strong></label>
+                            <button type="button" class="btn btn-danger btn-block" @onclick="GenerarPDF"><span class="oi oi-print"></span> Consulta</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Apellido</th>
-                            <th scope="col">Usuario</th>
-                            <th scope="col">Email</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in ItemsList)
-                        {
-                        <tr>
-                            <td>@item.Nombre</td>
-                            <td>@item.Apellido</td>
-                            <td>@item.Usuario</td>
-                            <td>@item.Email</td>
-                            <td><a class="btn btn-dark" href="@($"Usuarios/{item.UsuarioId}")">Editar</a></td>
-                        </tr>
-                        }
 
-                    </tbody>
-                </table>
-            </div>
-            <div class="card-footer" style="background-color:#CDCBCB">
-                <div class="row">
-                    <div class="form-group col-4">
-                        <label><strong>Numero de usuarios</strong></label>
-                        <input type="number" class="form-control" @bind="UserNumber"/>
-                    </div>
-                    <div class="form-group col-2 col-md-2 ml-auto">
-                        <label><strong>Imprimir </strong></label>
-                        <button type="button" class="btn btn-danger btn-block" @onclick="GenerarPDF"><span class="oi oi-print"></span> Consulta</button>
-                    </div>
-                </div>
-            </div>
         </div>
-
-    </div>
-    <div class="card-footer" style="background-color: #dc3545">
-        <div class="form-group text-center" display: inline-block>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                        <button class="page-link btn btn-danger"
-                                @onclick="@(e => NavegateTo("Previous"))" tabindex="-1">
-                            Previous
-                        </button>
-                    </li>
-
-                    @for (int i = 0; i < TotalPages; i++)
-                    {
-                        var pageNumber = i;
+        <div class="card-footer" style="background-color: #dc3545">
+            <div class="form-group text-center" display: inline-block>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
                         <li class="page-item">
-                            <button class="@(CurrentPage == pageNumber ? "page-link btn btn-dark" : "page-link btn btn-danger")"
-                                    @onclick="@(u => Consultar(pageNumber))">
-                                @(i + 1)
+                            <button class="page-link btn btn-danger"
+                                    @onclick="@(e => NavegateTo("Previous"))" tabindex="-1">
+                                Previous
                             </button>
                         </li>
-                    }
 
-                    <li class="page-item">
-                        <button type="button" class="page-link btn btn-danger" @onclick="@(e => NavegateTo("Next"))" tabindex="-1">Next</button>
-                    </li>
-                </ul>
-            </nav>
+                        @for (int i = 0; i < TotalPages; i++)
+                        {
+                            var pageNumber = i;
+                            <li class="page-item">
+                                <button class="@(CurrentPage == pageNumber ? "page-link btn btn-dark" : "page-link btn btn-danger")"
+                                        @onclick="@(u => Consultar(pageNumber))">
+                                    @(i + 1)
+                                </button>
+                            </li>
+                        }
+
+                        <li class="page-item">
+                            <button type="button" class="page-link btn btn-danger" @onclick="@(e => NavegateTo("Next"))" tabindex="-1">Next</button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
-</div>
+}
+else
+{
+    @if (!@ComprobarAdministrador())
+    {
+        toast.ShowWarning("Solo los administradores tienen acceso a interactuar con los usuarios");
+    }
+}
 
 @code {
     public List<Usuarios> ItemsList { get; set; } = new List<Usuarios>();
@@ -128,6 +140,8 @@
     public double TotalDeuda { get; set; }
     public int UserNumber { get; set; }
 
+    public Usuarios UsuarioLogeado = new Usuarios();
+
 
     protected override void OnInitialized()
     {
@@ -138,6 +152,7 @@
         //  CalcularInventario();
 
         base.OnInitialized();
+        ObtenerUsuarioLogeado();
     }
 
     public void Consultar(int omite)
@@ -237,4 +252,25 @@
         else
             toast.ShowWarning("No hay datos para imprimir, debe hacer una consulta");
     }
+
+    public void ObtenerUsuarioLogeado()
+    {
+        Usuarios usuario = UsuariosBLL.Buscar(AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name);
+
+        if (usuario != null)
+        {
+            UsuarioLogeado = usuario;
+        }
+    }
+
+    public bool ComprobarAdministrador()
+    {
+        bool paso = false;
+
+        if (UsuarioLogeado.NivelAcceso.Equals("Administrador"))
+            paso = true;
+
+        return paso;
+    }
+
 }
