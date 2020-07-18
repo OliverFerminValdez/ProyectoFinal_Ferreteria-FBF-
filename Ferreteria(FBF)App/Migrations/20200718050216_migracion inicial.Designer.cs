@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ferreteria_FBF_App.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20200717213827_Migracion")]
-    partial class Migracion
+    [Migration("20200718050216_migracion inicial")]
+    partial class migracioninicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -61,34 +61,6 @@ namespace Ferreteria_FBF_App.Migrations
                     b.HasKey("ClienteId");
 
                     b.ToTable("Clientes");
-
-                    b.HasData(
-                        new
-                        {
-                            ClienteId = 1,
-                            Apellido = "Fermin",
-                            Balance = 2000.0,
-                            Cedula = "00000000000",
-                            Dirección = "Castillo",
-                            Email = "Correo.com",
-                            LimiteCredito = 5000.0,
-                            Nombre = "Oliver",
-                            Telefono = "0000000000",
-                            UsuarioId = 1
-                        },
-                        new
-                        {
-                            ClienteId = 2,
-                            Apellido = "Rodriguez",
-                            Balance = 2000.0,
-                            Cedula = "00000000000",
-                            Dirección = "Castillo",
-                            Email = "Correo.com",
-                            LimiteCredito = 5000.0,
-                            Nombre = "Antonio",
-                            Telefono = "0000000000",
-                            UsuarioId = 1
-                        });
                 });
 
             modelBuilder.Entity("Ferreteria_FBF_App.Models.Cobros", b =>
@@ -213,13 +185,13 @@ namespace Ferreteria_FBF_App.Migrations
                         new
                         {
                             UsuarioId = 1,
-                            Apellido = "veras",
-                            Contraseña = "YQBkAG0AaQBuADEAMgAzAA==",
-                            Email = "martinsito@Ucne.edu.do",
-                            NivelAcceso = "admin",
-                            Nombre = "admin",
-                            Telefono = "8092128159",
-                            Usuario = "admin"
+                            Apellido = "FB",
+                            Contraseña = "123456789",
+                            Email = "FerreteriaFBF@gmail.com",
+                            NivelAcceso = "Administrador",
+                            Nombre = "Soluciones",
+                            Telefono = "8095883505",
+                            Usuario = "Admin"
                         });
                 });
 
@@ -263,47 +235,6 @@ namespace Ferreteria_FBF_App.Migrations
                     b.HasKey("VentaId");
 
                     b.ToTable("Ventas");
-
-                    b.HasData(
-                        new
-                        {
-                            VentaId = 1,
-                            CantidadProductos = 2,
-                            ClienteId = 1,
-                            Descuentos = 0.0,
-                            Fecha = new DateTime(2020, 6, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ITBIS = 18.0,
-                            Tipo = "Credito",
-                            Total = 100.0,
-                            TotalGeneral = 200.0,
-                            UsuarioId = 1
-                        },
-                        new
-                        {
-                            VentaId = 2,
-                            CantidadProductos = 2,
-                            ClienteId = 1,
-                            Descuentos = 0.0,
-                            Fecha = new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ITBIS = 18.0,
-                            Tipo = "Credito",
-                            Total = 100.0,
-                            TotalGeneral = 200.0,
-                            UsuarioId = 1
-                        },
-                        new
-                        {
-                            VentaId = 3,
-                            CantidadProductos = 2,
-                            ClienteId = 2,
-                            Descuentos = 0.0,
-                            Fecha = new DateTime(2020, 7, 17, 17, 38, 26, 820, DateTimeKind.Local).AddTicks(8600),
-                            ITBIS = 18.0,
-                            Tipo = "Credito",
-                            Total = 100.0,
-                            TotalGeneral = 200.0,
-                            UsuarioId = 1
-                        });
                 });
 
             modelBuilder.Entity("Ferreteria_FBF_App.Models.VentasDetalle", b =>

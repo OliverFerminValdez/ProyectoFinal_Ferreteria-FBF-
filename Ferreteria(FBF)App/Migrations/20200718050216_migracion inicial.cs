@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ferreteria_FBF_App.Migrations
 {
-    public partial class Migracion : Migration
+    public partial class migracioninicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -142,34 +142,9 @@ namespace Ferreteria_FBF_App.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Clientes",
-                columns: new[] { "ClienteId", "Apellido", "Balance", "Cedula", "Dirección", "Email", "LimiteCredito", "Nombre", "Telefono", "UsuarioId" },
-                values: new object[] { 1, "Fermin", 2000.0, "00000000000", "Castillo", "Correo.com", 5000.0, "Oliver", "0000000000", 1 });
-
-            migrationBuilder.InsertData(
-                table: "Clientes",
-                columns: new[] { "ClienteId", "Apellido", "Balance", "Cedula", "Dirección", "Email", "LimiteCredito", "Nombre", "Telefono", "UsuarioId" },
-                values: new object[] { 2, "Rodriguez", 2000.0, "00000000000", "Castillo", "Correo.com", 5000.0, "Antonio", "0000000000", 1 });
-
-            migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Apellido", "Contraseña", "Email", "NivelAcceso", "Nombre", "Telefono", "Usuario" },
-                values: new object[] { 1, "veras", "YQBkAG0AaQBuADEAMgAzAA==", "martinsito@Ucne.edu.do", "admin", "admin", "8092128159", "admin" });
-
-            migrationBuilder.InsertData(
-                table: "Ventas",
-                columns: new[] { "VentaId", "CantidadProductos", "ClienteId", "Comentario", "Descuentos", "Fecha", "ITBIS", "Tipo", "Total", "TotalGeneral", "UsuarioId" },
-                values: new object[] { 1, 2, 1, null, 0.0, new DateTime(2020, 6, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 18.0, "Credito", 100.0, 200.0, 1 });
-
-            migrationBuilder.InsertData(
-                table: "Ventas",
-                columns: new[] { "VentaId", "CantidadProductos", "ClienteId", "Comentario", "Descuentos", "Fecha", "ITBIS", "Tipo", "Total", "TotalGeneral", "UsuarioId" },
-                values: new object[] { 2, 2, 1, null, 0.0, new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), 18.0, "Credito", 100.0, 200.0, 1 });
-
-            migrationBuilder.InsertData(
-                table: "Ventas",
-                columns: new[] { "VentaId", "CantidadProductos", "ClienteId", "Comentario", "Descuentos", "Fecha", "ITBIS", "Tipo", "Total", "TotalGeneral", "UsuarioId" },
-                values: new object[] { 3, 2, 2, null, 0.0, new DateTime(2020, 7, 17, 17, 38, 26, 820, DateTimeKind.Local).AddTicks(8600), 18.0, "Credito", 100.0, 200.0, 1 });
+                values: new object[] { 1, "FB", "123456789", "FerreteriaFBF@gmail.com", "Administrador", "Soluciones", "8095883505", "Admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_VentasDetalle_VentaId",
