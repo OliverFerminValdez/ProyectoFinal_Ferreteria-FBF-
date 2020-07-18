@@ -42,28 +42,28 @@
                     @*Nombre*@
                     <div class="form-group">
                         <label>Nombre</label>
-                        <InputText @bind-Value="Usuario.Nombre" class="form-control" />
+                        <InputText @bind-Value="Usuario.Nombre" class="form-control" placeholder="Ej: Oliver"/>
                         <ValidationMessage For="@(() => Usuario.Nombre)" />
                     </div>
 
                     @*Apellido*@
                     <div class="form-group">
                         <label>Apellido</label>
-                        <InputText @bind-Value="Usuario.Apellido" class="form-control" />
+                        <InputText @bind-Value="Usuario.Apellido" class="form-control" placeholder="Ej: Fermin"/>
                         <ValidationMessage For="@(() => Usuario.Apellido)" />
                     </div>
 
                     @*Email*@
                     <div class="form-group">
                         <label class="label">Email</label>
-                        <InputText @bind-Value="Usuario.Email" class="form-control" />
+                        <InputText @bind-Value="Usuario.Email" class="form-control" placeholder="Ej: martinsitobrito@gmail.com"/>
                         <ValidationMessage For="@(() => Usuario.Email)" />
                     </div>
 
                     @*Telefono*@
                     <div class="form-group">
                         <label>Telefono</label>
-                        <InputText @bind-Value="Usuario.Telefono" class="form-control" />
+                        <InputText @bind-Value="Usuario.Telefono" class="form-control" placeholder="Ej: 000-000-0000"/>
                         <ValidationMessage For="@(() => Usuario.Telefono)" />
                     </div>
 
@@ -81,7 +81,7 @@
                     @*Usuario*@
                     <div class="form-group">
                         <label>Usuario</label>
-                        <InputText @bind-Value="Usuario.Usuario" class="form-control" />
+                        <InputText @bind-Value="Usuario.Usuario" class="form-control" placeholder="Ej: Nombre de usuario"/>
                         <ValidationMessage For="@(() => Usuario.Usuario)" />
                     </div>
 
@@ -90,7 +90,7 @@
                     <div class="col form-group">
                         <label>Contraseña</label>
                         <div class="input-group">
-                            <input type="@(View ? "text": "password")" @bind="Usuario.Contraseña" @onfocusin="Aviso" class="form-control" @onfocusout="(a => ContraseñaSegura())" />
+                            <input type="@(View ? "text": "password")" @bind="Usuario.Contraseña" @onfocusin="Aviso" class="form-control" @onfocusout="(a => ContraseñaSegura())" placeholder="Elija una contraseña" />
                             <ValidationMessage For="@(() => Usuario.Contraseña)" />
                             <button type="button" class="input-group-append btn btn-dark btn-block col-1" @onmousedown="Ver" @onmouseup="Ocultar"><span class="oi oi-eye"></span></button>
                         </div>
@@ -98,7 +98,7 @@
                     <div class="col-6 form-group">
                         <label>Confirmar contraseña</label>
                         <div class="input-group">
-                            <input type="password" @bind="ConfirmarContrasena" class="form-control" />
+                            <input type="password" @bind="ConfirmarContrasena" class="form-control" placeholder="Confirmar contraseña"/>
                             <button type="button" class="input-group-append btn btn-danger btn-block col-1" @onclick="(a => PasswordCoincide())"><span class="oi oi-chevron-left"></span></button>
                         </div>
                     </div>
