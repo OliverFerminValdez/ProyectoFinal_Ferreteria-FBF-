@@ -95,7 +95,9 @@ namespace Ferreteria_FBF_App.BLL
             try
             {
                 usuario = contexto.Usuarios.Find(id);
-                usuario.Contraseña = Usuarios.DesEncriptar(usuario.Contraseña);
+
+                if(usuario != null)
+                    usuario.Contraseña = Usuarios.DesEncriptar(usuario.Contraseña);
             }
             catch (Exception)
             {
@@ -161,11 +163,11 @@ namespace Ferreteria_FBF_App.BLL
         {
             bool paso = false;
             Contexto contexto = new Contexto();
-            string ContraseñaEncriptada = Usuarios.Encriptar(contraseña);
+            string Contraseña = Usuarios.Encriptar(contraseña);
 
             try
             {
-                if (contexto.Usuarios.Any(U => U.Usuario == Usuario && U.Contraseña == (ContraseñaEncriptada)))
+                if (contexto.Usuarios.Any(U => U.Usuario == Usuario && U.Contraseña == (Contraseña)))
                     paso = true;
             }
             catch (Exception)

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ferreteria_FBF_App.Migrations
 {
-    public partial class migracioninicial : Migration
+    public partial class Migracion : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -144,7 +144,7 @@ namespace Ferreteria_FBF_App.Migrations
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Apellido", "Contraseña", "Email", "NivelAcceso", "Nombre", "Telefono", "Usuario" },
-                values: new object[] { 1, "FB", "123456789", "FerreteriaFBF@gmail.com", "Administrador", "Soluciones", "8095883505", "Admin" });
+                values: new object[] { 1, "FB", "MQAyADMANAA1ADYANwA4ADkA", "FerreteriaFBF@gmail.com", "Administrador", "Soluciones", "8095883505", "Admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_VentasDetalle_VentaId",

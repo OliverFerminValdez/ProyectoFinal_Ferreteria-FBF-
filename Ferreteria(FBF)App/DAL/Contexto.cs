@@ -29,12 +29,12 @@ namespace Ferreteria_FBF_App.DAL
                 Nombre = "Soluciones",
                 Apellido = "FB",
                 Usuario = "Admin",
-                Contraseña = "123456789",
+                Contraseña = Encriptar("123456789"),
                 Email = "FerreteriaFBF@gmail.com",
                 NivelAcceso = "Administrador",
                 Telefono = "8095883505"
-            }); 
-            
+            });
+
         }
 
         public static string Encriptar(string contraseña)//Esta función encripta la cadena que se le pasa por parámentro

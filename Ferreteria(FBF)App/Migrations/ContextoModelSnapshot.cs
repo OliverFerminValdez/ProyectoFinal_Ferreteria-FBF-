@@ -184,7 +184,7 @@ namespace Ferreteria_FBF_App.Migrations
                         {
                             UsuarioId = 1,
                             Apellido = "FB",
-                            Contraseña = "123456789",
+                            Contraseña = "MQAyADMANAA1ADYANwA4ADkA",
                             Email = "FerreteriaFBF@gmail.com",
                             NivelAcceso = "Administrador",
                             Nombre = "Soluciones",

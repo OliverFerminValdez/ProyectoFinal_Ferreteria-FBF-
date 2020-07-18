@@ -26,7 +26,7 @@
 
                         @*Boton login*@
                         <a class="btn btn-lg btn-danger btn-block text-lg-center" style="font-size:larger"
-                            href="/login?paramUsuario=@encode(Usuario)&paramContraseña=@encode(Contraseña)" target="_top">Login</a>
+                            href="/login?paramUsuario=@encode(Usuario)&paramContraseña=@encode(Contraseña)" >Login</a>
                         <a class="form-label-group text-center" href="#">¿Olvidaste tu contraseña?</a>
 
                     </form>
@@ -45,5 +45,4 @@
     {
         return HttpUtility.UrlEncode(param);
     }
-
 }

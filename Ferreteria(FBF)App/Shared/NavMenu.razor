@@ -5,153 +5,151 @@
 @using Models
 @using BLL
 
-
-<AuthorizeView>
-    <Authorized>
-        <div class="page-wrapper chiller-theme toggled">
-            <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
-                <i class="fas fa-bars"></i>
-            </a>
-            <nav id="sidebar" class="sidebar-wrapper">
-                <div class="sidebar-content">
-                    <div class="sidebar-brand">
-                        <a href="#"><h4 style="color:#dc3545">Ferreteria FBF</h4></a>
-                        <div id="close-sidebar">
-                            <i class="fas fa-times"></i>
-                        </div>
+@if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
+{ 
+    <div class="page-wrapper chiller-theme toggled">
+        <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+            <i class="fas fa-bars"></i>
+        </a>
+        <nav id="sidebar" class="sidebar-wrapper">
+            <div class="sidebar-content">
+                <div class="sidebar-brand">
+                    <a href="#"><h4 style="color:#dc3545">Ferreteria FBF</h4></a>
+                    <div id="close-sidebar">
+                        <i class="fas fa-times"></i>
                     </div>
-                    <div class="sidebar-header">
-                        <div class="user-pic">
-                            <img class="img-responsive img-rounded login-img" src="Resources/Logo.PNG" height="100"
-                                 alt="User picture">
-                        </div>
-
-                        <div class="user-info">
-                            <span class="user-name">@(ObtenerNombreUsuarioLogeado()) <strong> @(ObtenerApellidoUsuarioLogeado()) </strong> </span>
-                            <span class="user-role">@(ObtenerNivelAccesoUsuarioLogeado())</span>
-                            @if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
-                            {
-                                <span class="user-status">
-                                    <i class="fa fa-circle"></i>
-                                    <span>Online</span>
-                                </span>
-                            }
-                            else
-                            {
-                                <span class="user-status">
-                                    <i class="fa fa-circle"></i>
-                                    <span>Offline</span>
-                                </span>
-                            }
-
-                        </div>
-                    </div>
-                    <!-- sidebar-header  -->
-                    <!-- sidebar-search  -->
-                    <div class="sidebar-menu">
-                        <ul>
-                            <li class="header-menu">
-                                <span>Menu</span>
-                            </li>
-                            <li class="sidebar-content">
-                                <a href="#">
-                                    <i class="fa fa-tachometer"></i>
-                                    <span>Inicio</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-dropdown">
-                                <a>
-                                    <i class="fa fa-folder"></i>
-                                    <span>Registros</span>
-                                </a>
-                                <div class="sidebar-submenu">
-                                    <ul>
-                                        <li>
-                                            <a href="Ventas"><span class="oi oi-cart"></span>Ventas</a>
-                                        </li>
-                                        <li>
-                                            <a href="Productos"><span class="oi oi-wrench"></span>Productos</a>
-                                        </li>
-                                        <li>
-                                            <a href="Clientes"><span class="oi oi-credit-card"></span>Clientes</a>
-                                        </li>
-                                        <li>
-                                            <a href="Cobros"><span class="oi oi-dollar"></span>Cobros</a>
-                                        </li>
-                                        <li>
-                                            <a href="Usuarios"><span class="oi oi-people"></span>Usuarios</a>
-                                        </li>
-                                        <li>
-                                            <a href="Marcas"><span class="oi oi-people"></span>Marcas</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li class="sidebar-dropdown">
-                                <a>
-                                    <i class="fa fa-database"></i>
-                                    <span>Consultas</span>
-                                </a>
-                                <div class="sidebar-submenu">
-                                    <ul>
-                                        <li>
-                                            <a href="consultaventas"><span class="oi oi-cart"></span>Ventas</a>
-                                        </li>
-                                        <li>
-                                            <a href="consultaproductos"><span class="oi oi-wrench"></span>Productos</a>
-                                        </li>
-                                        <li>
-                                            <a href="consultaclientes"><span class="oi oi-credit-card"></span>Clientes</a>
-                                        </li>
-                                        <li>
-                                            <a href="consultacobros"><span class="oi oi-dollar"></span>Cobros</a>
-                                        </li>
-                                        <li>
-                                            <a href="consultausuarios"><span class="oi oi-people"></span>Usuarios</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li class="sidebar-dropdown">
-                                <a>
-                                    <i class="fa fa-print"></i>
-                                    <span>Reportes</span>
-                                </a>
-                                <div class="sidebar-submenu">
-                                    <ul>
-                                        <li>
-                                            <a href="#"><span class="oi oi-cart"></span>Ventas del dia</a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><span class="oi oi-dollar"></span>Productos en reorden</a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><span class="oi oi-credit-card"></span>Clientes con deuda</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- sidebar-menu  -->
                 </div>
-                <!-- sidebar-content  -->
-                <div class="sidebar-footer">
-                    <a href="/logout?returnUrl=/">
-                        Cerrar Seccion
-                        <i class="fa fa-sign-out"></i>
-                    </a>
-                </div>
-            </nav>
-            <!-- sidebar-wrapper  -->
-            <!-- page-content" -->
-        </div>
-    </Authorized>
+                <div class="sidebar-header">
+                    <div class="user-pic">
+                        <img class="img-responsive img-rounded login-img" src="Resources/Logo.PNG" height="100"
+                             alt="User picture">
+                    </div>
 
-    <NotAuthorized>
-        <LoginControl />
-    </NotAuthorized>
-</AuthorizeView>
+                    <div class="user-info">
+                        <span class="user-name">@(ObtenerNombreUsuarioLogeado()) <strong> @(ObtenerApellidoUsuarioLogeado()) </strong> </span>
+                        <span class="user-role">@(ObtenerNivelAccesoUsuarioLogeado())</span>
+                        @if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
+                        {
+                            <span class="user-status">
+                                <i class="fa fa-circle"></i>
+                                <span>Online</span>
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="user-status">
+                                <i class="fa fa-circle"></i>
+                                <span>Offline</span>
+                            </span>
+                        }
+
+                    </div>
+                </div>
+                <!-- sidebar-header  -->
+                <!-- sidebar-search  -->
+                <div class="sidebar-menu">
+                    <ul>
+                        <li class="header-menu">
+                            <span>Menu</span>
+                        </li>
+                        <li class="sidebar-content">
+                            <a href="#">
+                                <i class="fa fa-tachometer"></i>
+                                <span>Inicio</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a>
+                                <i class="fa fa-folder"></i>
+                                <span>Registros</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="Ventas"><span class="oi oi-cart"></span>Ventas</a>
+                                    </li>
+                                    <li>
+                                        <a href="Productos"><span class="oi oi-wrench"></span>Productos</a>
+                                    </li>
+                                    <li>
+                                        <a href="Clientes"><span class="oi oi-credit-card"></span>Clientes</a>
+                                    </li>
+                                    <li>
+                                        <a href="Cobros"><span class="oi oi-dollar"></span>Cobros</a>
+                                    </li>
+                                    <li>
+                                        <a href="Usuarios"><span class="oi oi-people"></span>Usuarios</a>
+                                    </li>
+                                    <li>
+                                        <a href="Marcas"><span class="oi oi-people"></span>Marcas</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a>
+                                <i class="fa fa-database"></i>
+                                <span>Consultas</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="consultaventas"><span class="oi oi-cart"></span>Ventas</a>
+                                    </li>
+                                    <li>
+                                        <a href="consultaproductos"><span class="oi oi-wrench"></span>Productos</a>
+                                    </li>
+                                    <li>
+                                        <a href="consultaclientes"><span class="oi oi-credit-card"></span>Clientes</a>
+                                    </li>
+                                    <li>
+                                        <a href="consultacobros"><span class="oi oi-dollar"></span>Cobros</a>
+                                    </li>
+                                    <li>
+                                        <a href="consultausuarios"><span class="oi oi-people"></span>Usuarios</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a>
+                                <i class="fa fa-print"></i>
+                                <span>Reportes</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#"><span class="oi oi-cart"></span>Ventas del dia</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><span class="oi oi-dollar"></span>Productos en reorden</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><span class="oi oi-credit-card"></span>Clientes con deuda</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- sidebar-menu  -->
+            </div>
+            <!-- sidebar-content  -->
+            <div class="sidebar-footer">
+                <a href="/logout?returnUrl=/">
+                    Cerrar Seccion
+                    <i class="fa fa-sign-out"></i>
+                </a>
+            </div>
+        </nav>
+        <!-- sidebar-wrapper  -->
+        <!-- page-content" -->
+    </div>
+}
+else
+{
+    <LoginControl/>
+}
 
 
 @code {
@@ -180,7 +178,7 @@
     {
         Usuarios usuario = UsuariosBLL.Buscar(AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name);
 
-        if(usuario != null)
+        if (usuario != null)
         {
             return usuario.Nombre;
         }

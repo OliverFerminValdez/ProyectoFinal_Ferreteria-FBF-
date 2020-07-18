@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ferreteria_FBF_App.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20200718050216_migracion inicial")]
-    partial class migracioninicial
+    [Migration("20200718070247_Migracion")]
+    partial class Migracion
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -186,7 +186,7 @@ namespace Ferreteria_FBF_App.Migrations
                         {
                             UsuarioId = 1,
                             Apellido = "FB",
-                            Contraseña = "123456789",
+                            Contraseña = "MQAyADMANAA1ADYANwA4ADkA",
                             Email = "FerreteriaFBF@gmail.com",
                             NivelAcceso = "Administrador",
                             Nombre = "Soluciones",
