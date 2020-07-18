@@ -3,6 +3,7 @@
 
 @using Models
 @using BLL
+@using System
 
 @inject IToastService toast
 @inject IJSRuntime js
@@ -88,14 +89,17 @@
                 <div class="form-row">
                     <div class="col form-group">
                         <label>Contraseña</label>
-                        <input type="password" @bind="Usuario.Contraseña" class="form-control" />
-                        <ValidationMessage For="@(() => Usuario.Contraseña)" />
+                        <div class="input-group">
+                            <input type="@(View ? "text": "password")" @bind="Usuario.Contraseña" @onfocusin="Aviso" class="form-control" @onfocusout="(a => ContraseñaSegura())" />
+                            <ValidationMessage For="@(() => Usuario.Contraseña)" />
+                            <button type="button" class="input-group-append btn btn-dark btn-block col-1" @onmousedown="Ver" @onmouseup="Ocultar"><span class="oi oi-eye"></span></button>
+                        </div>
                     </div>
                     <div class="col-6 form-group">
                         <label>Confirmar contraseña</label>
                         <div class="input-group">
                             <input type="password" @bind="ConfirmarContrasena" class="form-control" />
-                            <button type="button" class="input-group-append btn btn-danger btn-block col-1" @onclick="PasswordCoincide"><span class="oi oi-chevron-left"></span></button>
+                            <button type="button" class="input-group-append btn btn-danger btn-block col-1" @onclick="(a => PasswordCoincide())"><span class="oi oi-chevron-left"></span></button>
                         </div>
                     </div>
                 </div>
@@ -137,6 +141,7 @@ else
     private Usuarios UsuarioLogeado = new Usuarios();
     public string ConfirmarContrasena { get; set; }
     public bool Verificado { get; set; } = false;
+    public bool View { get; set; }
 
     private Usuarios Usuario = new Usuarios();
 
@@ -273,5 +278,41 @@ else
             Verificado = true;
             toast.ShowSuccess("Las contraseñas coinciden");
         }
+    }
+    public bool ContraseñaSegura()
+    {
+        bool paso = true;
+
+        if (Usuario.Contraseña.Length < 8)
+        {
+            paso = false;
+        }
+        if (!(Usuario.Contraseña.Contains("-") || Usuario.Contraseña.Contains("_") || Usuario.Contraseña.Contains("[A-Z]") || Usuario.Contraseña.Contains("#") || Usuario.Contraseña.Contains("&")))
+        {
+            paso = false;
+        }
+        if (!(Usuario.Contraseña.Contains(".") || Usuario.Contraseña.Contains("?") || Usuario.Contraseña.Contains("ñ") || Usuario.Contraseña.Contains("6") || Usuario.Contraseña.Contains("/") || Usuario.Contraseña.Contains("/")))
+        {
+            paso = false;
+        }
+
+        if (!paso)
+            toast.ShowWarning("Contraseña no segura");
+        else
+            toast.ShowSuccess("Contraseña segura");
+
+        return paso;
+    }
+    public void Aviso()
+    {
+        toast.ShowInfo("Agregue caracteres especiales (/ . - _ # & [A-Z]...)","Elija una contraseña segura");
+    }
+    public void Ver()
+    {
+        View = true;
+    }
+    public void Ocultar()
+    {
+        View = false;
     }
 }
