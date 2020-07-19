@@ -2,48 +2,61 @@
 
 @using System.Web
 
+@inject IModalService modal
+@inject IJSRuntime js
+@inject IToastService toast
 
-<div class="container">
-    <div class="row">
-        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-            <div class="card card-signin my-5">
-                <div class="card-body">
-                    <img class="img-responsive login-img" src="Resources/Logo.PNG" height="100" />
-                    <br />
-                    <h5 class="card-title text-center">Login</h5>
+<AuthorizeView>
+    <NotAuthorized>
 
-                    <form class="form-signin">
-                        @*Usuario*@
-                        <div class="form-label-group">
-                            <input type="text" @bind="@Usuario" id="inputUsuario" class="form-control" placeholder="Usuario" autofocus />
-                            <label for="inputUsuario">Usuario</label>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                    <div class="card card-signin my-5">
+                        <div class="card-body">
+                            <img class="img-responsive login-img" src="Resources/Logo.PNG" height="100" />
+                            <br />
+                            <h5 class="card-title text-center">Login</h5>
+
+                            <form class="form-signin">
+                                @*Usuario*@
+                                <div class="form-label-group">
+                                    <input type="text" @bind="@Usuario" id="inputUsuario" class="form-control" placeholder="Usuario" autofocus />
+                                    <label for="inputUsuario">Usuario</label>
+                                </div>
+
+                                @*Contraseña*@
+                                <div class="form-label-group">
+                                    <input type="password" id="inputContraseña" @bind="@Contraseña" class="form-control" placeholder="Contraseña" />
+                                    <label for="inputContraseña">Contraseña</label>
+                                </div>
+
+                                @*Boton login*@
+                                <a class="btn btn-lg btn-danger btn-block text-lg-center" style="font-size:larger"
+                                   href="/login?paramUsuario=@encode(Usuario)&paramContraseña=@encode(Contraseña)">Login</a>
+                                <a class="form-label-group text-center" href="/RecuperarContraseña">¿Olvidaste tu contraseña?</a>
+                            </form>
+
                         </div>
-
-                        @*Contraseña*@
-                        <div class="form-label-group">
-                            <input type="password" id="inputContraseña" @bind="@Contraseña" class="form-control" placeholder="Contraseña" />
-                            <label for="inputContraseña">Contraseña</label>
-                        </div>
-
-                        @*Boton login*@
-                        <a class="btn btn-lg btn-danger btn-block text-lg-center" style="font-size:larger"
-                            href="/login?paramUsuario=@encode(Usuario)&paramContraseña=@encode(Contraseña)" >Login</a>
-                        <a class="form-label-group text-center" href="Recuperarcontrasena">¿Olvidaste tu contraseña?</a>
-
-                    </form>
-
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-@code {
-    string Usuario = "";
-    string Contraseña = "";
 
-    private string encode(string param)
-    {
-        return HttpUtility.UrlEncode(param);
-    }
-}
+        @code {
+            string Usuario = "";
+            string Contraseña = "";
+
+            protected override void OnInitialized()
+            {
+                base.OnInitialized();
+            }
+
+            private string encode(string param)
+            {
+                return HttpUtility.UrlEncode(param);
+            }
+        }
+    </NotAuthorized>
+</AuthorizeView>
