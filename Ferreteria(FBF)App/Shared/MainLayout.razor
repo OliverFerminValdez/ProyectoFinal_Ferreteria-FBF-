@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
+@using BLL 
 <AuthorizeView>
     <Authorized>
 
@@ -8,7 +9,6 @@
         </div>
 
         <div class="main">
-
             <div class="content px-4">
                 @Body
             </div>
@@ -18,10 +18,8 @@
                        DisableBackgroundCancel=true
                        Class="modal-dialog-scrollable" />
         <BlazoredToasts />
-
     </Authorized>
     <NotAuthorized>
-        <LoginControl/>
+                <LoginControl></LoginControl>
     </NotAuthorized>
 </AuthorizeView>
-

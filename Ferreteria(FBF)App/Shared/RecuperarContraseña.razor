@@ -1,101 +1,116 @@
-﻿@page "/Recuperarcontrasena"
-
-@using BLL
-@inject IToastService toast
-@inject NavigationManager nav
-<AuthorizeView>
+﻿<AuthorizeView>
     <NotAuthorized>
-        <div class="card">
-            <div class="card-header">
-                <h3>Recuperar Contraseña</h3>
+        @page "/Recuperarcontrasena"
+        @page "/pid/{idcontrasena:int}"
+
+    @using BLL
+    @inject IToastService toast
+    @inject NavigationManager nav
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Recuperar Contraseña</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label>Nombre de usuario: </label>
+                <input type="text" class="form-control" @bind="User" />
             </div>
-            <div class="card-body">
-                <div class="form-group">
-                    <label>Nombre de usuario: </label>
-                    <input type="text" class="form-control" @bind="User" />
-                </div>
-                <div class="form-group">
-                    <label>Email: </label>
-                    <input type="text" class="form-control" @bind="Correo" />
-                </div>
-            </div>
-            <div class="card-footer">
-                <div class="form-group text-center">
-                    <button type="button" class="btn btn-success btn-block" @onclick="EnviarCorreo"><span class="oi oi-cart"></span> Enviar</button>
-                </div>
+            <div class="form-group">
+                <label>Email: </label>
+                <input type="text" class="form-control" @bind="Correo" />
             </div>
         </div>
+        <div class="card-footer">
+            <div class="form-group text-center">
+                <button type="button" class="btn btn-success btn-block" @onclick="EnviarCorreo"><span class="oi oi-cart"></span> Enviar</button>
+            </div>
+        </div>
+    </div>
 
-        @code {
-            public int UsuarioId { get; set; }
-            public string User { get; set; }
-            public string Correo { get; set; }
-            public string NombreUsuario { get; set; }
-            public string CorreoUsuario { get; set; }
+    @code {
+        public int UsuarioId { get; set; }
+        public string User { get; set; }
+        public string Correo { get; set; }
+        public string NombreUsuario { get; set; }
+        public string CorreoUsuario { get; set; }
+        [Parameter]
+        public int IDContrasena { get; set; }
 
-
-            public void EnviarCorreo()
+        protected override void OnInitialized()
+        {
+            if (IDContrasena > 0)
             {
-                VerificarAutenticidad();
+                OlvidarContrasena.ContrasenaOlvidada();
             }
-            public void ConstruirCorreo()
+            else
             {
-                string YourUserName = UsuariosBLL.Buscar(UsuarioId).Usuario;
-                string YourPassWord = UsuariosBLL.Buscar(UsuarioId).Contraseña;
-
-                System.Net.Mail.MailMessage msg = new System.Net.Mail.MailMessage();
-
-                msg.To.Add(Correo);
-                msg.Subject = "Ferreteria FBF Recuperacion de contraseña";
-                msg.SubjectEncoding = System.Text.Encoding.UTF8;
-                msg.Body = $"Su nombre de usuario es: {YourUserName} <br/> Su contraseña es: {YourPassWord}";
-                msg.BodyEncoding = System.Text.Encoding.UTF8;
-                msg.IsBodyHtml = true;
-                msg.From = new System.Net.Mail.MailAddress("ferreteriafbf@gmail.com");
-
-                System.Net.Mail.SmtpClient cliente = new System.Net.Mail.SmtpClient();
-
-                cliente.Credentials = new System.Net.NetworkCredential("ferreteriafbf@gmail.com", "SolucionesFBF020202003");
-
-                cliente.Port = 587;
-                cliente.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
-                cliente.EnableSsl = true;
-
-                cliente.Host = "smtp.gmail.com";
-
-                try
-                {
-                    cliente.Send(msg);
-                }
-                catch (Exception)
-                {
-                    toast.ShowError("El problema puede estar relacionado con la conexion a internet o al servidor", "Mensaje no enviado");
-                }
-
-
-            }
-            public void VerificarAutenticidad()
-            {
-                foreach (var item in UsuariosBLL.GetList(p => true))
-                {
-                    if (item.Usuario == User)
-                    {
-                        UsuarioId = item.UsuarioId;
-                    }
-                }
-
-                NombreUsuario = UsuariosBLL.Buscar(UsuarioId).Usuario;
-                CorreoUsuario = UsuariosBLL.Buscar(UsuarioId).Email;
-
-                if (NombreUsuario == User && CorreoUsuario == Correo)
-                {
-                    ConstruirCorreo();
-                }
-                else
-                {
-                    toast.ShowError("Los datos no coinciden");
-                }
+                OlvidarContrasena.NoOlvidada();
             }
         }
-    </NotAuthorized>
+
+        public void EnviarCorreo()
+        {
+            VerificarAutenticidad();
+        }
+        public void ConstruirCorreo()
+        {
+            string YourUserName = UsuariosBLL.Buscar(UsuarioId).Usuario;
+            string YourPassWord = UsuariosBLL.Buscar(UsuarioId).Contraseña;
+
+            System.Net.Mail.MailMessage msg = new System.Net.Mail.MailMessage();
+
+            msg.To.Add(Correo);
+            msg.Subject = "Ferreteria FBF Recuperacion de contraseña";
+            msg.SubjectEncoding = System.Text.Encoding.UTF8;
+            msg.Body = $"Su nombre de usuario es: {YourUserName} <br/> Su contraseña es: {YourPassWord}";
+            msg.BodyEncoding = System.Text.Encoding.UTF8;
+            msg.IsBodyHtml = true;
+            msg.From = new System.Net.Mail.MailAddress("ferreteriafbf@gmail.com");
+
+            System.Net.Mail.SmtpClient cliente = new System.Net.Mail.SmtpClient();
+
+            cliente.Credentials = new System.Net.NetworkCredential("ferreteriafbf@gmail.com", "SolucionesFBF020202003");
+
+            cliente.Port = 587;
+            cliente.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+            cliente.EnableSsl = true;
+
+            cliente.Host = "smtp.gmail.com";
+
+            try
+            {
+                cliente.Send(msg);
+            }
+            catch (Exception)
+            {
+                toast.ShowError("El problema puede estar relacionado con la conexion a internet o al servidor", "Mensaje no enviado");
+            }
+
+
+        }
+        public void VerificarAutenticidad()
+        {
+            foreach (var item in UsuariosBLL.GetList(p => true))
+            {
+                if (item.Usuario == User)
+                {
+                    UsuarioId = item.UsuarioId;
+                }
+            }
+
+            NombreUsuario = UsuariosBLL.Buscar(UsuarioId).Usuario;
+            CorreoUsuario = UsuariosBLL.Buscar(UsuarioId).Email;
+
+            if (NombreUsuario == User && CorreoUsuario == Correo)
+            {
+                ConstruirCorreo();
+            }
+            else
+            {
+                toast.ShowError("Los datos no coinciden");
+            }
+        }
+    }
+</NotAuthorized>
 </AuthorizeView>
