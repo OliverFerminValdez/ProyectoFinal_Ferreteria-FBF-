@@ -58,13 +58,13 @@
                     @*Cliente Id*@
                     <div class="form-group">
                         <label>Cliente Id</label>
-                        <InputSelectNumber class="form-control" @bind-Value="Venta.ClienteId">
+                        <select class="form-control" @bind="Venta.ClienteId">
                             <option disabled="disabled" selected="selected">Elija una opción</option>
                             @foreach (var auxiliar in LlenarComboCliente())
                             {
                                 <option value="@auxiliar.ClienteId">@auxiliar.Nombre</option>
                             }
-                        </InputSelectNumber>
+                        </select>
                         <ValidationMessage For="@(() => Venta.ClienteId)" />
                     </div>
 
@@ -364,8 +364,6 @@ else
                 else
                     toast.ShowError("No fue posible guardar");
             }
-
-
         }
         else
         {
@@ -547,6 +545,7 @@ else
             return 0;
         }
     }
+
     public int VerificarProducto() //Vefirica el inventario del producto
     {
         var ProductoElegido = ProductosBLL.Buscar(productoSeleccionado);
@@ -623,18 +622,19 @@ else
 
         if (Venta.VentaId == 0)
         {
-
+            Venta.UsuarioId = Usuario.UsuarioId;
             if (Validar())
-                await js.InvokeAsync<Ventas>("SaveAsFile", "Factura.pdf", Convert.ToBase64String(rpt.Report(Venta)));
+                await js.InvokeAsync<Ventas>("SaveAsFile", "Factura.pdf", Convert.ToBase64String(rpt.Report(Venta,Venta.UsuarioId)));
             else
                 toast.ShowWarning("Faltan datos para poder imprimir la factura");
 
             Guardar();
+
         }
         else
         {
             if (Venta != null)
-                await js.InvokeAsync<Ventas>("SaveAsFile", "Factura.pdf", Convert.ToBase64String(rpt.Report(Venta)));
+                await js.InvokeAsync<Ventas>("SaveAsFile", "Factura.pdf", Convert.ToBase64String(rpt.Report(Venta,Venta.UsuarioId)));
             else
                 toast.ShowWarning("No hay datos para imprimir la factura");
         }

@@ -113,7 +113,8 @@ namespace Ferreteria_FBF_App.Migrations
 
                     b.Property<string>("Descripción")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(30);
 
                     b.Property<int>("Inventario")
                         .HasColumnType("INTEGER");
@@ -184,7 +185,7 @@ namespace Ferreteria_FBF_App.Migrations
                         {
                             UsuarioId = 1,
                             Apellido = "FB",
-                            Contraseña = "MQAyADMANAA1ADYANwA4ADkA",
+                            Contraseña = "UwBvAGwAdQBjAGkAbwBuAGUAcwBGAEIAMAAyADAAMgAwADIAMAAwADMA",
                             Email = "FerreteriaFBF@gmail.com",
                             NivelAcceso = "Administrador",
                             Nombre = "Soluciones",

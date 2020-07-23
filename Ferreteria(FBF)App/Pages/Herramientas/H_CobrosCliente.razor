@@ -1,10 +1,12 @@
 ﻿@page "/DetalleCobro/{ClienteId:int}"
 
-
 @using Models
 @using BLL
 
 <div class="card border-dark">
+    <div class="form-group">
+        <a class="btn btn-lg btn-info" href="@($"Clientes/{ClienteId}")">Volver al registro de clientes <span class="oi oi-action-undo"></span></a>
+    </div>
     <div class="card-header-pills text-lg-center">
         <h2 style="font-family:'Segoe UI'" class="col-form-label-lg">Historial de cobros</h2>
     </div>
@@ -26,7 +28,7 @@
                     <td>@auxiliar.CobroId</td>
                     <td>@auxiliar.Fecha</td>
                     <td>@auxiliar.Monto</td>
-                    <td>@auxiliar.Balance</td>
+                    <td>@ClientesBLL.Buscar(auxiliar.ClienteId).Balance</td>
                 </tr>
             }
         </tbody>

@@ -52,6 +52,7 @@ namespace Ferreteria_FBF_App.BLL
                     if (venta.Tipo == "Credito")
                     {
                         cliente.Balance += venta.TotalGeneral;
+                        cliente.LimiteCredito -= venta.TotalGeneral;
                         ClientesBLL.Modificar(cliente);
                     }
                 }
@@ -95,6 +96,7 @@ namespace Ferreteria_FBF_App.BLL
                         if(ventaAnterior.Tipo == "Contado")
                         {
                             cliente.Balance += venta.TotalGeneral;
+                            cliente.LimiteCredito -= venta.TotalGeneral;
                             ClientesBLL.Modificar(cliente);
                         }
                         else
@@ -109,6 +111,7 @@ namespace Ferreteria_FBF_App.BLL
                         if (ventaAnterior.Tipo == "Credito")
                         {
                             cliente.Balance -= ventaAnterior.TotalGeneral;
+                            cliente.LimiteCredito += venta.TotalGeneral;
                             ClientesBLL.Modificar(cliente);
                         }
                         
@@ -120,12 +123,14 @@ namespace Ferreteria_FBF_App.BLL
                     if (ventaAnterior.Tipo == "Credito")
                     {
                         cliente.Balance -= venta.TotalGeneral;
+                        cliente.LimiteCredito += venta.TotalGeneral;
                         ClientesBLL.Modificar(cliente);
                     }
 
                     if (venta.Tipo == "Credito")
                     {
                         NuevoCliente.Balance += venta.TotalGeneral;
+                        cliente.LimiteCredito -= venta.TotalGeneral;
                         ClientesBLL.Modificar(NuevoCliente);
                     }
 
@@ -218,6 +223,7 @@ namespace Ferreteria_FBF_App.BLL
                     if (venta.Tipo == "Credito")
                     {
                         cliente.Balance -= venta.TotalGeneral;
+                        cliente.LimiteCredito += venta.TotalGeneral;
                         ClientesBLL.Modificar(cliente);
                     }
                     

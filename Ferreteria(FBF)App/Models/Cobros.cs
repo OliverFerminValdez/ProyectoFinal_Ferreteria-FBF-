@@ -10,6 +10,7 @@ namespace Ferreteria_FBF_App.Models
     {
         [Key]
         public int CobroId { get; set; }
+        [Required(ErrorMessage = "Es obligatorio elegir un cliente")]
         public int ClienteId { get; set; }
 
         [Required(ErrorMessage = "Es obligatorio introducir la fecha")]

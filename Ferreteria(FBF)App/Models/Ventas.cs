@@ -13,6 +13,7 @@ namespace Ferreteria_FBF_App.Models
         [Key]
         public int VentaId { get; set; }
         [Required(ErrorMessage ="Es obligatorio asignarle la venta a un cliente")]
+        [ForeignKey("ClienteId")]
         public int ClienteId { get; set; }
 
         [Required(ErrorMessage = "Es obligatorio introducir la fecha")]

@@ -35,7 +35,7 @@ namespace Ferreteria_FBF_App.Models
         [StringLength(12, ErrorMessage = "Debe contener 10 digitos", MinimumLength = 10)] 
         public string Telefono { get; set; }
         
-        [Required(ErrorMessage = "Debe introducir el limite de credito")]
+        [Range(1,1000000,ErrorMessage = "Debe introducir el limite de credito")]
         public double LimiteCredito { get; set; }
         public double Balance { get; set; }
 

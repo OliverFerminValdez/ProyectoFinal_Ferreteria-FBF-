@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ferreteria_FBF_App.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20200718070247_Migracion")]
-    partial class Migracion
+    [Migration("20200722152846_Migracion inicial")]
+    partial class Migracioninicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -115,7 +115,8 @@ namespace Ferreteria_FBF_App.Migrations
 
                     b.Property<string>("Descripción")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(30);
 
                     b.Property<int>("Inventario")
                         .HasColumnType("INTEGER");
@@ -186,7 +187,7 @@ namespace Ferreteria_FBF_App.Migrations
                         {
                             UsuarioId = 1,
                             Apellido = "FB",
-                            Contraseña = "MQAyADMANAA1ADYANwA4ADkA",
+                            Contraseña = "UwBvAGwAdQBjAGkAbwBuAGUAcwBGAEIAMAAyADAAMgAwADIAMAAwADMA",
                             Email = "FerreteriaFBF@gmail.com",
                             NivelAcceso = "Administrador",
                             Nombre = "Soluciones",

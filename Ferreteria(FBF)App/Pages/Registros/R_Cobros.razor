@@ -151,7 +151,8 @@ else
 
         if (Cobro.CobroId >= 0)
         {
-            Cobro.UsuarioId = Usuario.UsuarioId;
+            Cobro.UsuarioId = UsuariosBLL.Buscar(AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name).UsuarioId;
+            
 
             guardo = CobrosBLL.Guardar(Cobro);
 

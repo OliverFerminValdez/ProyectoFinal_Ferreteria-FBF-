@@ -28,7 +28,7 @@ namespace Ferreteria_FBF_App.Pages
         {
             lista = Usuarios;
 
-            document = new Document(PageSize.A4, 25f, 25f, 20f, 30f);
+            document = new Document(PageSize.Letter, 25f, 25f, 20f, 30f);
             pdfPTable.WidthPercentage = 100;
             pdfPTable.HorizontalAlignment = Element.ALIGN_LEFT;
             fontStyle = FontFactory.GetFont("Calibri", 8f, 1);

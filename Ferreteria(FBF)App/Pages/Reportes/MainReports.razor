@@ -1,0 +1,107 @@
+﻿@page "/reportes"
+@page "/reportes/{ReportId:int}"
+
+@inject IJSRuntime js
+@inject IToastService toast
+@inject NavigationManager nav
+@using BLL
+@using Models 
+
+    <div class="form-group">
+        <button type="button" class="btn btn-danger btn-block col-4" @onclick="Generar">Descargar PDF <span class="oi oi-document"></span></button>
+    </div>
+@code {
+    [Parameter]
+    public int ReportId { get; set; } = 0;
+    public string Nombre { get; set; }
+
+    protected override void OnInitialized()
+    {
+        nav.NavigateTo($"reportes/{ReportId}");
+        AsignarNombre();
+
+    }
+    public void AsignarNombre()
+    {
+
+        if (ReportId == 1)
+        {
+            Nombre = string.Empty;
+            Nombre = "Reporte de ventas";
+        }
+
+        if (ReportId == 2)
+        {
+            Nombre = string.Empty;
+            Nombre = "Productos en reorden";
+        }
+
+        if (ReportId == 3)
+        {
+            Nombre = string.Empty;
+            Nombre = "Clientes con deuda";
+        }
+
+    }
+
+    public void Generar()
+    {
+        if (ReportId == 1)
+            PDFVentas();
+        if (ReportId == 2)
+            PDFProductos();
+        if (ReportId == 3)
+            PDFClientes();
+    }
+    public async void PDFVentas()
+    {
+        VentasReport rpt = new VentasReport();
+
+        List<Ventas> listaVentas = new List<Ventas>();
+
+        if (VentasBLL.GetList(p => p.Fecha == DateTime.Today) != null)
+        {
+            listaVentas = VentasBLL.GetList(p => p.Fecha == DateTime.Today);
+            await js.InvokeAsync<Ventas>("SaveAsFile", "Ventas del dia.pdf", Convert.ToBase64String(rpt.Report(listaVentas)));
+        }
+        else
+        {
+            toast.ShowWarning("No se ha realizado ninguna venta hoy");
+        }
+
+    }
+    public async void PDFProductos()
+    {
+        ProductosReport rpt = new ProductosReport();
+
+        List<Productos> listaReorden = new List<Productos>();
+
+        if (ProductosBLL.GetList(p => p.Inventario < 4) != null)
+        {
+            listaReorden = ProductosBLL.GetList(p => p.Inventario < 4);
+
+            await js.InvokeAsync<Productos>("SaveAsFile", "Productos En Reorden.pdf", Convert.ToBase64String(rpt.Report(listaReorden)));
+        }
+        else
+        {
+            toast.ShowWarning("No hay productos en reorden");
+        }
+    }
+    public async void PDFClientes()
+    {
+        CustomersReport rpt = new CustomersReport();
+
+        List<Clientes> listaClientes = new List<Clientes>();
+
+        if (ClientesBLL.GetList(p => p.Balance > 0) != null)
+        {
+            listaClientes = ClientesBLL.GetList(p => p.Balance > 0);
+
+            await js.InvokeAsync<Clientes>("SaveAsFile", "Productos En Reorden.pdf", Convert.ToBase64String(rpt.Report(listaClientes)));
+        }
+        else
+        {
+            toast.ShowWarning("No hay clientes con deuda");
+        }
+    }
+}

@@ -20,7 +20,7 @@ namespace Ferreteria_FBF_App.Models
 
         [Required(ErrorMessage = "Es obligatorio introducir el email, para lograr recuperar su contraseña")]
         [DataType(DataType.EmailAddress)]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage ="Introduzca una direccion valida")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Es obligatorio seleccionar el nivel de acceso")]

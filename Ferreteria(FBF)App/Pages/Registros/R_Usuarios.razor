@@ -81,7 +81,7 @@
                     @*Usuario*@
                     <div class="form-group">
                         <label>Usuario</label>
-                        <InputText @bind-Value="Usuario.Usuario" class="form-control" placeholder="Ej: Nombre de usuario"/>
+                        <InputText @bind-Value="Usuario.Usuario" class="form-control" @onfocusout="@(a => ValidarUsuario())" placeholder="Ej: Nombre de usuario"/>
                         <ValidationMessage For="@(() => Usuario.Usuario)" />
                     </div>
 
@@ -150,8 +150,9 @@ else
     protected override void OnInitialized()
     {
         Nuevo();
-        Buscar();
         ObtenerUsuarioLogeado();
+        Usuario.Contraseña = string.Empty;
+        Usuario.Usuario = string.Empty;
 
         if (UsuarioId > 0)
             Buscar(UsuarioId);
@@ -192,8 +193,14 @@ else
         PasswordCoincide();
         bool guardo = false;
 
+        if (!ValidarUsuario())
+        {
+            return;
+        }
+
         if (Usuario.UsuarioId >= 0 && Verificado)
         {
+            Usuario.UsuarioId = UsuarioLogeado.UsuarioId;
             guardo = UsuariosBLL.Guardar(Usuario);
 
             if (guardo)
@@ -314,5 +321,19 @@ else
     public void Ocultar()
     {
         View = false;
+    }
+    public bool ValidarUsuario()
+    {
+        bool paso = true;
+
+        foreach (var item in UsuariosBLL.GetList(p => true))
+        {
+            if(Usuario.Usuario == item.Usuario)
+            {
+                paso = false;
+                toast.ShowError("Este nombre de usuario ya esta en uso");
+            }
+        }
+        return paso;
     }
 }

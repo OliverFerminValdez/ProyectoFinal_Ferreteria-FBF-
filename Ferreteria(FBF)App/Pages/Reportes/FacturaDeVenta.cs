@@ -2,6 +2,7 @@
 using Ferreteria_FBF_App.Models;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Microsoft.AspNetCore.Components.Authorization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,12 +23,14 @@ namespace Ferreteria_FBF_App.Pages
         Font Titulo;
         MemoryStream memoryStream = new MemoryStream();
         Ventas venta = new Ventas();
+        int usuariologueadoId;
         #endregion
 
-        public byte[] Report(Ventas ventas)
+        public byte[] Report(Ventas ventas,int userID)
         {
+            usuariologueadoId = userID;
             venta = ventas;
-            document = new Document(PageSize.A4, 25f, 25f, 20f, 30f);
+            document = new Document(PageSize.Letter, 25f, 25f, 20f, 30f);
             pdfPTable.WidthPercentage = 100;
             pdfPTable.HorizontalAlignment = Element.ALIGN_LEFT;
             fontStyle = FontFactory.GetFont("Calibri", 8f, 1);
@@ -259,7 +262,10 @@ namespace Ferreteria_FBF_App.Pages
             TableRows("", "", fontStyle, "");
             TableRows("", "", fontStyle, "");
 
-            Totales("Despachado por:", "Oliver", "Cliente: ", ClientesBLL.Buscar(venta.ClienteId).Nombre + " " + ClientesBLL.Buscar(venta.ClienteId).Apellido, _fontStyle);/*+ UsuariosBLL.Buscar(venta.UsuarioId).Nombre + " " + UsuariosBLL.Buscar(venta.UsuarioId).Apellido, fontStyle, ""*/
+            if (UsuariosBLL.Buscar(venta.UsuarioId) != null)
+                Totales("Despachado por:", (UsuariosBLL.Buscar(venta.UsuarioId).Nombre + " " + UsuariosBLL.Buscar(venta.UsuarioId).Apellido), "Cliente: ", ClientesBLL.Buscar(venta.ClienteId).Nombre + " " + ClientesBLL.Buscar(venta.ClienteId).Apellido, _fontStyle);/*+ UsuariosBLL.Buscar(venta.UsuarioId).Nombre + " " + UsuariosBLL.Buscar(venta.UsuarioId).Apellido, fontStyle, ""*/
+            else
+                Totales("Despachado por:", (UsuariosBLL.Buscar(usuariologueadoId).Nombre + " " + UsuariosBLL.Buscar(usuariologueadoId).Apellido), "Cliente: ", ClientesBLL.Buscar(venta.ClienteId).Nombre + " " + ClientesBLL.Buscar(venta.ClienteId).Apellido, _fontStyle);
             #endregion
         }
         public void Totales(string num, string col2, string total, string restotal, Font _fontStyle)

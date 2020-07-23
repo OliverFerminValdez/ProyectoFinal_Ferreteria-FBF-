@@ -12,11 +12,12 @@ namespace Ferreteria_FBF_App.Models
         public int ProductoId { get; set; }
 
         [Required(ErrorMessage = "Debe de introducir la descripción")]
+        [StringLength(30, ErrorMessage = "la descripcion debe contener al menos 4 digitos", MinimumLength = 4)]
         public string Descripción { get; set; }
 
         [Required(ErrorMessage = "Es obligatorio introducir la unidad")]
         public string Unidad { get; set; }
-
+        [Required(ErrorMessage = "Debe introducir una marca")]
         public int MarcaId { get; set; }
         
         [Required(ErrorMessage = "Es obligatorio introducir el precio unitario")]

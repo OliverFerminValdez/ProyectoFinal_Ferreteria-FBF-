@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ferreteria_FBF_App.Migrations
 {
-    public partial class Migracion : Migration
+    public partial class Migracioninicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -65,7 +65,7 @@ namespace Ferreteria_FBF_App.Migrations
                 {
                     ProductoId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Descripción = table.Column<string>(nullable: false),
+                    Descripción = table.Column<string>(maxLength: 30, nullable: false),
                     Unidad = table.Column<string>(nullable: false),
                     MarcaId = table.Column<int>(nullable: false),
                     PrecioUnitario = table.Column<double>(nullable: false),
@@ -144,7 +144,7 @@ namespace Ferreteria_FBF_App.Migrations
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Apellido", "Contraseña", "Email", "NivelAcceso", "Nombre", "Telefono", "Usuario" },
-                values: new object[] { 1, "FB", "MQAyADMANAA1ADYANwA4ADkA", "FerreteriaFBF@gmail.com", "Administrador", "Soluciones", "8095883505", "Admin" });
+                values: new object[] { 1, "FB", "UwBvAGwAdQBjAGkAbwBuAGUAcwBGAEIAMAAyADAAMgAwADIAMAAwADMA", "FerreteriaFBF@gmail.com", "Administrador", "Soluciones", "8095883505", "Admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_VentasDetalle_VentaId",
