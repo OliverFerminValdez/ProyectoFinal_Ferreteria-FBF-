@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Ferreteria_FBF_App.Pages
 {
-    public class UserReports
+    public class UsuariosReport
     {
         #region Declaration
         int maxColumn = 6;

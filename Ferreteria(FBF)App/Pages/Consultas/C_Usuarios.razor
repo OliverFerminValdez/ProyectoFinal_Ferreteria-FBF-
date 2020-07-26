@@ -4,6 +4,7 @@
 @using BLL
 @inject IJSRuntime js
 @inject IToastService toast
+@inject IModalService Modal
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 
@@ -139,6 +140,8 @@ else
     public int Order { get; set; }
     public double TotalDeuda { get; set; }
     public int UserNumber { get; set; }
+    byte[] data;
+    string pdfContent = "";
 
     public Usuarios UsuarioLogeado = new Usuarios();
 
@@ -243,12 +246,22 @@ else
         }
 
     }
-    public async void GenerarPDF()
+    public void GenerarPDF()
     {
-        UserReports rpt = new UserReports();
+        UsuariosReport report = new UsuariosReport();
 
         if (Items.Count > 0)
-            await js.InvokeAsync<Usuarios>("SaveAsFile", "Reporte de usuarios.pdf", Convert.ToBase64String(rpt.Report(Items)));
+        {
+            data = report.Report(Items);
+            pdfContent = "data:application/pdf;base64,";
+            pdfContent += System.Convert.ToBase64String(data);
+
+            var parameters = new ModalParameters();
+            parameters.Add("Items", Items);
+
+            Modal.Show<Herramientas.UsuariosViewer>("Reporte de usuarios", parameters);
+        }
+
         else
             toast.ShowWarning("No hay datos para imprimir, debe hacer una consulta");
     }

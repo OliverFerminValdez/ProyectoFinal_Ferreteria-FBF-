@@ -149,6 +149,8 @@ else
     public int Order { get; set; }
     public double TotalInventario { get; set; }
     RepositorioBase<Productos> repo = new RepositorioBase<Productos>();
+    byte[] data;
+    string pdfContent = "";
 
     protected override void OnInitialized()
     {
@@ -257,16 +259,25 @@ else
 
 
     }
-    public async void GeneratePdf()
+    public void GeneratePdf()
     {
         ProductosReport rpt = new ProductosReport();
 
         if (Items.Count > 0)
-            await js.InvokeAsync<Productos>("SaveAsFile", "Reporte de productos.pdf", Convert.ToBase64String(rpt.Report(Items)));
+        {
+            data = rpt.Report(Items);
+            pdfContent = "data:application/pdf;base64,";
+            pdfContent += System.Convert.ToBase64String(data);
+
+            var parameters = new ModalParameters();
+            parameters.Add("Items", Items);
+
+            Modal.Show<Herramientas.ProductosViewer>("Reporte de productos", parameters);
+        }
         else
             toast.ShowWarning("No hay datos para imprimir, debe hacer una consulta");
     }
-    public async void GeneratePdfReorder()
+    public void GeneratePdfReorder()
     {
         ProductosReport rpt = new ProductosReport();
 
@@ -275,8 +286,14 @@ else
         if (ProductosBLL.GetList(p => p.Inventario < 4) != null)
         {
             listaReorden = ProductosBLL.GetList(p => p.Inventario < 4);
+            data = rpt.Report(listaReorden);
+            pdfContent = "data:application/pdf;base64,";
+            pdfContent += System.Convert.ToBase64String(data);
 
-            await js.InvokeAsync<Productos>("SaveAsFile", "Productos En Reorden.pdf", Convert.ToBase64String(rpt.Report(listaReorden)));
+            var parameters = new ModalParameters();
+            parameters.Add("Items", listaReorden);
+
+            Modal.Show<Herramientas.ProductosViewer>("Reporte de productos en reorden", parameters);
         }
         else
         {

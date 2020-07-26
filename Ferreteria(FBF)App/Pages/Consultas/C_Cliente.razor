@@ -148,6 +148,8 @@ else
     public int Order { get; set; }
     public double TotalDeuda { get; set; }
     RepositorioBase<Clientes> repo = new RepositorioBase<Clientes>();
+    byte[] data;
+    string pdfContent = "";
 
     protected override void OnInitialized()
     {
@@ -252,16 +254,27 @@ else
         }
 
     }
-    public async void GeneratePdf()
+    public void GeneratePdf()
     {
-        CustomersReport rpt = new CustomersReport();
+        CustomersReport customers = new CustomersReport();
 
         if (Items.Count > 0)
-            await js.InvokeAsync<Clientes>("SaveAsFile", "Reporte de Clientes.pdf", Convert.ToBase64String(rpt.Report(Items)));
+        {
+            data = customers.Report(Items);
+            pdfContent = "data:application/pdf;base64,";
+            pdfContent += System.Convert.ToBase64String(data);
+
+            var parameters = new ModalParameters();
+            parameters.Add("Items", Items);
+
+            Modal.Show<Herramientas.ClientesViewer>("Reporte de clientes", parameters);
+        }
         else
+        {
             toast.ShowWarning("No hay datos para imprimir, debe hacer una consulta");
+        }
     }
-    public async void GeneratePdfOwe()
+    public void GeneratePdfOwe()
     {
         CustomersReport rpt = new CustomersReport();
 
@@ -270,8 +283,14 @@ else
         if (ClientesBLL.GetList(p => p.Balance > 0) != null)
         {
             listaClientes = ClientesBLL.GetList(p => p.Balance > 0);
+            data = rpt.Report(listaClientes);
+            pdfContent = "data:application/pdf;base64,";
+            pdfContent += System.Convert.ToBase64String(data);
 
-            await js.InvokeAsync<Clientes>("SaveAsFile", "Productos En Reorden.pdf", Convert.ToBase64String(rpt.Report(listaClientes)));
+            var parameters = new ModalParameters();
+            parameters.Add("Items", listaClientes);
+
+            Modal.Show<Herramientas.ClientesViewer>("Reporte de clientes con deuda", parameters);
         }
         else
         {

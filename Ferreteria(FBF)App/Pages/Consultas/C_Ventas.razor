@@ -4,6 +4,7 @@
 @using Models
 @inject IJSRuntime js
 @inject IToastService toast
+@inject IModalService modal
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 @if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
@@ -134,6 +135,7 @@
             </div>
         </div>
     </div>
+
 }
 else
 {
@@ -156,6 +158,8 @@ else
     public int Order { get; set; }
     public double TotalDeuda { get; set; }
     public double TotalVentas { get; set; }
+    byte[] data;
+    string pdfContent = "";
 
     protected override void OnInitialized()
     {
@@ -272,25 +276,46 @@ else
             TotalVentas = Math.Round(TotalVentas, 2);
         }
     }
-    public async void GeneratePdf()
+    public void GeneratePdf()
     {
-        VentasReport rpt = new VentasReport();
+        VentasReport ventas = new VentasReport();
 
-        if (Items.Count > 0)
-            await js.InvokeAsync<Ventas>("SaveAsFile", "Reporte de Ventas.pdf", Convert.ToBase64String(rpt.Report(Items)));
+        if(Items.Count > 0)
+        {
+            data = ventas.Report(Items);
+            pdfContent = "data:application/pdf;base64,";
+            pdfContent += System.Convert.ToBase64String(data);
+
+            var parameters = new ModalParameters();
+            parameters.Add("Items", Items);
+
+            modal.Show<Herramientas.VentasViewer>("Reporte de ventas", parameters);
+        }
         else
+        {
             toast.ShowWarning("No hay datos para imprimir, debe hacer una consulta");
+        }
+
     }
-    public async void GeneratePdfToday()
+
+    public void GeneratePdfToday()
     {
-        VentasReport rpt = new VentasReport();
+        VentasReport ventas = new VentasReport();
 
         List<Ventas> listaVentas = new List<Ventas>();
 
-        if (VentasBLL.GetList(p => p.Fecha == DateTime.Today) != null)
+        if (VentasBLL.GetList(p => p.Fecha == DateTime.Today).Count == 0)
         {
             listaVentas = VentasBLL.GetList(p => p.Fecha == DateTime.Today);
-            await js.InvokeAsync<Ventas>("SaveAsFile", "Ventas del dia.pdf", Convert.ToBase64String(rpt.Report(listaVentas)));
+
+            data = ventas.Report(listaVentas);
+            pdfContent = "data:application/pdf;base64,";
+            pdfContent += System.Convert.ToBase64String(data);
+
+            var parameters = new ModalParameters();
+            parameters.Add("Items", listaVentas);
+
+            modal.Show<Herramientas.VentasViewer>("Reporte de ventas del dia", parameters);
         }
         else
         {

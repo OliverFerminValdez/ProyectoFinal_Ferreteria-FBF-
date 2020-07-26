@@ -3,6 +3,7 @@
 @using Models
 @using BLL
 @inject IJSRuntime js
+@inject IModalService Modal
 @inject IToastService toast
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
@@ -131,7 +132,8 @@ else
     public int Order { get; set; }
     public double TotalDeuda { get; set; }
     public int UserNumber { get; set; }
-
+    byte[] data;
+    string pdfContent = "";
 
     protected override void OnInitialized()
     {
@@ -225,12 +227,22 @@ else
 
 
     }
-    public async void GeneratePDF()
+    public void GeneratePDF()
     {
         CobrosReport rpt = new CobrosReport();
 
         if (Items.Count > 0)
-            await js.InvokeAsync<Cobros>("SaveAsFile", "Reporte de Clientes.pdf", Convert.ToBase64String(rpt.Report(Items)));
+        {
+            data = rpt.Report(Items);
+            pdfContent = "data:application/pdf;base64,";
+            pdfContent += System.Convert.ToBase64String(data);
+
+            var parameters = new ModalParameters();
+            parameters.Add("Items", Items);
+
+            Modal.Show<Herramientas.CobrosViewer>("Reporte de cobros", parameters);
+        }
+
         else
             toast.ShowWarning("No hay datos para imprimir, debe hacer una consulta");
     }

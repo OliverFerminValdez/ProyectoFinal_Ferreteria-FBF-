@@ -1,0 +1,33 @@
+﻿@using Reportes
+@using Models
+
+
+@if (data is { })
+{
+    <object data="@pdfContent" width="1000" height="700" name="_blank"></object>
+}
+
+@code {
+    [Parameter]
+    public List<Usuarios> Items { get; set; }
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    byte[] data;
+    string pdfContent = "";
+
+    protected override void OnInitialized()
+    {
+        UsuariosView();
+    }
+
+    public void UsuariosView()
+    {
+        UsuariosReport Usuarios = new UsuariosReport();
+
+        data = Usuarios.Report(Items);
+        pdfContent = "data:application/pdf;base64,";
+        pdfContent += System.Convert.ToBase64String(data);
+    }
+
+}

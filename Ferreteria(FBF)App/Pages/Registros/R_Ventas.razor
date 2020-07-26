@@ -7,6 +7,7 @@
 @inject IJSRuntime js
 @inject IToastService toast
 @inject NavigationManager nav
+@inject IModalService Modal
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 
@@ -248,6 +249,8 @@ else
 
     private Ventas Venta = new Ventas();
 
+    byte[] data;
+    string pdfContent = "";
     protected override void OnInitialized()
     {
         Nuevo();
@@ -616,7 +619,7 @@ else
         return paso;
     }
 
-    public async void Imprimir()
+    public void Imprimir()
     {
         FacturaDeVenta rpt = new FacturaDeVenta();
 
@@ -624,7 +627,16 @@ else
         {
             Venta.UsuarioId = Usuario.UsuarioId;
             if (Validar())
-                await js.InvokeAsync<Ventas>("SaveAsFile", "Factura.pdf", Convert.ToBase64String(rpt.Report(Venta,Venta.UsuarioId)));
+            {
+                data = rpt.Report(Venta,Usuario.UsuarioId);
+                pdfContent = "data:application/pdf;base64,";
+                pdfContent += System.Convert.ToBase64String(data);
+
+                var parameters = new ModalParameters();
+                parameters.Add("Venta", Venta);
+
+                Modal.Show<Herramientas.FacturasViewer>("Factura de venta", parameters);
+            }
             else
                 toast.ShowWarning("Faltan datos para poder imprimir la factura");
 
@@ -634,7 +646,16 @@ else
         else
         {
             if (Venta != null)
-                await js.InvokeAsync<Ventas>("SaveAsFile", "Factura.pdf", Convert.ToBase64String(rpt.Report(Venta,Venta.UsuarioId)));
+            {
+                data = rpt.Report(Venta,Usuario.UsuarioId);
+                pdfContent = "data:application/pdf;base64,";
+                pdfContent += System.Convert.ToBase64String(data);
+
+                var parameters = new ModalParameters();
+                parameters.Add("Venta", Venta);
+
+                Modal.Show<Herramientas.FacturasViewer>("Factura de venta", parameters);
+            }
             else
                 toast.ShowWarning("No hay datos para imprimir la factura");
         }

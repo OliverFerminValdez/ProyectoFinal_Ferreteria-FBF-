@@ -4,6 +4,10 @@
 
 @using Models
 @using BLL
+@using Pages.Herramientas
+@using Pages
+@inject IModalService Modal
+@inject IToastService toast
 
 @if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
 { 
@@ -119,13 +123,13 @@
                             <div class="sidebar-submenu">
                                 <ul>
                                     <li>
-                                        <a href="@($"reportes/{1}")"><span class="oi oi-cart"></span>Ventas del dia</a>
+                                        <a @onclick="VentasDelDia"><span class="oi oi-cart"></span>Ventas del dia</a>
                                     </li>
                                     <li>
-                                        <a href="@($"reportes/{2}")"><span class="oi oi-dollar"></span>Productos en reorden</a>
+                                        <a @onclick="ProductosEnReorden"><span class="oi oi-dollar"></span>Productos en reorden</a>
                                     </li>
                                     <li>
-                                        <a href="@($"reportes/{3}")"><span class="oi oi-credit-card"></span>Clientes con deuda</a>
+                                        <a @onclick="ClientesConDeuda"><span class="oi oi-credit-card"></span>Clientes con deuda</a>
                                     </li>
                                 </ul>
                             </div>
@@ -158,6 +162,8 @@ else
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     public string NivelAcceso { get; set; }
+    byte[] data;
+    string pdfContent = "";
 
     private void ToggleNavMenu()
     {
@@ -208,6 +214,77 @@ else
         }
 
         return "Error...";
+    }
+    public void VentasDelDia()
+    {
+        VentasReport ventas = new VentasReport();
+
+        List<Ventas> listaVentas = new List<Ventas>();
+
+        if (VentasBLL.GetList(p => p.Fecha == DateTime.Today).Count == 0)
+        {
+            listaVentas = VentasBLL.GetList(p => p.Fecha == DateTime.Today);
+
+            data = ventas.Report(listaVentas);
+            pdfContent = "data:application/pdf;base64,";
+            pdfContent += System.Convert.ToBase64String(data);
+
+            var parameters = new ModalParameters();
+            parameters.Add("Items", listaVentas);
+
+            Modal.Show<VentasViewer>("Reporte de ventas del dia", parameters);
+        }
+        else
+        {
+            toast.ShowWarning("No se ha realizado ninguna venta hoy");
+        }
+
+    }
+    public void ProductosEnReorden()
+    {
+        ProductosReport rpt = new ProductosReport();
+
+        List<Productos> listaReorden = new List<Productos>();
+
+        if (ProductosBLL.GetList(p => p.Inventario < 4) != null)
+        {
+            listaReorden = ProductosBLL.GetList(p => p.Inventario < 4);
+            data = rpt.Report(listaReorden);
+            pdfContent = "data:application/pdf;base64,";
+            pdfContent += System.Convert.ToBase64String(data);
+
+            var parameters = new ModalParameters();
+            parameters.Add("Items", listaReorden);
+
+            Modal.Show<ProductosViewer>("Reporte de productos en reorden", parameters);
+        }
+        else
+        {
+            toast.ShowWarning("No hay productos en reorden");
+        }
+    }
+    public void ClientesConDeuda()
+    {
+        CustomersReport rpt = new CustomersReport();
+
+        List<Clientes> listaClientes = new List<Clientes>();
+
+        if (ClientesBLL.GetList(p => p.Balance > 0) != null)
+        {
+            listaClientes = ClientesBLL.GetList(p => p.Balance > 0);
+            data = rpt.Report(listaClientes);
+            pdfContent = "data:application/pdf;base64,";
+            pdfContent += System.Convert.ToBase64String(data);
+
+            var parameters = new ModalParameters();
+            parameters.Add("Items", listaClientes);
+
+            Modal.Show<ClientesViewer>("Reporte de clientes con deuda", parameters);
+        }
+        else
+        {
+            toast.ShowWarning("No hay clientes con deuda");
+        }
     }
 
 }

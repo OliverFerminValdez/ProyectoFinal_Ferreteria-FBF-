@@ -1,0 +1,34 @@
+﻿@page "/VentasViewer"
+@using Reportes
+@using Models
+
+
+@if (data is { })
+{
+    <object data="@pdfContent" width="1000" height="700" name="_blank"></object>
+}
+
+@code {
+    [Parameter]
+    public List<Ventas> Items { get; set; }
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    byte[] data;
+    string pdfContent = "";
+
+        protected override void OnInitialized()
+        {
+            VentasView();
+        }
+
+        public void VentasView()
+    {
+        VentasReport ventas = new VentasReport();
+
+        data = ventas.Report(Items);
+        pdfContent = "data:application/pdf;base64,";
+        pdfContent += System.Convert.ToBase64String(data);
+    }
+
+}
