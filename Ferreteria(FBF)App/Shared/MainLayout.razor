@@ -1,23 +1,21 @@
 ﻿@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-@using BLL 
-<AuthorizeView>
-    <Authorized>
+@using BLL
 
-        <div class="sidebar">
-            <NavMenu />
-        </div>
+@if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
+{
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+}
 
-        <div class="main">
-            <div class="content px-4">
-                @Body
-            </div>
-        </div>
+<div class="main">
+    <div class="content px-4">
+        @Body
+    </div>
+</div>
 
-        <BlazoredModal DisableBackgroundCancel="true"></BlazoredModal>
-        <BlazoredToasts />
-    </Authorized>
-    <NotAuthorized>
-                <LoginControl/>
-    </NotAuthorized>
-</AuthorizeView>
+<BlazoredModal DisableBackgroundCancel="true"></BlazoredModal>
+<BlazoredToasts />
+

@@ -167,7 +167,7 @@ else
     {
         bool guardo = false;
 
-        if (Producto.ProductoId >= 0)
+        if (Producto.ProductoId >= 0 && Producto.MarcaId > 0)
         {
             Producto.UsuarioId = Usuario.UsuarioId;
 
@@ -183,7 +183,11 @@ else
                 toast.ShowSuccess("Guardado exitosamente");
             }
             else
-                toast.ShowError("No fue posible guardo");
+                toast.ShowError("No fue posible guardar");
+        }
+        else
+        {
+            toast.ShowError("No fue posible guardar");
         }
     }
 

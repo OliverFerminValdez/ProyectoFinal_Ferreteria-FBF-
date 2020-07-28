@@ -1,47 +1,48 @@
 ﻿@page "/"
 
-@inject IJSRuntime js
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
+
+@if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
+{
     <div class="container">
 
         <img class="img-rounded index-img" src="Resources/Logo.PNG"
              height="100">
 
-        <br>
-
         <h1 class="text-lg-center">Ferreteria FBF</h1>
         <br>
         <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
         <section class="contenedor seccion">
             <div class="iconos-nosotros">
-                <div class="icono">
+                <div class="icono-index">
                     <img src="/Resources/Registros.png" />
                     <h3><strong>Registros</strong></h3>
                     <p>Una gran variedad de registros para poder guardar la informacion referente a los clientes, cobros, ventas, usuarios, etc...</p>
                 </div>
 
-                <div class="icono">
+                <div class="icono-index">
                     <img src="/Resources/Consultas.png" />
                     <h3><strong>Consultas</strong></h3>
                     <p>Consultas con todo lo que necesitas como filtros, rango de fechas, metodos para ordenar la informacion que se presenta.</p>
                 </div>
 
-                <div class="icono">
+                <div class="icono-index">
                     <img src="/Resources/Reportes.png" />
                     <h3><strong>Reportes</strong></h3>
                     <p>Contamos con una gran variedad de reportes que muestran la informacion mas relevante de los procesos que se realizan en este sistema.</p>
                 </div>
             </div>
         </section>
-
-        @*<p>Esta es una empresa dedicada a la venta de productos para la contruccion.</p>*@
-
     </div>
-
-
-@code{        
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        await js.InvokeVoidAsync("Notificar","Bienvenido");
-    }
 }
+else
+{
+    <LoginControl />
+}
+

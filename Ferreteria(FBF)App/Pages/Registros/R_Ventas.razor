@@ -346,7 +346,7 @@ else
             CalcularITBIS();
             CalcularTotalGeneral();
 
-            if (VerificarLimiteCredito())
+            if (VerificarLimiteCredito() && Venta.VentaId > 0)
             {
                 Venta.UsuarioId = Usuario.UsuarioId;
 
@@ -367,6 +367,10 @@ else
                 else
                     toast.ShowError("No fue posible guardar");
             }
+            else
+            {
+                toast.ShowError("No fue posible guardar");
+            }
         }
         else
         {
@@ -377,6 +381,7 @@ else
 
     public async void Eliminar()
     {
+
         if (VerificarNivelAcceso())
         {
             if (await js.InvokeAsync<bool>("ConfirmationPrumpt", "Confirmacion", "¿Esta seguro que desea eliminar esta venta?", "question"))

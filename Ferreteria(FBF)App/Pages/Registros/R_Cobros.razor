@@ -151,21 +151,36 @@ else
 
         if (Cobro.CobroId >= 0)
         {
-            Cobro.UsuarioId = UsuariosBLL.Buscar(AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name).UsuarioId;
-            
-
-            guardo = CobrosBLL.Guardar(Cobro);
-
-            if (guardo)
+            if(Cobro.ClienteId > 0)
             {
-                if (CobroId > 0)
-                    nav.NavigateTo("consultacobros", true);
+                if(Cobro.Monto > 0 && Cobro.Monto <= BalanceCobro)
+                {
+                    Cobro.UsuarioId = UsuariosBLL.Buscar(AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name).UsuarioId;
 
-                Nuevo();
-                toast.ShowSuccess("Guardado exitosamente");
+
+                    guardo = CobrosBLL.Guardar(Cobro);
+
+                    if (guardo)
+                    {
+                        if (CobroId > 0)
+                            nav.NavigateTo("consultacobros", true);
+
+                        Nuevo();
+                        toast.ShowSuccess("Guardado exitosamente");
+                    }
+                    else
+                        toast.ShowError("No fue posible guardo");
+                }
+                else
+                {
+                    toast.ShowWarning("No puede cobrar mas de lo que el cliente debe");
+                }
             }
             else
-                toast.ShowError("No fue posible guardo");
+            {
+                toast.ShowWarning("Debe de seleccionar el cliente");
+            }
+
         }
     }
 
@@ -218,8 +233,13 @@ else
 
     public void CalcularBalance()
     {
-        BalanceCobro = ClientesBLL.Buscar(Cobro.ClienteId).Balance;
-        BalanceCobro -= Cobro.Monto;
+        Clientes cliente = ClientesBLL.Buscar(Cobro.ClienteId);
+
+        if(cliente != null)
+        {
+            BalanceCobro = cliente.Balance;
+            BalanceCobro -= Cobro.Monto;
+        }
     }
 
 

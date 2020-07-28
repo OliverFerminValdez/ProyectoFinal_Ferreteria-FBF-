@@ -216,10 +216,11 @@ namespace Ferreteria_FBF_App.BLL
             {   
                 var venta = contexto.Ventas.Find(id);
 
-                Clientes cliente = ClientesBLL.Buscar(venta.ClienteId);
 
                 if (venta != null) //Afecta el balance del cliente
                 {
+                    Clientes cliente = ClientesBLL.Buscar(venta.ClienteId);
+
                     if (venta.Tipo == "Credito")
                     {
                         cliente.Balance -= venta.TotalGeneral;

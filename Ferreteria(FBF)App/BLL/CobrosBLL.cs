@@ -135,12 +135,12 @@ namespace Ferreteria_FBF_App.BLL
             bool paso = false;
             Contexto contexto = new Contexto();
             Cobros cobro = CobrosBLL.Buscar(id);
-            Clientes cliente = ClientesBLL.Buscar(cobro.ClienteId);
 
             try
             {
                 if (cobro != null)
                 {
+                    Clientes cliente = ClientesBLL.Buscar(cobro.ClienteId);
                     cliente.Balance += cobro.Monto;
                     ClientesBLL.Modificar(cliente);
                 }
