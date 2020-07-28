@@ -85,7 +85,7 @@
                                         <a href="Usuarios"><span class="oi oi-people"></span>Usuarios</a>
                                     </li>
                                     <li>
-                                        <a href="Marcas"><span class="oi oi-people"></span>Marcas</a>
+                                        <a href="Marcas"><span class="oi oi-tags"></span>Marcas</a>
                                     </li>
                                 </ul>
                             </div>
@@ -221,7 +221,7 @@ else
 
         List<Ventas> listaVentas = new List<Ventas>();
 
-        if (VentasBLL.GetList(p => p.Fecha == DateTime.Today).Count == 0)
+        if (VentasBLL.GetList(p => p.Fecha == DateTime.Today).Count != 0)
         {
             listaVentas = VentasBLL.GetList(p => p.Fecha == DateTime.Today);
 
@@ -246,7 +246,7 @@ else
 
         List<Productos> listaReorden = new List<Productos>();
 
-        if (ProductosBLL.GetList(p => p.Inventario < 4) != null)
+        if (ProductosBLL.GetList(p => p.Inventario < 4).Count != 0)
         {
             listaReorden = ProductosBLL.GetList(p => p.Inventario < 4);
             data = rpt.Report(listaReorden);
@@ -269,7 +269,7 @@ else
 
         List<Clientes> listaClientes = new List<Clientes>();
 
-        if (ClientesBLL.GetList(p => p.Balance > 0) != null)
+        if (ClientesBLL.GetList(p => p.Balance > 0).Count != 0)
         {
             listaClientes = ClientesBLL.GetList(p => p.Balance > 0);
             data = rpt.Report(listaClientes);

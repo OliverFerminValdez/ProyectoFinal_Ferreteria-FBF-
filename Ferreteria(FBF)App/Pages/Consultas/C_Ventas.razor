@@ -42,7 +42,7 @@
                             </div>
                             <div class="form-group col-2 col-md-2 ml-auto">
                                 <label><strong>Ordenar por: </strong></label>
-                                <select class="form-control" @bind="Order" @onclick="Ordenar">
+                                <select class="form-control" @bind="Order" @onclick="Ordenar" disabled="@(Items.Count>0 ? false : true)">
                                     <option value=0>Eliga una opcion</option>
                                     <option value=1>Total general</option>
                                     <option value=2>Credito</option>
@@ -90,7 +90,7 @@
                     <div class="row">
                         <div class="form-group col-4 mr-auto">
                             <label><strong>Total de ventas consultadas</strong></label>
-                            <input type="number" class="form-control" @bind="TotalVentas" />
+                            <input type="number" class="form-control" @bind="TotalVentas" readonly/>
                         </div>
                         <div class="form-group col-2 col-md-2 ml-md-auto">
                             <label><strong>Reporte </strong></label>
@@ -304,7 +304,7 @@ else
 
         List<Ventas> listaVentas = new List<Ventas>();
 
-        if (VentasBLL.GetList(p => p.Fecha == DateTime.Today).Count == 0)
+        if (VentasBLL.GetList(p => p.Fecha == DateTime.Today).Count != 0)
         {
             listaVentas = VentasBLL.GetList(p => p.Fecha == DateTime.Today);
 

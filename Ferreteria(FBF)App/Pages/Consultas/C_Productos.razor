@@ -283,7 +283,7 @@ else
 
         List<Productos> listaReorden = new List<Productos>();
 
-        if (ProductosBLL.GetList(p => p.Inventario < 4) != null)
+        if (ProductosBLL.GetList(p => p.Inventario < 4).Count != 0)
         {
             listaReorden = ProductosBLL.GetList(p => p.Inventario < 4);
             data = rpt.Report(listaReorden);

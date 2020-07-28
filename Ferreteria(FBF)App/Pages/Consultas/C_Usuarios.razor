@@ -37,7 +37,7 @@
                             </div>
                             <div class="form-group col-2 col-md-4 ml-auto">
                                 <label><strong>Ordenar por: </strong></label>
-                                <select class="form-control" @bind="Order" @onclick="Ordenar">
+                                <select class="form-control" @bind="Order" @onclick="Ordenar" disabled="@(Items.Count>0 ? false : true)">
                                     <option value="value">Eliga una opcion</option>
                                     <option value=1>Nombre</option>
                                     <option value=2>Apellido</option>

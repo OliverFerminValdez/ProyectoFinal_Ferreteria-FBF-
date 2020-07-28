@@ -57,7 +57,7 @@
 
         System.Net.Mail.SmtpClient cliente = new System.Net.Mail.SmtpClient();
 
-        cliente.Credentials = new System.Net.NetworkCredential("ferreteriafbf@gmail.com", "SolucionesFBF020202003");
+        cliente.Credentials = new System.Net.NetworkCredential("ferreteriafbf@gmail.com","SolucionesFBF020202003");
 
         cliente.Port = 587;
         cliente.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
@@ -68,12 +68,12 @@
         try
         {
             cliente.Send(msg);
+            toast.ShowSuccess("Se le ha enviado un correo electronico con sus credenciales");
         }
         catch (Exception)
         {
             toast.ShowError("El problema puede estar relacionado con la conexion a internet o al servidor", "Mensaje no enviado");
         }
-
 
     }
 
