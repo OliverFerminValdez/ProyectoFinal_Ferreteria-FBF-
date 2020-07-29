@@ -533,7 +533,7 @@ else
 
         foreach (var item in Venta.VentasDetalle)
         {
-            Venta.ITBIS += Math.Round(((item.Precio * item.Cantidad) * 0.18));
+            Venta.ITBIS += Math.Round(((item.Precio * item.Cantidad) * 0.18),2);
         }
     }
 
