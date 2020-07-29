@@ -148,10 +148,12 @@ else
 
     protected override void OnInitialized()
     {
-        Nuevo();
-        ObtenerUsuarioLogeado();
         Usuario.Contraseña = string.Empty;
         Usuario.Usuario = string.Empty;
+
+        ObtenerUsuarioLogeado();
+
+        Nuevo();
 
         if (UsuarioId > 0)
             Buscar(UsuarioId);
