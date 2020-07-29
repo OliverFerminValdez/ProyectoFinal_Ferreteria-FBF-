@@ -232,8 +232,9 @@ else
 
                 if (eliminar)
                 {
-                    Nuevo();
                     toast.ShowSuccess("Eliminado correctamente");
+                    await Task.Delay(2000);
+                    nav.NavigateTo("usuarios", true);
                 }
                 else
                     toast.ShowError("!No fue posible eliminar!");

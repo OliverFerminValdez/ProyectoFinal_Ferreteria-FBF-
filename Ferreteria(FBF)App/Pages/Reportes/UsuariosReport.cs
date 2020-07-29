@@ -176,7 +176,7 @@ namespace Ferreteria_FBF_App.Pages
             pdfCell.BackgroundColor = BaseColor.LightGray;
             pdfPTable.AddCell(pdfCell);
 
-            pdfCell = new PdfPCell(new Phrase("Usuarios", fontStyle));
+            pdfCell = new PdfPCell(new Phrase("Usuario", fontStyle));
             pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
             pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
             pdfCell.BackgroundColor = BaseColor.LightGray;

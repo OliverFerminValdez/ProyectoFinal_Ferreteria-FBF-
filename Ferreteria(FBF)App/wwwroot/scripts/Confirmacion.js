@@ -8,7 +8,7 @@
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
+            confirmButtonText: 'Si, eliminar!',
             allowOutsideClick: false
         }).then((result) => {
             if (result.value) {
@@ -20,3 +20,6 @@
     });
 }
 
+function result() {
+    return confirm("Esta seguro que desea eliminar?");
+}

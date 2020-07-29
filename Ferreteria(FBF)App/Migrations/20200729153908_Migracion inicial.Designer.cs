@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ferreteria_FBF_App.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20200728205059_Migracion")]
-    partial class Migracion
+    [Migration("20200729153908_Migracion inicial")]
+    partial class Migracioninicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,7 +38,8 @@ namespace Ferreteria_FBF_App.Migrations
 
                     b.Property<string>("Dirección")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(30);
 
                     b.Property<string>("Email")
                         .IsRequired()

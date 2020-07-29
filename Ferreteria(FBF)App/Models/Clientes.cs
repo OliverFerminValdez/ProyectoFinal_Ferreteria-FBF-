@@ -28,7 +28,7 @@ namespace Ferreteria_FBF_App.Models
         [EmailAddress(ErrorMessage ="Introduzca una direccion valida")]
         public string Email { get; set; }
 
-        [StringLength(10, ErrorMessage = "Debe contener 10 digitos", MinimumLength = 10)]
+        [StringLength(30,ErrorMessage = "Debe contener 10 digitos", MinimumLength = 10)]
         [Required(ErrorMessage = "Es obligatorio introducir la direccion")]
         public string Dirección { get; set; }
 

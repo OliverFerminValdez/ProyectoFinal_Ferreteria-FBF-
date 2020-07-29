@@ -36,7 +36,8 @@ namespace Ferreteria_FBF_App.Migrations
 
                     b.Property<string>("Dirección")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(30);
 
                     b.Property<string>("Email")
                         .IsRequired()

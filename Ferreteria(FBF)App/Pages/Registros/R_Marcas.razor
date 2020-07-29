@@ -5,6 +5,7 @@
 @using Models
 @inject IToastService toast
 @inject IJSRuntime js
+@inject NavigationManager nav 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 
@@ -130,7 +131,7 @@ else
     {
         if (VerificarNivelAcceso())
         {
-            if (await js.InvokeAsync<bool>("ConfirmationPrumpt", "Confirmacion", "¿Esta seguro que desea eliminar esta marca?", "question"))
+            if (await js.InvokeAsync<bool>("ConfirmationPrumpt","Confirmacion","Esta seguro que desea eliminar esta marca?","question"))
             {
                 bool eliminar = false;
 
@@ -138,11 +139,15 @@ else
 
                 if (eliminar)
                 {
-                    Nuevo();
                     toast.ShowSuccess("Eliminado correctamente");
+                    await Task.Delay(2000);
+                    nav.NavigateTo("Marcas", true);
                 }
                 else
+                {
                     toast.ShowError("No fue posible eliminar la marca");
+
+                }
             }
         }
         else
@@ -150,7 +155,6 @@ else
             toast.ShowError("No puedes eliminar marcas. !Solo los administradores pueden eliminar!");
         }
     }
-
     public void ObtenerUsuarioLogeado()
     {
         Usuarios usuario = UsuariosBLL.Buscar(AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name);

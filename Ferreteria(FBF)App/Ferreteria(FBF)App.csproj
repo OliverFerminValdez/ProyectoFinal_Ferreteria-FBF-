@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200722152846_Migracion inicial.cs" />
-    <Compile Remove="Migrations\20200722152846_Migracion inicial.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Blazored.Modal" Version="4.1.0" />
     <PackageReference Include="Blazored.Toast" Version="3.1.2" />
     <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.6.7" />

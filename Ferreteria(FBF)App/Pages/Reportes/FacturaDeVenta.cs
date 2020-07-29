@@ -255,7 +255,7 @@ namespace Ferreteria_FBF_App.Pages
             TableRows("", "", fontStyle, "");
             TableRows("", "", fontStyle, "");
             TableRows("", "", fontStyle, "");
-            Totales("Total: ", venta.Total.ToString(), "Total Generales: ", venta.TotalGeneral.ToString(), _fontStyle);
+            Totales("Total: ", venta.Total.ToString(), "Total General: ", venta.TotalGeneral.ToString(), _fontStyle);
             Totales("ITBIS: ", venta.ITBIS.ToString(), "", "", _fontStyle);
             Totales("Descuentos: ", venta.Descuentos.ToString(), "", "", _fontStyle);
 

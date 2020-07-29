@@ -247,10 +247,8 @@ else
 
     private Usuarios Usuario = new Usuarios();
 
-    private Ventas Venta = new Ventas();
+    private Ventas Venta;
 
-    byte[] data;
-    string pdfContent = "";
     protected override void OnInitialized()
     {
         Nuevo();
@@ -346,7 +344,7 @@ else
             CalcularITBIS();
             CalcularTotalGeneral();
 
-            if (VerificarLimiteCredito() && Venta.VentaId > 0)
+            if (VerificarLimiteCredito() && Venta.VentaId >= 0)
             {
                 Venta.UsuarioId = Usuario.UsuarioId;
 
@@ -391,12 +389,14 @@ else
 
                 if (elimino)
                 {
-                    Nuevo();
                     toast.ShowSuccess("Eliminada correctamente");
+                    await Task.Delay(2000);
+                    nav.NavigateTo("ventas", true);
                 }
                 else
                     toast.ShowError("No fue posible eliminar");
             }
+            nav.NavigateTo("ventas", true);
         }
         else
         {
@@ -533,7 +533,7 @@ else
 
         foreach (var item in Venta.VentasDetalle)
         {
-            Venta.ITBIS += ((item.Precio * item.Cantidad) * 0.18);
+            Venta.ITBIS += Math.Round(((item.Precio * item.Cantidad) * 0.18));
         }
     }
 
@@ -633,33 +633,26 @@ else
             Venta.UsuarioId = Usuario.UsuarioId;
             if (Validar())
             {
-                data = rpt.Report(Venta,Usuario.UsuarioId);
-                pdfContent = "data:application/pdf;base64,";
-                pdfContent += System.Convert.ToBase64String(data);
-
                 var parameters = new ModalParameters();
                 parameters.Add("Venta", Venta);
 
                 Modal.Show<Herramientas.FacturasViewer>("Factura de venta", parameters);
+                Guardar();
             }
             else
                 toast.ShowWarning("Faltan datos para poder imprimir la factura");
-
-            Guardar();
 
         }
         else
         {
             if (Venta != null)
             {
-                data = rpt.Report(Venta,Usuario.UsuarioId);
-                pdfContent = "data:application/pdf;base64,";
-                pdfContent += System.Convert.ToBase64String(data);
-
                 var parameters = new ModalParameters();
                 parameters.Add("Venta", Venta);
+                parameters.Add("UsuarioId", Usuario.UsuarioId);
 
                 Modal.Show<Herramientas.FacturasViewer>("Factura de venta", parameters);
+                Guardar();
             }
             else
                 toast.ShowWarning("No hay datos para imprimir la factura");
