@@ -159,8 +159,6 @@ else
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     public string NivelAcceso { get; set; }
-    byte[] data;
-    string pdfContent = "";
 
     private void ToggleNavMenu()
     {
@@ -222,10 +220,6 @@ else
         {
             listaVentas = VentasBLL.GetList(p => p.Fecha == DateTime.Today);
 
-            data = ventas.Report(listaVentas);
-            pdfContent = "data:application/pdf;base64,";
-            pdfContent += System.Convert.ToBase64String(data);
-
             var parameters = new ModalParameters();
             parameters.Add("Items", listaVentas);
 
@@ -246,9 +240,6 @@ else
         if (ProductosBLL.GetList(p => p.Inventario < 4).Count != 0)
         {
             listaReorden = ProductosBLL.GetList(p => p.Inventario < 4);
-            data = rpt.Report(listaReorden);
-            pdfContent = "data:application/pdf;base64,";
-            pdfContent += System.Convert.ToBase64String(data);
 
             var parameters = new ModalParameters();
             parameters.Add("Items", listaReorden);
@@ -269,9 +260,6 @@ else
         if (ClientesBLL.GetList(p => p.Balance > 0).Count != 0)
         {
             listaClientes = ClientesBLL.GetList(p => p.Balance > 0);
-            data = rpt.Report(listaClientes);
-            pdfContent = "data:application/pdf;base64,";
-            pdfContent += System.Convert.ToBase64String(data);
 
             var parameters = new ModalParameters();
             parameters.Add("Items", listaClientes);

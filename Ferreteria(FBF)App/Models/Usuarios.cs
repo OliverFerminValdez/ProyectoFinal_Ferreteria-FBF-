@@ -34,6 +34,7 @@ namespace Ferreteria_FBF_App.Models
         [Required(ErrorMessage = "Es obligatorio introducir el usuario")]
         public string Usuario { get; set; }
 
+        [RegularExpression("({(?=.*[a - z])(?=.*[A - Z]).{8,}}|{(?=.*[A - Z])(?!.*\\s).{8,}})",ErrorMessage ="Elija una contraseña segura")]
         [Required(ErrorMessage = "Es obligatorio introducir la contraseña")]
         [StringLength(50, ErrorMessage = "Debe contener minimo 4 digitos", MinimumLength = 4)]
         public string Contraseña { get; set; }

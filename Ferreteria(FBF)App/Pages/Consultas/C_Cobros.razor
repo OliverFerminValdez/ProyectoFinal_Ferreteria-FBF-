@@ -132,8 +132,6 @@ else
     public int Order { get; set; }
     public double TotalDeuda { get; set; }
     public int UserNumber { get; set; }
-    byte[] data;
-    string pdfContent = "";
 
     protected override void OnInitialized()
     {
@@ -233,10 +231,6 @@ else
 
         if (Items.Count > 0)
         {
-            data = rpt.Report(Items);
-            pdfContent = "data:application/pdf;base64,";
-            pdfContent += System.Convert.ToBase64String(data);
-
             var parameters = new ModalParameters();
             parameters.Add("Items", Items);
 

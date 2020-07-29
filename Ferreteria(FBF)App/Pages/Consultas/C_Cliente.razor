@@ -147,8 +147,6 @@ else
     public int Filtro { get; set; }
     public int Order { get; set; }
     public double TotalDeuda { get; set; }
-    byte[] data;
-    string pdfContent = "";
 
     protected override void OnInitialized()
     {
@@ -259,10 +257,6 @@ else
 
         if (Items.Count > 0)
         {
-            data = customers.Report(Items);
-            pdfContent = "data:application/pdf;base64,";
-            pdfContent += System.Convert.ToBase64String(data);
-
             var parameters = new ModalParameters();
             parameters.Add("Items", Items);
 
@@ -282,9 +276,6 @@ else
         if (ClientesBLL.GetList(p => p.Balance > 0).Count !=0)
         {
             listaClientes = ClientesBLL.GetList(p => p.Balance > 0);
-            data = rpt.Report(listaClientes);
-            pdfContent = "data:application/pdf;base64,";
-            pdfContent += System.Convert.ToBase64String(data);
 
             var parameters = new ModalParameters();
             parameters.Add("Items", listaClientes);

@@ -90,7 +90,7 @@
                     <div class="col form-group">
                         <label>Contraseña</label>
                         <div class="input-group">
-                            <input type="@(View ? "text": "password")" @bind="Usuario.Contraseña" @onfocusin="Aviso" class="form-control" @onfocusout="(a => ContraseñaSegura())" placeholder="Elija una contraseña" />
+                            <input type="@(View ? "text": "password")" @bind="Usuario.Contraseña"  class="form-control" placeholder="Elija una contraseña" />
                             <ValidationMessage For="@(() => Usuario.Contraseña)" />
                             <button type="button" class="input-group-append btn btn-dark btn-block col-1" @onmousedown="Ver" @onmouseup="Ocultar"><span class="oi oi-eye"></span></button>
                         </div>
@@ -286,34 +286,7 @@ else
             toast.ShowSuccess("Las contraseñas coinciden");
         }
     }
-    public bool ContraseñaSegura()
-    {
-        bool paso = true;
 
-        if (Usuario.Contraseña.Length < 8)
-        {
-            paso = false;
-        }
-        if (!(Usuario.Contraseña.Contains("-") || Usuario.Contraseña.Contains("_") || Usuario.Contraseña.Contains("[A-Z]") || Usuario.Contraseña.Contains("#") || Usuario.Contraseña.Contains("&")))
-        {
-            paso = false;
-        }
-        if (!(Usuario.Contraseña.Contains(".") || Usuario.Contraseña.Contains("?") || Usuario.Contraseña.Contains("ñ") || Usuario.Contraseña.Contains("6") || Usuario.Contraseña.Contains("/") || Usuario.Contraseña.Contains("/")))
-        {
-            paso = false;
-        }
-
-        if (!paso)
-            toast.ShowWarning("Contraseña no segura");
-        else
-            toast.ShowSuccess("Contraseña segura");
-
-        return paso;
-    }
-    public void Aviso()
-    {
-        toast.ShowInfo("Agregue caracteres especiales (/ . - _ # & [A-Z]...)","Elija una contraseña segura");
-    }
     public void Ver()
     {
         View = true;

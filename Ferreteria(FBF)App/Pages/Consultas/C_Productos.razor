@@ -149,8 +149,7 @@ else
     public int Order { get; set; }
     public double TotalInventario { get; set; }
     RepositorioBase<Productos> repo = new RepositorioBase<Productos>();
-    byte[] data;
-    string pdfContent = "";
+
 
     protected override void OnInitialized()
     {
@@ -265,10 +264,6 @@ else
 
         if (Items.Count > 0)
         {
-            data = rpt.Report(Items);
-            pdfContent = "data:application/pdf;base64,";
-            pdfContent += System.Convert.ToBase64String(data);
-
             var parameters = new ModalParameters();
             parameters.Add("Items", Items);
 
@@ -286,9 +281,6 @@ else
         if (ProductosBLL.GetList(p => p.Inventario < 4).Count != 0)
         {
             listaReorden = ProductosBLL.GetList(p => p.Inventario < 4);
-            data = rpt.Report(listaReorden);
-            pdfContent = "data:application/pdf;base64,";
-            pdfContent += System.Convert.ToBase64String(data);
 
             var parameters = new ModalParameters();
             parameters.Add("Items", listaReorden);
