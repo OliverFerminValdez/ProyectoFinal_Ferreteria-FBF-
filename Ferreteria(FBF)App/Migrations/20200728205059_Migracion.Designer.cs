@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ferreteria_FBF_App.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20200722152846_Migracion inicial")]
-    partial class Migracioninicial
+    [Migration("20200728205059_Migracion")]
+    partial class Migracion
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,6 +41,7 @@ namespace Ferreteria_FBF_App.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<double>("LimiteCredito")

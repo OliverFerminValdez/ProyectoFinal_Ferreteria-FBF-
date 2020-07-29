@@ -24,6 +24,7 @@ namespace Ferreteria_FBF_App.Models
         [StringLength(11, ErrorMessage = "Debe contener 11 digitos", MinimumLength = 11)]
         public string Cedula { get; set; }
 
+        [Required(ErrorMessage = "Es obligatorio introducir el email")]
         [EmailAddress(ErrorMessage ="Introduzca una direccion valida")]
         public string Email { get; set; }
 

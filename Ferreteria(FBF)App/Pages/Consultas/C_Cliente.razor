@@ -147,7 +147,6 @@ else
     public int Filtro { get; set; }
     public int Order { get; set; }
     public double TotalDeuda { get; set; }
-    RepositorioBase<Clientes> repo = new RepositorioBase<Clientes>();
     byte[] data;
     string pdfContent = "";
 
@@ -198,7 +197,7 @@ else
         }
         else
         {
-            Items = repo.GetList(a => true);
+            Items =  ClientesBLL.GetList(a => true);
             TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
             UpdateList(omite);
         }

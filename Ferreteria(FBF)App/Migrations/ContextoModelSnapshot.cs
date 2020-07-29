@@ -39,6 +39,7 @@ namespace Ferreteria_FBF_App.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<double>("LimiteCredito")

@@ -178,7 +178,7 @@ app {
 }
 /*Index*/
 .index-img {
-    height: 150px;
+    height: 170px;
     width: 320px;
     display: block;
     padding-top: 40px;
@@ -195,19 +195,16 @@ app {
     }
 }
 
-.icono {
+.icono-index {
     text-align: center;
 }
 
 @media (min-width: 768px) {
-    .icono {
+    .icono-index {
         flex-basis: calc(33.3% - 1rem);
     }
 }
 
-.icono h3 {
-    text-transform: uppercase;
-}
 
 /*LOGIN*/
 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ferreteria_FBF_App.Migrations
 {
-    public partial class Migracioninicial : Migration
+    public partial class Migracion : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,7 +16,7 @@ namespace Ferreteria_FBF_App.Migrations
                     Nombre = table.Column<string>(nullable: false),
                     Apellido = table.Column<string>(nullable: false),
                     Cedula = table.Column<string>(maxLength: 11, nullable: false),
-                    Email = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: false),
                     Dirección = table.Column<string>(nullable: false),
                     Telefono = table.Column<string>(maxLength: 12, nullable: false),
                     LimiteCredito = table.Column<double>(nullable: false),
