@@ -1,0 +1,176 @@
+﻿@page "/suplidores"
+
+
+@using BLL
+@using Models
+@inject IToastService toast
+@inject IJSRuntime js
+@inject NavigationManager nav
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+
+@if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
+{
+    <EditForm Model="Suplidor" OnValidSubmit="Guardar">
+        <DataAnnotationsValidator />
+        <div class="card border-danger">
+
+            <div class="card-header bg-danger text-lg-center">
+                <h2 style="font-family : 'Segoe UI'">Registro de Suplidores</h2>
+            </div>
+
+            <div class="card-body">
+                <form>
+                    @*Suplidor Id*@
+                    <div class="form-row align-content-center">
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Suplidor Id</label>
+                                <div class="input-group">
+                                    <InputNumber @bind-Value="Suplidor.SuplidorId" class="form-control col-3" />
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
+                                            <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*NombreSuplidor*@
+                    <div class="form-group">
+                        <label>Nombre suplidor</label>
+                        <InputText @bind-Value="Suplidor.NombreSuplidor" class="form-control" />
+                        <ValidationMessage For="@(() => Suplidor.NombreSuplidor)" />
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="card-footer text-center" display: inline-block>
+                <div class="form-group">
+
+                    <button type="button" class="btn btn-lg btn-secondary" @onclick="Nuevo">
+                        <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
+                    </button>
+
+                    <button type="submit" class="btn btn-lg btn-info">
+                        <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
+                    </button>
+
+                    <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
+                        <span class="oi oi-circle-x"></span> Eliminar
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </EditForm>
+}
+else
+{
+    <LoginControl />
+}
+
+@code {
+    [Parameter]
+    public int SuplidorId { get; set; }
+
+    private Usuarios Usuario = new Usuarios();
+
+    private Suplidores Suplidor = new Suplidores();
+
+    protected override void OnInitialized()
+    {
+        Nuevo();
+        Buscar();
+
+        ObtenerUsuarioLogeado();
+    }
+
+    public void Nuevo()
+    {
+        Suplidor = new Suplidores();
+    }
+
+    public void Buscar()
+    {
+        if (Suplidor.SuplidorId > 0)
+        {
+            var encontrado = SuplidoresBLL.Buscar(Suplidor.SuplidorId);
+
+            if (encontrado != null)
+                this.Suplidor = encontrado;
+            else
+                toast.ShowWarning("Suplidor no encontrada");
+        }
+    }
+
+    public void Guardar()
+    {
+        bool guardo = false;
+
+        if (Suplidor.SuplidorId >= 0)
+        {
+
+            guardo = SuplidoresBLL.Guardar(Suplidor);
+
+            if (guardo)
+            {
+                Nuevo();
+                toast.ShowSuccess("Guardado exitosamente");
+            }
+            else
+                toast.ShowError("No fue posible guardo");
+        }
+    }
+
+    public async void Eliminar()
+    {
+        if (VerificarNivelAcceso())
+        {
+            if (await js.InvokeAsync<bool>("ConfirmationPrumpt", "Confirmacion", "Esta seguro que desea eliminar esta Suplidor?", "question"))
+            {
+                bool eliminar = false;
+
+                eliminar = SuplidoresBLL.Eliminar(Suplidor.SuplidorId);
+
+                if (eliminar)
+                {
+                    toast.ShowSuccess("Eliminado correctamente");
+                    await Task.Delay(2000);
+                    nav.NavigateTo("Suplidores", true);
+                }
+                else
+                {
+                    toast.ShowError("No fue posible eliminar la Suplidor");
+
+                }
+            }
+        }
+        else
+        {
+            toast.ShowError("No puedes eliminar Suplidores. !Solo los administradores pueden eliminar!");
+        }
+    }
+    public void ObtenerUsuarioLogeado()
+    {
+        Usuarios usuario = UsuariosBLL.Buscar(AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name);
+
+        if (usuario != null)
+        {
+            Usuario = usuario;
+        }
+    }
+
+    public bool VerificarNivelAcceso()
+    {
+        bool paso = false;
+
+        if (Usuario.NivelAcceso == "Administrador")
+            paso = true;
+
+        return paso;
+    }
+}

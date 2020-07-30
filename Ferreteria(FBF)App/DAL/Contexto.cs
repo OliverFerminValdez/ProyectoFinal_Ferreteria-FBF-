@@ -16,6 +16,10 @@ namespace Ferreteria_FBF_App.DAL
         public DbSet<Marcas> Marcas { get; set; }
         public DbSet<Usuarios> Usuarios { get; set; }
         public DbSet<Cobros> Cobros { get; set; }
+        public DbSet<Suplidores> Suplidores { get; set; }
+        public DbSet<Inventario> Inventarios { get; set; }
+        public DbSet<Categorias> Categorias { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder dbContext)
         {

@@ -1,0 +1,232 @@
+﻿@page "/Inventario"
+@page "/Inventario/{InventarioId:int}"
+
+@using Models
+@using BLL 
+    <EditForm Model="Inventario" OnValidSubmit="Guardar">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <div class="card">
+            <div class="card-header bg-danger text-center">
+                <h3><strong>Entrada de inventario</strong></h3>
+            </div>
+            <div class="card-body">
+                    @*Inventario Id*@
+                    <div class="form-group">
+                        <div class="col-4">
+                            <label>Inventario Id</label>
+                            <div class="input-group">
+                                <InputNumber @bind-Value="Inventario.InventarioId" class="form-control" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
+                                        <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*Fecha*@
+                <div class="form-group">
+                    <label>Fecha</label>
+                    <InputDate class="form-control" @bind-Value="Inventario.Fecha"></InputDate>
+                    <ValidationMessage For="@(() => Inventario.Fecha)"/>
+                </div>
+
+                    @*Suplidor*@
+                    <div class="form-group">
+                        <label>Cliente Id</label>
+                        <select class="form-control" @bind="Inventario.SuplidorId">
+                            <option disabled="disabled" selected="selected">Elija una opción</option>
+                            @foreach (var auxiliar in SuplidoresBLL.GetList(p =>true))
+                            {
+                                <option value="@auxiliar.SuplidorId">@auxiliar.NombreSuplidor</option>
+                            }
+                        </select>
+                        <ValidationMessage For="@(() => Inventario.SuplidorId)" />
+                    </div>
+
+                    @*Agregar Al detalle*@ 
+                <div class="card">
+                    <div class="card-header">
+                        <div class="form-row">
+
+                            <div class="form-group col-3">
+                                <label>Descripción</label>
+                                <InputSelectNumber class="form-control" @bind-Value="productoSeleccionado">
+                                    <option disabled="disabled" selected="selected">Elija una opción</option>
+                                    @foreach (var auxiliar in ProductosBLL.GetList(p => true))
+                                    {
+                                        <option value="@auxiliar.ProductoId">@auxiliar.Descripción</option>
+                                    }
+                                </InputSelectNumber>
+                            </div>
+
+                            <div class="form-group col-3">
+                                <label>Costo</label>
+                                <InputNumber @bind-Value="costoproducto" class="form-control"/>
+                            </div>
+
+                            <div class="form-group col-2">
+                                <label>Inventario</label>
+                                <InputNumber @bind-Value="inventarioproducto" class="form-control" @onfocusout="CalcularImporte"/>
+                            </div>
+
+                            <div class="form-group col-3">
+                                <label>Importe</label>
+                                <div class="input-group">
+                                    <InputNumber @bind-Value="Importe" class="form-control" readonly />
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-secondary" @onclick="AgregarAlDetalle"><span class="oi oi-plus"></span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">ProductoId</th>
+                                    <th scope="col">Descripcion</th>
+                                    <th scope="col">Cantidad</th>
+                                    <th scope="col">Costo</th>
+                                    <th scope="col">Valor inventario</th>
+                                    <th scope="col">Ajuste</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var auxiliar in Inventario.Productos)
+                                {
+                                <tr>
+                                    <td>@auxiliar.ProductoId</td>
+                                    <td>@ProductosBLL.Buscar(auxiliar.ProductoId).Descripción</td>
+                                    <td>@auxiliar.Inventario</td>
+                                    <td>@auxiliar.costo</td>
+                                    <td>@auxiliar.ValorInventario</td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger" @onclick="@(() => EliminarDetalle(auxiliar))">
+                                            <span class="oi oi-x"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                       <InputNumber class="form-control col-4" @bind-Value="valorinventariocampo" readonly></InputNumber>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="form-group text-center" display: inline-block>
+                    <button type="button" class="btn btn-lg btn-secondary" @onclick="Nuevo">
+                        <span class="oi oi-plus" aria-hidden="true"></span> Nuevo
+                    </button>
+
+                    <button type="submit" class="btn btn-lg btn-info">
+                        <span class="oi oi-circle-check" aria-hidden="true"></span> Guardar
+                    </button>
+
+                    <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
+                        <span class="oi oi-circle-x"></span> Eliminar
+                    </button>
+
+                    <button type="button" class="btn btn-lg btn-warning">
+                        <span class="oi oi-print"></span> Imprimir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+@code {
+
+    [Parameter]
+    public int InventarioId { get; set; }
+
+    public int productoSeleccionado { get; set; }
+    public int inventarioproducto { get; set; }
+    public double costoproducto { get; set; }
+    public float Importe { get; set; }
+    public float valorinventariocampo { get; set; }
+    private Inventario Inventario;
+
+    protected override void OnInitialized()
+    {
+        Nuevo();
+        Buscar();
+    }
+    public void Nuevo()
+    {
+        Inventario = new Inventario();
+    }
+    public void Buscar()
+    {
+        var encontrado = InventarioBLL.Buscar(Inventario.InventarioId);
+
+        if (encontrado != null)
+            this.Inventario = encontrado;
+    }
+    public void Guardar()
+    {
+        bool guardo;
+
+        if(Inventario.InventarioId >= 0)
+        {
+            guardo = InventarioBLL.Guardar(Inventario);
+
+            if (guardo)
+            {
+                Nuevo();
+            }
+        }
+    }
+    public void Eliminar()
+    {
+        bool elimino;
+
+        if(Inventario.InventarioId > 0)
+        {
+            elimino = InventarioBLL.Eliminar(Inventario.InventarioId);
+
+            if (elimino)
+            {
+                Nuevo();
+            }
+        }
+    }
+    public void AgregarAlDetalle()
+    {
+        Inventario.Productos.Add(new InventarioDetalle
+        {
+            InventarioId = Inventario.InventarioId,
+            ProductoId = productoSeleccionado,
+            Inventario = inventarioproducto,
+            costo = costoproducto,
+            ValorInventario = Importe
+        });
+
+        CalcularImporte();
+        CalcularValorInventario();
+    }
+    public void CalcularValorInventario()
+    {
+        valorinventariocampo = 0;
+
+        foreach (var item in Inventario.Productos)
+        {
+            valorinventariocampo += item.ValorInventario;
+        }
+    }
+    public void CalcularImporte()
+    {
+        Importe = (float)costoproducto* inventarioproducto;
+    }
+    public void EliminarDetalle(InventarioDetalle detalle)
+    {
+        Inventario.Productos.Remove(detalle);
+
+        CalcularValorInventario();
+    }
+
+}

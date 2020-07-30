@@ -67,16 +67,29 @@
                     </div>
 
                     @*Precio unitario*@
-                    <div class="form-group">
+                <div class="form-row form-group">
+                    <div class="col-6">
                         <label>Precio unitario</label>
                         <InputNumber @bind-Value="Producto.PrecioUnitario" class="form-control" @onfocusout="ActualizarValorInventario" />
                         <ValidationMessage For="@(() => Producto.PrecioUnitario)" />
                     </div>
 
+                    <div class="col-6">
+                        <label>Categorias</label>
+                        <InputSelectNumber class="form-control" @bind-Value="Producto.MarcaId">
+                            <option disabled="disabled" selected="selected">Elija una opción</option>
+                            @foreach (var auxiliar in CategoriasBLL.GetList(p => true))
+                                {
+                                <option value="@auxiliar.CategoriaId">@auxiliar.Descripcion</option>
+                                }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+
                     @*Inventario*@
                     <div class="form-group">
                         <label>Inventario</label>
-                        <InputNumber @bind-Value="Producto.Inventario" class="form-control" @onfocusout="ActualizarValorInventario" />
+                        <InputNumber @bind-Value="Producto.Inventario" class="form-control" readonly/>
                         <ValidationMessage For="@(() => Producto.Inventario)" />
                     </div>
 

@@ -8,6 +8,19 @@ namespace Ferreteria_FBF_App.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Categorias",
+                columns: table => new
+                {
+                    CategoriaId = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Descripcion = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categorias", x => x.CategoriaId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Clientes",
                 columns: table => new
                 {
@@ -46,6 +59,21 @@ namespace Ferreteria_FBF_App.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Inventarios",
+                columns: table => new
+                {
+                    InventarioId = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    SuplidorId = table.Column<int>(nullable: false),
+                    Fecha = table.Column<DateTime>(nullable: false),
+                    TotalInventario = table.Column<double>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Inventarios", x => x.InventarioId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Marcas",
                 columns: table => new
                 {
@@ -76,6 +104,19 @@ namespace Ferreteria_FBF_App.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Productos", x => x.ProductoId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Suplidores",
+                columns: table => new
+                {
+                    SuplidorId = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    NombreSuplidor = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Suplidores", x => x.SuplidorId);
                 });
 
             migrationBuilder.CreateTable(
@@ -120,6 +161,29 @@ namespace Ferreteria_FBF_App.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "InventarioDetalle",
+                columns: table => new
+                {
+                    InventarioDetalleId = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    InventarioId = table.Column<int>(nullable: false),
+                    ProductoId = table.Column<int>(nullable: false),
+                    costo = table.Column<double>(nullable: false),
+                    Inventario = table.Column<int>(nullable: false),
+                    ValorInventario = table.Column<float>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InventarioDetalle", x => x.InventarioDetalleId);
+                    table.ForeignKey(
+                        name: "FK_InventarioDetalle_Inventarios_InventarioId",
+                        column: x => x.InventarioId,
+                        principalTable: "Inventarios",
+                        principalColumn: "InventarioId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "VentasDetalle",
                 columns: table => new
                 {
@@ -147,6 +211,11 @@ namespace Ferreteria_FBF_App.Migrations
                 values: new object[] { 1, "FB", "UwBvAGwAdQBjAGkAbwBuAGUAcwBGAEIAMAAyADAAMgAwADIAMAAwADMA", "FerreteriaFBF@gmail.com", "Administrador", "Soluciones", "8095883505", "Admin" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_InventarioDetalle_InventarioId",
+                table: "InventarioDetalle",
+                column: "InventarioId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_VentasDetalle_VentaId",
                 table: "VentasDetalle",
                 column: "VentaId");
@@ -155,10 +224,16 @@ namespace Ferreteria_FBF_App.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Categorias");
+
+            migrationBuilder.DropTable(
                 name: "Clientes");
 
             migrationBuilder.DropTable(
                 name: "Cobros");
+
+            migrationBuilder.DropTable(
+                name: "InventarioDetalle");
 
             migrationBuilder.DropTable(
                 name: "Marcas");
@@ -167,10 +242,16 @@ namespace Ferreteria_FBF_App.Migrations
                 name: "Productos");
 
             migrationBuilder.DropTable(
+                name: "Suplidores");
+
+            migrationBuilder.DropTable(
                 name: "Usuarios");
 
             migrationBuilder.DropTable(
                 name: "VentasDetalle");
+
+            migrationBuilder.DropTable(
+                name: "Inventarios");
 
             migrationBuilder.DropTable(
                 name: "Ventas");

@@ -16,6 +16,21 @@ namespace Ferreteria_FBF_App.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.5");
 
+            modelBuilder.Entity("Ferreteria_FBF_App.Models.Categorias", b =>
+                {
+                    b.Property<int>("CategoriaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CategoriaId");
+
+                    b.ToTable("Categorias");
+                });
+
             modelBuilder.Entity("Ferreteria_FBF_App.Models.Clientes", b =>
                 {
                     b.Property<int>("ClienteId")
@@ -89,6 +104,54 @@ namespace Ferreteria_FBF_App.Migrations
                     b.ToTable("Cobros");
                 });
 
+            modelBuilder.Entity("Ferreteria_FBF_App.Models.Inventario", b =>
+                {
+                    b.Property<int>("InventarioId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("SuplidorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("TotalInventario")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("InventarioId");
+
+                    b.ToTable("Inventarios");
+                });
+
+            modelBuilder.Entity("Ferreteria_FBF_App.Models.InventarioDetalle", b =>
+                {
+                    b.Property<int>("InventarioDetalleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Inventario")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("InventarioId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<float>("ValorInventario")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("costo")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("InventarioDetalleId");
+
+                    b.HasIndex("InventarioId");
+
+                    b.ToTable("InventarioDetalle");
+                });
+
             modelBuilder.Entity("Ferreteria_FBF_App.Models.Marcas", b =>
                 {
                     b.Property<int>("MarcaId")
@@ -140,6 +203,21 @@ namespace Ferreteria_FBF_App.Migrations
                     b.HasKey("ProductoId");
 
                     b.ToTable("Productos");
+                });
+
+            modelBuilder.Entity("Ferreteria_FBF_App.Models.Suplidores", b =>
+                {
+                    b.Property<int>("SuplidorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("NombreSuplidor")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("SuplidorId");
+
+                    b.ToTable("Suplidores");
                 });
 
             modelBuilder.Entity("Ferreteria_FBF_App.Models.Usuarios", b =>
@@ -261,6 +339,15 @@ namespace Ferreteria_FBF_App.Migrations
                     b.HasIndex("VentaId");
 
                     b.ToTable("VentasDetalle");
+                });
+
+            modelBuilder.Entity("Ferreteria_FBF_App.Models.InventarioDetalle", b =>
+                {
+                    b.HasOne("Ferreteria_FBF_App.Models.Inventario", null)
+                        .WithMany("Productos")
+                        .HasForeignKey("InventarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Ferreteria_FBF_App.Models.VentasDetalle", b =>

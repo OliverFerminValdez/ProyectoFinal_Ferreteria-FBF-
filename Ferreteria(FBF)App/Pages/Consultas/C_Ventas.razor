@@ -72,7 +72,7 @@
                             {
                                 <tr>
                                     <td>@item.VentaId</td>
-                                    <td>@item.Fecha</td>
+                                    <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
                                     <td>@item.Tipo</td>
                                     <td>@ClientesBLL.Buscar(item.ClienteId).Nombre @ClientesBLL.Buscar(item.ClienteId).Apellido</td>
                                     <td>@item.Total</td>
@@ -147,8 +147,8 @@ else
     public List<Ventas> ItemsList { get; set; } = new List<Ventas>();
     public List<Ventas> Items { get; set; } = new List<Ventas>();
 
-    public DateTime Desde { get; set; }
-    public DateTime Hasta { get; set; }
+    public DateTime Desde { get; set; } = DateTime.Today;
+    public DateTime Hasta { get; set; } = DateTime.Today;
     public string Criterio { get; set; } = string.Empty;
     public int Numeracion { get; set; }
     public int PageSize { get; set; }

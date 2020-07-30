@@ -66,6 +66,10 @@ namespace Ferreteria_FBF_App.Pages
             pdfCell.Border = 0;
             pdfPTable.AddCell(pdfCell);
 
+            //pdfCell = new PdfPCell(this.AddId());
+            //pdfCell.Colspan = 1;
+            //pdfCell.Border = 0;
+            //pdfPTable.AddCell(pdfCell);
 
             pdfCell = new PdfPCell(this.setPageTitle());
             pdfCell.Colspan = maxColumn;
@@ -74,6 +78,22 @@ namespace Ferreteria_FBF_App.Pages
 
             pdfPTable.CompleteRow();
 
+        }
+        public PdfPTable AddId()
+        {
+            int maxColumn = 1;
+            PdfPTable pdfPTable = new PdfPTable(maxColumn);
+            
+            pdfCell = new PdfPCell(new Phrase(VentasBLL.GetList(p => true).Count.ToString(),fontFecha));
+            pdfCell.Colspan = maxColumn;
+            pdfCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+            pdfCell.Border = 0;
+            pdfCell.ExtraParagraphSpace = 0;
+            pdfPTable.AddCell(pdfCell);
+
+            pdfPTable.CompleteRow();
+
+            return pdfPTable;
         }
         public void FacturaHeader()
         {
@@ -120,6 +140,17 @@ namespace Ferreteria_FBF_App.Pages
             pdfCell = new PdfPCell(new Phrase("Ferreteria FBF", Titulo));
             pdfCell.Colspan = maxColumn;
             pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
+            pdfCell.Border = 0;
+            pdfCell.ExtraParagraphSpace = 0;
+            pdfPTable.AddCell(pdfCell);
+
+            pdfPTable.CompleteRow();
+            if(venta.VentaId == 0)
+                pdfCell = new PdfPCell(new Phrase("No:  " + VentasBLL.GetList(p=>true).Count.ToString(), fontFecha));
+            else
+                pdfCell = new PdfPCell(new Phrase("No:  " + venta.VentaId.ToString(), fontFecha));
+            pdfCell.Colspan = maxColumn;
+            pdfCell.HorizontalAlignment = Element.ALIGN_RIGHT;
             pdfCell.Border = 0;
             pdfCell.ExtraParagraphSpace = 0;
             pdfPTable.AddCell(pdfCell);

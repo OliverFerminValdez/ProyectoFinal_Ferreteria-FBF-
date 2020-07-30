@@ -377,26 +377,24 @@ else
 
     }
 
-    public async void Eliminar()
+    public void Eliminar()
     {
 
         if (VerificarNivelAcceso())
         {
-            if (await js.InvokeAsync<bool>("ConfirmationPrumpt", "Confirmacion", "¿Esta seguro que desea eliminar esta venta?", "question"))
-            {
-                bool elimino;
-                elimino = VentasBLL.Eliminar(Venta.VentaId);
+            //if (await js.InvokeAsync<bool>("ConfirmationPrumpt", "Confirmacion", "¿Esta seguro que desea eliminar esta venta?", "question"))
+            //{
+            bool elimino;
+            elimino = VentasBLL.Eliminar(Venta.VentaId);
 
-                if (elimino)
-                {
-                    toast.ShowSuccess("Eliminada correctamente");
-                    await Task.Delay(2000);
-                    nav.NavigateTo("ventas", true);
-                }
-                else
-                    toast.ShowError("No fue posible eliminar");
+            if (elimino)
+            {
+                toast.ShowSuccess("Eliminada correctamente");
             }
-            nav.NavigateTo("ventas", true);
+            else
+                toast.ShowError("No fue posible eliminar");
+            //}
+            //nav.NavigateTo("ventas", true);
         }
         else
         {
@@ -635,6 +633,8 @@ else
             {
                 var parameters = new ModalParameters();
                 parameters.Add("Venta", Venta);
+                parameters.Add("UsuarioId",Usuario.UsuarioId);
+
 
                 Modal.Show<Herramientas.FacturasViewer>("Factura de venta", parameters);
                 Guardar();

@@ -160,7 +160,7 @@ namespace Ferreteria_FBF_App.BLL
                     {
                         contexto.Entry(item).State = EntityState.Modified;  
                         var Producto = ProductosBLL.Buscar(item.ProductoId);
-                        Producto.Inventario -= item.Cantidad;
+                        Producto.Inventario += item.Cantidad;
                         ProductosBLL.Modificar(Producto);
 
                     }
@@ -214,34 +214,26 @@ namespace Ferreteria_FBF_App.BLL
 
             try
             {   
-                var venta = contexto.Ventas.Find(id);
+                Ventas venta = VentasBLL.Buscar(id);
 
+                Clientes cliente = ClientesBLL.Buscar(venta.ClienteId);
 
-                if (venta != null) //Afecta el balance del cliente
+                if (venta.Tipo == "Credito")
                 {
-                    Clientes cliente = ClientesBLL.Buscar(venta.ClienteId);
-
-                    if (venta.Tipo == "Credito")
-                    {
-                        cliente.Balance -= venta.TotalGeneral;
-                        cliente.LimiteCredito += venta.TotalGeneral;
-                        ClientesBLL.Modificar(cliente);
-                    }
-                    
+                    cliente.Balance -= venta.TotalGeneral;
+                    cliente.LimiteCredito += venta.TotalGeneral;
+                    ClientesBLL.Modificar(cliente);
                 }
 
-
-                if (venta != null)
+                foreach (var item in venta.VentasDetalle) //Afecta el inventario
                 {
-                    foreach (var item in venta.VentasDetalle) //Afecta el inventario
-                    {
-                        contexto.Entry(item).State = EntityState.Modified;
                         var Producto = ProductosBLL.Buscar(item.ProductoId);
-                        Producto.Inventario -= item.Cantidad;
-                    }
-                    contexto.Ventas.Remove(venta);
-                    paso = (contexto.SaveChanges() > 0);
+                        Producto.Inventario += item.Cantidad;
+                        ProductosBLL.Modificar(Producto);
                 }
+
+                contexto.Ventas.Remove(venta);
+                paso = (contexto.SaveChanges() > 0);
             }
             catch (Exception)
             {
