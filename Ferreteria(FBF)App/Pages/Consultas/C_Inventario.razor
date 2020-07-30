@@ -61,7 +61,7 @@
                             {
                                 <tr>
                                     <td>@InventarioBLL.Buscar(item.InventarioId).InventarioId</td>
-                                    <td>@InventarioBLL.Buscar(item.InventarioId).Fecha</td>
+                                    <td>@InventarioBLL.Buscar(item.InventarioId).Fecha.ToString("dd/MM/yyyy")</td>
                                     <td>@InventarioBLL.Buscar(item.InventarioId).SuplidorId</td>
                                     <td>@InventarioBLL.Buscar(item.InventarioId).TotalInventario</td>
                                     <td><a class="btn btn-danger" href="@($"InventarioId/{item.InventarioId}")">Editar</a></td>
