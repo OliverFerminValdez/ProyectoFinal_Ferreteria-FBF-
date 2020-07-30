@@ -12,6 +12,7 @@ namespace Ferreteria_FBF_App.Models
         public int SuplidorId { get; set; }
         [Required(ErrorMessage ="Es obligatorio introducir el nombre")]
         public string NombreSuplidor { get; set; }
+        public int UsuarioId { get; set; }
 
     }
 }

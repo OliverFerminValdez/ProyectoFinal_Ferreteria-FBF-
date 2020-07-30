@@ -19,13 +19,15 @@ namespace Ferreteria_FBF_App.Models
         public string Unidad { get; set; }
         [Required(ErrorMessage = "Debe introducir una marca")]
         public int MarcaId { get; set; }
-        
+        [Required(ErrorMessage ="Debe introducir una categoria")]
+        public int CategoriaId { get; set; }
+
         [Required(ErrorMessage = "Es obligatorio introducir el precio unitario")]
         [Range(1, 99999999999999, ErrorMessage = "Es obligatorio introducir un precio unitario valido")]
         public double PrecioUnitario { get; set; }
         
-        [Required(ErrorMessage = "Es obligatorio introducir el inventario")]
-        [Range(1, 99999999999999, ErrorMessage = "Es obligatorio introducir una cantidad de inventario valida")]
+        //[Required(ErrorMessage = "Es obligatorio introducir el inventario")]
+        //[Range(1, 99999999999999, ErrorMessage = "Es obligatorio introducir una cantidad de inventario valida")]
         public int Inventario { get; set; }
         public double ValorInventario { get; set; }
         public int UsuarioId { get; set; }

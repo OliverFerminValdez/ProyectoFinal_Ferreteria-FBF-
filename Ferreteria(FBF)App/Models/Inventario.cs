@@ -14,6 +14,7 @@ namespace Ferreteria_FBF_App.Models
         public int SuplidorId { get; set; }
         public DateTime Fecha { get; set; } = DateTime.Today;
         public double TotalInventario { get; set; }
+        public int UsuarioId { get; set; }
         public virtual List<InventarioDetalle> Productos { get; set; } = new List<InventarioDetalle>();
     }
 }

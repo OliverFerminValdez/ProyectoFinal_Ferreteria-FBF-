@@ -76,7 +76,7 @@
 
                     <div class="col-6">
                         <label>Categorias</label>
-                        <InputSelectNumber class="form-control" @bind-Value="Producto.MarcaId">
+                        <InputSelectNumber class="form-control" @bind-Value="Producto.CategoriaId">
                             <option disabled="disabled" selected="selected">Elija una opción</option>
                             @foreach (var auxiliar in CategoriasBLL.GetList(p => true))
                                 {

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ferreteria_FBF_App.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20200730023306_Migracion inicial")]
+    [Migration("20200730143533_Migracion inicial")]
     partial class Migracioninicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,6 +27,9 @@ namespace Ferreteria_FBF_App.Migrations
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("CategoriaId");
 
@@ -121,6 +124,9 @@ namespace Ferreteria_FBF_App.Migrations
                     b.Property<double>("TotalInventario")
                         .HasColumnType("REAL");
 
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("InventarioId");
 
                     b.ToTable("Inventarios");
@@ -178,6 +184,9 @@ namespace Ferreteria_FBF_App.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Descripción")
                         .IsRequired()
                         .HasColumnType("TEXT")
@@ -216,6 +225,9 @@ namespace Ferreteria_FBF_App.Migrations
                     b.Property<string>("NombreSuplidor")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("SuplidorId");
 

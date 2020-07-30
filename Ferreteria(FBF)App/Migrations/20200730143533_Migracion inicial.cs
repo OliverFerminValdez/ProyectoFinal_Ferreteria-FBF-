@@ -13,7 +13,8 @@ namespace Ferreteria_FBF_App.Migrations
                 {
                     CategoriaId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Descripcion = table.Column<string>(nullable: false)
+                    Descripcion = table.Column<string>(nullable: false),
+                    UsuarioId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,7 +67,8 @@ namespace Ferreteria_FBF_App.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     SuplidorId = table.Column<int>(nullable: false),
                     Fecha = table.Column<DateTime>(nullable: false),
-                    TotalInventario = table.Column<double>(nullable: false)
+                    TotalInventario = table.Column<double>(nullable: false),
+                    UsuarioId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -96,6 +98,7 @@ namespace Ferreteria_FBF_App.Migrations
                     Descripción = table.Column<string>(maxLength: 30, nullable: false),
                     Unidad = table.Column<string>(nullable: false),
                     MarcaId = table.Column<int>(nullable: false),
+                    CategoriaId = table.Column<int>(nullable: false),
                     PrecioUnitario = table.Column<double>(nullable: false),
                     Inventario = table.Column<int>(nullable: false),
                     ValorInventario = table.Column<double>(nullable: false),
@@ -112,7 +115,8 @@ namespace Ferreteria_FBF_App.Migrations
                 {
                     SuplidorId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    NombreSuplidor = table.Column<string>(nullable: false)
+                    NombreSuplidor = table.Column<string>(nullable: false),
+                    UsuarioId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

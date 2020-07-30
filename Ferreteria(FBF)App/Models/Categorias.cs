@@ -12,6 +12,7 @@ namespace Ferreteria_FBF_App.Models
         public int CategoriaId { get; set; }
         [Required(ErrorMessage ="Es obligatorio introducir una descripcion")]
         public string Descripcion { get; set; }
+        public int UsuarioId { get; set; }
 
     }
 }

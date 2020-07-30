@@ -2,49 +2,58 @@
 @page "/Inventario/{InventarioId:int}"
 
 @using Models
-@using BLL 
+@using BLL
+@using Pages.Reportes 
+@inject IToastService toast
+@inject IModalService Modal
+@inject IJSRuntime js
+@inject NavigationManager nav
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
+{
     <EditForm Model="Inventario" OnValidSubmit="Guardar">
         <DataAnnotationsValidator></DataAnnotationsValidator>
         <div class="card">
             <div class="card-header bg-danger text-center">
-                <h3><strong>Entrada de inventario</strong></h3>
+                <h2 style="font-family :'Segoe UI'">Entrada de inventario</h2>
             </div>
             <div class="card-body">
-                    @*Inventario Id*@
-                    <div class="form-group">
-                        <div class="col-4">
-                            <label>Inventario Id</label>
-                            <div class="input-group">
-                                <InputNumber @bind-Value="Inventario.InventarioId" class="form-control" />
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
-                                        <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
-                                    </button>
-                                </div>
+                @*Inventario Id*@
+                <div class="form-group">
+                    <div class="col-4">
+                        <label>Inventario Id</label>
+                        <div class="input-group">
+                            <InputNumber @bind-Value="Inventario.InventarioId" class="form-control" />
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
+                                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+                                </button>
                             </div>
                         </div>
                     </div>
-                    @*Fecha*@
+                </div>
+                @*Fecha*@
                 <div class="form-group">
                     <label>Fecha</label>
                     <InputDate class="form-control" @bind-Value="Inventario.Fecha"></InputDate>
-                    <ValidationMessage For="@(() => Inventario.Fecha)"/>
+                    <ValidationMessage For="@(() => Inventario.Fecha)" />
                 </div>
 
-                    @*Suplidor*@
-                    <div class="form-group">
-                        <label>Cliente Id</label>
-                        <select class="form-control" @bind="Inventario.SuplidorId">
-                            <option disabled="disabled" selected="selected">Elija una opción</option>
-                            @foreach (var auxiliar in SuplidoresBLL.GetList(p =>true))
-                            {
-                                <option value="@auxiliar.SuplidorId">@auxiliar.NombreSuplidor</option>
-                            }
-                        </select>
-                        <ValidationMessage For="@(() => Inventario.SuplidorId)" />
-                    </div>
+                @*Suplidor*@
+                <div class="form-group">
+                    <label>Suplidor</label>
+                    <select class="form-control" @bind="Inventario.SuplidorId">
+                        <option disabled="disabled" selected="selected">Elija una opción</option>
+                        @foreach (var auxiliar in SuplidoresBLL.GetList(p => true))
+                        {
+                            <option value="@auxiliar.SuplidorId">@auxiliar.NombreSuplidor</option>
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => Inventario.SuplidorId)" />
+                </div>
 
-                    @*Agregar Al detalle*@ 
+                @*Agregar Al detalle*@
                 <div class="card">
                     <div class="card-header">
                         <div class="form-row">
@@ -62,12 +71,12 @@
 
                             <div class="form-group col-3">
                                 <label>Costo</label>
-                                <InputNumber @bind-Value="costoproducto" class="form-control"/>
+                                <InputNumber @bind-Value="costoproducto" class="form-control" />
                             </div>
 
                             <div class="form-group col-2">
                                 <label>Inventario</label>
-                                <InputNumber @bind-Value="inventarioproducto" class="form-control" @onfocusout="CalcularImporte"/>
+                                <InputNumber @bind-Value="inventarioproducto" class="form-control" @onfocusout="CalcularImporte" />
                             </div>
 
                             <div class="form-group col-3">
@@ -97,24 +106,25 @@
                             <tbody>
                                 @foreach (var auxiliar in Inventario.Productos)
                                 {
-                                <tr>
-                                    <td>@auxiliar.ProductoId</td>
-                                    <td>@ProductosBLL.Buscar(auxiliar.ProductoId).Descripción</td>
-                                    <td>@auxiliar.Inventario</td>
-                                    <td>@auxiliar.costo</td>
-                                    <td>@auxiliar.ValorInventario</td>
-                                    <td>
-                                        <button type="button" class="btn btn-danger" @onclick="@(() => EliminarDetalle(auxiliar))">
-                                            <span class="oi oi-x"></span>
-                                        </button>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td>@auxiliar.ProductoId</td>
+                                        <td>@ProductosBLL.Buscar(auxiliar.ProductoId).Descripción</td>
+                                        <td>@auxiliar.Inventario</td>
+                                        <td>@auxiliar.costo</td>
+                                        <td>@auxiliar.ValorInventario</td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger" @onclick="@(() => EliminarDetalle(auxiliar))">
+                                                <span class="oi oi-x"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
                     <div class="card-footer">
-                       <InputNumber class="form-control col-4" @bind-Value="valorinventariocampo" readonly></InputNumber>
+                        <label>Total inventario</label>
+                        <InputNumber class="form-control col-4" @bind-Value="Inventario.TotalInventario" readonly></InputNumber>
                     </div>
                 </div>
             </div>
@@ -132,13 +142,19 @@
                         <span class="oi oi-circle-x"></span> Eliminar
                     </button>
 
-                    <button type="button" class="btn btn-lg btn-warning">
+                    <button type="button" class="btn btn-lg btn-warning" @onclick="Imprimir">
                         <span class="oi oi-print"></span> Imprimir
                     </button>
                 </div>
             </div>
         </div>
     </EditForm>
+}
+else
+{
+    <LoginControl></LoginControl>
+}
+
 @code {
 
     [Parameter]
@@ -150,15 +166,23 @@
     public float Importe { get; set; }
     public float valorinventariocampo { get; set; }
     private Inventario Inventario;
+    private Usuarios Usuario;
 
     protected override void OnInitialized()
     {
         Nuevo();
+        ObtenerUsuarioLogeado();
         Buscar();
+
     }
     public void Nuevo()
     {
         Inventario = new Inventario();
+        valorinventariocampo = 0;
+        productoSeleccionado = 0;
+        inventarioproducto = 0;
+        costoproducto = 0;
+        Importe = 0;
     }
     public void Buscar()
     {
@@ -171,56 +195,92 @@
     {
         bool guardo;
 
-        if(Inventario.InventarioId >= 0)
+        if (Inventario.InventarioId >= 0)
         {
-            guardo = InventarioBLL.Guardar(Inventario);
-
-            if (guardo)
+            if (Inventario.Productos.Count != 0)
             {
-                Nuevo();
+                Inventario.UsuarioId = Usuario.UsuarioId;
+                CalcularValorInventario();
+                guardo = InventarioBLL.Guardar(Inventario);
+
+                if (guardo)
+                {
+
+                    Nuevo();
+                    toast.ShowSuccess("Guardado exitosamente");
+                }
+                else
+                {
+                    toast.ShowError("No se pudo guardar");
+                }
             }
+            else
+                toast.ShowWarning("Debe insertar datos validos al detalle");
         }
     }
-    public void Eliminar()
+    public async void Eliminar()
     {
         bool elimino;
 
-        if(Inventario.InventarioId > 0)
+        if (VerificarNivelAcceso())
         {
-            elimino = InventarioBLL.Eliminar(Inventario.InventarioId);
-
-            if (elimino)
+            if (Inventario.InventarioId > 0)
             {
-                Nuevo();
+                if (await js.InvokeAsync<bool>("ConfirmationPrumpt", "Confirmacion", "¿Esta seguro que desea eliminar este inventario?", "question"))
+                {
+                    elimino = InventarioBLL.Eliminar(Inventario.InventarioId);
+
+                    if (elimino)
+                    {
+                        Nuevo();
+                        toast.ShowSuccess("Eliminado exitosamente");
+                    }
+                    else
+                    {
+                        toast.ShowError("No se pudo eliminar");
+                    }
+                }
             }
         }
+
     }
     public void AgregarAlDetalle()
     {
-        Inventario.Productos.Add(new InventarioDetalle
+        if (validarDetalle())
         {
-            InventarioId = Inventario.InventarioId,
-            ProductoId = productoSeleccionado,
-            Inventario = inventarioproducto,
-            costo = costoproducto,
-            ValorInventario = Importe
-        });
+            Inventario.Productos.Add(new InventarioDetalle
+            {
+                InventarioId = Inventario.InventarioId,
+                ProductoId = productoSeleccionado,
+                Inventario = inventarioproducto,
+                costo = costoproducto,
+                ValorInventario = Importe
+            });
+        }
+        else
+        {
+            toast.ShowWarning("Ingrese datos validos");
+        }
+        productoSeleccionado = 0;
+        costoproducto = 0;
+        inventarioproducto = 0;
+        Importe = 0;
 
         CalcularImporte();
         CalcularValorInventario();
     }
     public void CalcularValorInventario()
     {
-        valorinventariocampo = 0;
+        Inventario.TotalInventario = 0;
 
         foreach (var item in Inventario.Productos)
         {
-            valorinventariocampo += item.ValorInventario;
+            Inventario.TotalInventario += item.ValorInventario;
         }
     }
     public void CalcularImporte()
     {
-        Importe = (float)costoproducto* inventarioproducto;
+        Importe = (float)costoproducto * inventarioproducto;
     }
     public void EliminarDetalle(InventarioDetalle detalle)
     {
@@ -228,5 +288,71 @@
 
         CalcularValorInventario();
     }
+    public void ObtenerUsuarioLogeado()
+    {
+        Usuarios usuario = UsuariosBLL.Buscar(AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name);
 
-}
+        if (usuario != null)
+        {
+            Usuario = usuario;
+        }
+    }
+    public bool VerificarNivelAcceso()
+    {
+        bool paso = false;
+
+        if (Usuario.NivelAcceso == "Administrador")
+            paso = true;
+
+        return paso;
+    }
+    public bool validarDetalle()
+    {
+        bool paso = true;
+
+        if (costoproducto <= 0)
+            paso = false;
+        if (productoSeleccionado == 0)
+            paso = false;
+        if (inventarioproducto <= 0)
+            paso = false;
+
+        return paso;
+    }
+    public void Imprimir()
+    {
+        FacturaDeCompra rpt = new FacturaDeCompra();
+
+        if (Inventario.InventarioId == 0)
+        {
+            Inventario.UsuarioId = Usuario.UsuarioId;
+            if (validarDetalle())
+            {
+                var parameters = new ModalParameters();
+                parameters.Add("Inventario", Inventario);
+                parameters.Add("UsuarioId", Usuario.UsuarioId);
+
+                Modal.Show<Herramientas.CompraViewer>("Entrada de inventario", parameters);
+                Guardar();
+            }
+            else
+                toast.ShowWarning("Faltan datos para poder imprimir la factura");
+
+        }
+        else
+        {
+            if (Inventario != null)
+            {
+                var parameters = new ModalParameters();
+                parameters.Add("Inventario", Inventario);
+                parameters.Add("UsuarioId", Usuario.UsuarioId);
+
+                Modal.Show<Herramientas.CompraViewer>("Entrada de inventario", parameters);
+                Guardar();
+            }
+            else
+                toast.ShowWarning("No hay datos para imprimir la factura");
+        }
+
+    }
+    }

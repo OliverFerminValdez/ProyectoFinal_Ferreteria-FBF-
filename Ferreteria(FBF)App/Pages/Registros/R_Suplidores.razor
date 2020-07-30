@@ -113,7 +113,7 @@ else
 
         if (Suplidor.SuplidorId >= 0)
         {
-
+            Suplidor.UsuarioId = Usuario.UsuarioId;
             guardo = SuplidoresBLL.Guardar(Suplidor);
 
             if (guardo)
@@ -173,4 +173,5 @@ else
 
         return paso;
     }
+
 }

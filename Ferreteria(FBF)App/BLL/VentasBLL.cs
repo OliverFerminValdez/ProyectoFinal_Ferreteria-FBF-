@@ -61,6 +61,7 @@ namespace Ferreteria_FBF_App.BLL
                 {
                     var Producto = ProductosBLL.Buscar(item.ProductoId);
                     Producto.Inventario -= item.Cantidad;
+                    Producto.ValorInventario = Producto.Inventario * Producto.PrecioUnitario;
                     ProductosBLL.Modificar(Producto);
                 }
                 contexto.Ventas.Add(venta);
@@ -142,6 +143,7 @@ namespace Ferreteria_FBF_App.BLL
                     {
                         var producto = ProductosBLL.Buscar(item.ProductoId);
                         producto.Inventario += item.Cantidad;
+                        producto.ValorInventario = producto.Inventario * producto.PrecioUnitario;
                         ProductosBLL.Modificar(producto);
                         contexto.Entry(item).State = EntityState.Deleted;
                     }
@@ -153,14 +155,16 @@ namespace Ferreteria_FBF_App.BLL
                     {
                         contexto.Entry(item).State = EntityState.Added;
                         var producto = ProductosBLL.Buscar(item.ProductoId);
-                        producto.Inventario += item.Cantidad;
+                        producto.Inventario -= item.Cantidad;
+                        producto.ValorInventario = producto.Inventario * producto.PrecioUnitario;
                         ProductosBLL.Modificar(producto);
                     }
                     else
                     {
                         contexto.Entry(item).State = EntityState.Modified;  
                         var Producto = ProductosBLL.Buscar(item.ProductoId);
-                        Producto.Inventario += item.Cantidad;
+                        Producto.Inventario -= item.Cantidad;
+                        Producto.ValorInventario = Producto.Inventario * Producto.PrecioUnitario;
                         ProductosBLL.Modificar(Producto);
 
                     }
@@ -229,6 +233,7 @@ namespace Ferreteria_FBF_App.BLL
                 {
                         var Producto = ProductosBLL.Buscar(item.ProductoId);
                         Producto.Inventario += item.Cantidad;
+                        Producto.ValorInventario = Producto.Inventario * Producto.PrecioUnitario;
                         ProductosBLL.Modificar(Producto);
                 }
 

@@ -45,7 +45,6 @@ namespace Ferreteria_FBF_App.BLL
         {
             Contexto contexto = new Contexto();
             bool paso = false;
-            Clientes cliente = ClientesBLL.Buscar(inventario.InventarioId);
 
             try
             {
@@ -53,6 +52,7 @@ namespace Ferreteria_FBF_App.BLL
                 {
                     var Producto = ProductosBLL.Buscar(item.ProductoId);
                     Producto.Inventario += item.Inventario;
+                    Producto.ValorInventario = Producto.Inventario * Producto.PrecioUnitario;
                     ProductosBLL.Modificar(Producto);
                 }
                 contexto.Inventarios.Add(inventario);
@@ -82,13 +82,11 @@ namespace Ferreteria_FBF_App.BLL
 
                 foreach (var item in invAnterior.Productos)
                 {
-                    if (!invAnterior.Productos.Exists(o => o.InventarioDetalleId == item.InventarioDetalleId))
-                    {
                         var producto = ProductosBLL.Buscar(item.ProductoId);
                         producto.Inventario -= item.Inventario;
+                        producto.ValorInventario = producto.Inventario * producto.PrecioUnitario;
                         ProductosBLL.Modificar(producto);
                         contexto.Entry(item).State = EntityState.Deleted;
-                    }
                 }
 
                 foreach (var item in inventario.Productos)
@@ -97,14 +95,18 @@ namespace Ferreteria_FBF_App.BLL
                     {
                         contexto.Entry(item).State = EntityState.Added;
                         var producto = ProductosBLL.Buscar(item.ProductoId);
-                        producto.Inventario -= item.Inventario;
+                        producto.Inventario = 0;
+                        producto.Inventario += item.Inventario;
+                        producto.ValorInventario = producto.Inventario * producto.PrecioUnitario;
                         ProductosBLL.Modificar(producto);
                     }
                     else
                     {
                         contexto.Entry(item).State = EntityState.Modified;
                         var Producto = ProductosBLL.Buscar(item.ProductoId);
+                        Producto.Inventario = 0;
                         Producto.Inventario += item.Inventario;
+                        Producto.ValorInventario = Producto.Inventario * Producto.PrecioUnitario;
                         ProductosBLL.Modificar(Producto);
 
                     }
@@ -163,7 +165,8 @@ namespace Ferreteria_FBF_App.BLL
                 foreach (var item in venta.Productos) //Afecta el inventario
                 {
                     var Producto = ProductosBLL.Buscar(item.ProductoId);
-                    Producto.Inventario += item.Inventario;
+                    Producto.Inventario -= item.Inventario;
+                    Producto.ValorInventario = Producto.Inventario * Producto.PrecioUnitario;
                     ProductosBLL.Modificar(Producto);
                 }
 

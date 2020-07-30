@@ -1,0 +1,36 @@
+﻿@page "/comprasviewer"
+
+@using Models
+@using Reportes
+
+@if (data is { })
+{
+<object data="@pdfContent" width="600" height="550" name="_blank"></object>
+}
+
+@code {
+    [Parameter]
+    public Inventario Inventario { get; set; }
+    [Parameter]
+    public int UsuarioId { get; set; }
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    byte[] data;
+    string pdfContent = "";
+
+    protected override void OnInitialized()
+    {
+        CompraView();
+    }
+
+    public void CompraView()
+    {
+        FacturaDeCompra inv = new FacturaDeCompra();
+
+        data = inv.Report(Inventario, UsuarioId);
+        pdfContent = "data:application/pdf;base64,";
+        pdfContent += System.Convert.ToBase64String(data);
+    }
+
+}

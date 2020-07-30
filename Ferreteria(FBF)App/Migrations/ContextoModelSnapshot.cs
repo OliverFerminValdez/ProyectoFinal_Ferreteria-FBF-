@@ -26,6 +26,9 @@ namespace Ferreteria_FBF_App.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("CategoriaId");
 
                     b.ToTable("Categorias");
@@ -119,6 +122,9 @@ namespace Ferreteria_FBF_App.Migrations
                     b.Property<double>("TotalInventario")
                         .HasColumnType("REAL");
 
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("InventarioId");
 
                     b.ToTable("Inventarios");
@@ -176,6 +182,9 @@ namespace Ferreteria_FBF_App.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Descripción")
                         .IsRequired()
                         .HasColumnType("TEXT")
@@ -214,6 +223,9 @@ namespace Ferreteria_FBF_App.Migrations
                     b.Property<string>("NombreSuplidor")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("SuplidorId");
 

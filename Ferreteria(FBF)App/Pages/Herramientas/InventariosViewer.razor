@@ -1,0 +1,32 @@
+﻿@page "/Inventariosview"
+@using Pages.Reportes
+@using Models
+
+@if (data is { })
+{
+    <object data="@pdfContent" width="600" height="550" name="_blank"></object>
+}
+
+@code {
+    [Parameter]
+    public List<Inventario> Items { get; set; }
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    byte[] data;
+    string pdfContent = "";
+
+    protected override void OnInitialized()
+    {
+        InventariosView();
+    }
+
+    public void InventariosView()
+    {
+        InventariosReport rpt = new InventariosReport();
+
+        data = rpt.Report(Items);
+        pdfContent = "data:application/pdf;base64,";
+        pdfContent += System.Convert.ToBase64String(data);
+    }
+}
