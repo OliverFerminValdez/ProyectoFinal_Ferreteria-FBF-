@@ -184,7 +184,7 @@ else
         }
     }
 
-    public async void Eliminar()
+    public async Task Eliminar()
     {
         if (VerificarNivelAcceso())
         {
@@ -196,9 +196,8 @@ else
 
                 if (eliminar)
                 {
+                    Nuevo();
                     toast.ShowSuccess("Eliminado correctamente");
-                    await Task.Delay(2000);
-                    nav.NavigateTo("cobros", true);
                 }
                 else
                     toast.ShowError("!No fue posible eliminar!");

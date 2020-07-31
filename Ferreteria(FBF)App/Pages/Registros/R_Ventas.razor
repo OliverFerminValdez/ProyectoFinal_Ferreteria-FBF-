@@ -124,6 +124,7 @@
                             <table class="table">
                                 <thead class="thead-dark">
                                     <tr>
+                                        <th scope="col">ID</th>
                                         <th scope="col">Descripción</th>
                                         <th scope="col">Cantidad</th>
                                         <th scope="col">Unidad</th>
@@ -136,6 +137,7 @@
                                     @foreach (var auxiliar in Venta.VentasDetalle)
                                     {
                                         <tr>
+                                            <td>@auxiliar.ProductoId</td>
                                             <td>@(GetDescripcionProducto(auxiliar.ProductoId))</td>
                                             <td>@auxiliar.Cantidad</td>
                                             <td>@(GetUnidadProducto(auxiliar.ProductoId))</td>
@@ -377,7 +379,7 @@ else
 
     }
 
-    public async void Eliminar()
+    public async Task Eliminar()
     {
 
         if (VerificarNivelAcceso())
@@ -389,12 +391,13 @@ else
 
                 if (elimino)
                 {
+                    Nuevo();
                     toast.ShowSuccess("Eliminada correctamente");
                 }
                 else
                     toast.ShowError("No fue posible eliminar");
             }
-            nav.NavigateTo("ventas", true);
+
         }
         else
         {

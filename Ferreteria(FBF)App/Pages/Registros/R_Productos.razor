@@ -204,7 +204,7 @@ else
         }
     }
 
-    public async void Eliminar()
+    public async Task Eliminar()
     {
         if (VerificarNivelAcceso())
         {
@@ -215,15 +215,14 @@ else
                 eliminar = ProductosBLL.Eliminar(Producto.ProductoId);
 
                 if (eliminar)
-                { 
+                {
+                    Nuevo();
                     toast.ShowSuccess("Eliminado correctamente");
-                    await Task.Delay(2000);
-                    Navigation.NavigateTo("productos", true);
                 }
-            else
-                toast.ShowError("!No fue posible eliminar!");
+                else
+                    toast.ShowError("!No fue posible eliminar!");
+            }
         }
-    }
         else
         {
             toast.ShowError("No puedes eliminar productos. !Solo los administradores pueden eliminar!");

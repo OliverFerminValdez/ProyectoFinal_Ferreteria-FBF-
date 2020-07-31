@@ -52,6 +52,7 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
+                                <th scope="col">ID</th>
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Apellido</th>
                                 <th scope="col">Usuario</th>
@@ -65,12 +66,13 @@
                             @foreach (var item in ItemsList)
                             {
                                 <tr>
-                                    <td>@item.Nombre</td>
-                                    <td>@item.Apellido</td>
-                                    <td>@item.Usuario</td>
-                                    <td>@item.Email</td>
-                                    <td>@item.Telefono</td>
-                                    <td>@item.NivelAcceso</td>
+                                    <td>@item.UsuarioId</td>
+                                    <td>@UsuariosBLL.Buscar(item.UsuarioId).Nombre</td>
+                                    <td>@UsuariosBLL.Buscar(item.UsuarioId).Apellido</td>
+                                    <td>@UsuariosBLL.Buscar(item.UsuarioId).Usuario</td>
+                                    <td>@UsuariosBLL.Buscar(item.UsuarioId).Email</td>
+                                    <td>@UsuariosBLL.Buscar(item.UsuarioId).Telefono</td>
+                                    <td>@UsuariosBLL.Buscar(item.UsuarioId).NivelAcceso</td>
                                     <td><a class="btn btn-dark" href="@($"Usuarios/{item.UsuarioId}")">Editar</a></td>
                                 </tr>
                             }
