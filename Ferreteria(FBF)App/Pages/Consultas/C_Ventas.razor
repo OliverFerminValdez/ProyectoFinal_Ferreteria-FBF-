@@ -78,7 +78,7 @@
                                     <td>@item.Total</td>
                                     <td>@item.ITBIS</td>
                                     <td>@item.Descuentos</td>
-                                    <td>@item.TotalGeneral</td>
+                                    <td>@Math.Round(item.TotalGeneral,2)</td>
                                     <td><a class="btn btn-dark" href="@($"Ventas/{item.VentaId}")">Editar</a></td>
                                 </tr>
                             }
@@ -170,7 +170,7 @@ else
 
         base.OnInitialized();
     }
-
+    //
     public void Consultar(int omite)
     {
         if (Criterio != string.Empty)

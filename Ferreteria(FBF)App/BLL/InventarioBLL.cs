@@ -95,7 +95,6 @@ namespace Ferreteria_FBF_App.BLL
                     {
                         contexto.Entry(item).State = EntityState.Added;
                         var producto = ProductosBLL.Buscar(item.ProductoId);
-                        producto.Inventario = 0;
                         producto.Inventario += item.Inventario;
                         producto.ValorInventario = producto.Inventario * producto.PrecioUnitario;
                         ProductosBLL.Modificar(producto);
@@ -104,7 +103,6 @@ namespace Ferreteria_FBF_App.BLL
                     {
                         contexto.Entry(item).State = EntityState.Modified;
                         var Producto = ProductosBLL.Buscar(item.ProductoId);
-                        Producto.Inventario = 0;
                         Producto.Inventario += item.Inventario;
                         Producto.ValorInventario = Producto.Inventario * Producto.PrecioUnitario;
                         ProductosBLL.Modificar(Producto);

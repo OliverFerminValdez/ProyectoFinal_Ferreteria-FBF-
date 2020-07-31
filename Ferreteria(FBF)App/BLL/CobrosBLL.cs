@@ -52,6 +52,7 @@ namespace Ferreteria_FBF_App.BLL
                 if (cobro != null)
                 {
                     cliente.Balance -= cobro.Monto;
+                    cliente.LimiteCredito += cobro.Monto;
                     ClientesBLL.Modificar(cliente);
                 }
                 contexto.Cobros.Add(cobro);

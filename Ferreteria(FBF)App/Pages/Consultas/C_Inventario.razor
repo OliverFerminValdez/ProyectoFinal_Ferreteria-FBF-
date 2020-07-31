@@ -60,10 +60,10 @@
                             @foreach (var item in ItemsList)
                             {
                                 <tr>
-                                    <td>@InventarioBLL.Buscar(item.InventarioId).InventarioId</td>
-                                    <td>@InventarioBLL.Buscar(item.InventarioId).Fecha.ToString("dd/MM/yyyy")</td>
-                                    <td>@InventarioBLL.Buscar(item.InventarioId).SuplidorId</td>
-                                    <td>@InventarioBLL.Buscar(item.InventarioId).TotalInventario</td>
+                                    <td>@item.InventarioId</td>
+                                    <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.SuplidorId</td>
+                                    <td>@item.TotalInventario</td>
                                     <td><a class="btn btn-danger" href="@($"InventarioId/{item.InventarioId}")">Editar</a></td>
                                 </tr>
                             }
@@ -161,7 +161,7 @@ else
             switch (Filtro)
             {
                 case 0:
-                    Items = repo.GetList(p => true);
+                    Items = InventarioBLL.GetList(p => true);
                     TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
                     UpdateList(omite);
                     break;

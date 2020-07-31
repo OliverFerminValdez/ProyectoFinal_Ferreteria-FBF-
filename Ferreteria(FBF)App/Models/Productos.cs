@@ -19,6 +19,7 @@ namespace Ferreteria_FBF_App.Models
         public string Unidad { get; set; }
         [Required(ErrorMessage = "Debe introducir una marca")]
         public int MarcaId { get; set; }
+        [Display(Name = "Elija una categoria")]
         [Required(ErrorMessage ="Debe introducir una categoria")]
         public int CategoriaId { get; set; }
 

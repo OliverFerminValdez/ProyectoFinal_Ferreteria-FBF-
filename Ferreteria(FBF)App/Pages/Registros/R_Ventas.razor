@@ -142,7 +142,7 @@
                                             <td>@auxiliar.Cantidad</td>
                                             <td>@(GetUnidadProducto(auxiliar.ProductoId))</td>
                                             <td>@auxiliar.Precio</td>
-                                            <td>@(CalcularImporteTabla(auxiliar.Cantidad, auxiliar.Precio))</td>
+                                            <td>@(CalcularImporteTabla(auxiliar.Cantidad, auxiliar.Precio).ToString("N2"))</td>
                                             <td>
                                                 <button type="button" class="btn btn-danger" @onclick="@(() => EliminarDetalle(auxiliar))">
                                                     <span class="oi oi-x"></span>
@@ -177,7 +177,7 @@
                         @*Descuentos*@
                         <div class="col-md-4">
                             <label>Descuentos</label>
-                            <InputNumber @bind-Value="Venta.Descuentos" class="form-control" @onfocusout="CalcularTotalGeneral" />
+                            <InputNumber @bind-Value="Venta.Descuentos" class="form-control" @onfocusout="CalcularTotalGeneral" readonly />
                             <ValidationMessage For="@(() => Venta.Descuentos)" />
                         </div>
 
@@ -199,7 +199,7 @@
                         @*Total General*@
                         <div class="col-md-4 offset-md-4">
                             <label>Total General</label>
-                            <InputNumber @bind-Value="Venta.TotalGeneral" class="form-control" />
+                            <InputNumber @bind-Value="Venta.TotalGeneral" class="form-control" readonly/>
                             <ValidationMessage For="@(() => Venta.TotalGeneral)" />
                         </div>
                     </div>
@@ -605,17 +605,35 @@ else
         bool paso = false;
 
         Clientes cliente = ClientesBLL.Buscar(Venta.ClienteId);
-
+        double sum = 0;
         if (cliente != null)
         {
-            if (Venta.TotalGeneral > cliente.LimiteCredito && Venta.Tipo == "Credito")
+            if(Venta.VentaId == 0)
             {
-                toast.ShowWarning("El cliente " + cliente.Nombre + " tiene un limite de credito de " + cliente.LimiteCredito + " , no puede hacer una compra con un valor mayor");
+                if (Venta.TotalGeneral > cliente.LimiteCredito && Venta.Tipo == "Credito")
+                {
+                    toast.ShowWarning("El cliente " + cliente.Nombre + " tiene un limite de credito de " + cliente.LimiteCredito + " , no puede hacer una compra con un valor mayor");
+                }
+                else
+                {
+                    paso = true;
+                }
             }
             else
             {
-                paso = true;
+                foreach (var item in Venta.VentasDetalle)
+                {
+                    if(item.VentasDetalleId == 0)
+                    {
+                        sum += item.Precio * item.Cantidad;
+                    }
+                }
+                if (sum > cliente.LimiteCredito)
+                    paso = false;
+                else
+                    paso = true;
             }
+
         }
         else
         {

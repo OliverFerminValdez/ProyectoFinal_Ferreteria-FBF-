@@ -63,6 +63,7 @@
                                     <option value="@auxiliar.MarcaId">@auxiliar.Descripcion</option>
                                 }
                             </InputSelectNumber>
+                            <ValidationMessage For="@(() => Producto.MarcaId)"/>
                         </div>
                     </div>
 
@@ -83,6 +84,7 @@
                                 <option value="@auxiliar.CategoriaId">@auxiliar.Descripcion</option>
                                 }
                         </InputSelectNumber>
+                        <ValidationMessage For="@(()=> Producto.CategoriaId)"></ValidationMessage>
                     </div>
                 </div>
 

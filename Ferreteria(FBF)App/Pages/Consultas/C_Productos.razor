@@ -67,10 +67,10 @@
                             {
                                 <tr>
                                     <td>@item.ProductoId</td>
-                                    <td>@ProductosBLL.Buscar(item.ProductoId).Descripción</td>
-                                    <td>@ProductosBLL.Buscar(item.ProductoId).PrecioUnitario</td>
-                                    <td>@ProductosBLL.Buscar(item.ProductoId).Inventario</td>
-                                    <td>@ProductosBLL.Buscar(item.ProductoId).ValorInventario</td>
+                                    <td>@item.Descripción</td>
+                                    <td>@item.PrecioUnitario</td>
+                                    <td>@item.Inventario</td>
+                                    <td>@item.ValorInventario</td>
                                     <td><a class="btn btn-danger" href="@($"ProductoId/{item.ProductoId}")">Editar</a></td>
                                 </tr>
                             }
@@ -172,7 +172,7 @@ else
             switch (Filtro)
             {
                 case 0:
-                    Items = repo.GetList(p => true);
+                    Items = ProductosBLL.GetList(p => true);
                     TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
                     UpdateList(omite);
                     break;
@@ -189,7 +189,7 @@ else
                     break;
                 case 3:
                     double costo = Convert.ToDouble(Criterio);
-                    Items = repo.GetList(a => a.PrecioUnitario == costo);
+                    Items = ProductosBLL.GetList(a => a.PrecioUnitario == costo);
                     TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
                     UpdateList(omite);
                     break;
@@ -197,7 +197,6 @@ else
         }
         else
         {
-            Items = new List<Productos>();
             Items = ProductosBLL.GetList(a => true);
             TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
             UpdateList(omite);

@@ -67,12 +67,12 @@
                             {
                                 <tr>
                                     <td>@item.UsuarioId</td>
-                                    <td>@UsuariosBLL.Buscar(item.UsuarioId).Nombre</td>
-                                    <td>@UsuariosBLL.Buscar(item.UsuarioId).Apellido</td>
-                                    <td>@UsuariosBLL.Buscar(item.UsuarioId).Usuario</td>
-                                    <td>@UsuariosBLL.Buscar(item.UsuarioId).Email</td>
-                                    <td>@UsuariosBLL.Buscar(item.UsuarioId).Telefono</td>
-                                    <td>@UsuariosBLL.Buscar(item.UsuarioId).NivelAcceso</td>
+                                    <td>@item.Nombre</td>
+                                    <td>@item.Apellido</td>
+                                    <td>@item.Usuario</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.Telefono</td>
+                                    <td>@item.NivelAcceso</td>
                                     <td><a class="btn btn-dark" href="@($"Usuarios/{item.UsuarioId}")">Editar</a></td>
                                 </tr>
                             }

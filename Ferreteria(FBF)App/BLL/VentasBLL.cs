@@ -102,7 +102,18 @@ namespace Ferreteria_FBF_App.BLL
                         }
                         else
                         {
-                            cliente.Balance += (cliente.Balance - ventaAnterior.TotalGeneral) + venta.TotalGeneral;
+                            if ((!(ventaAnterior.TotalGeneral == venta.TotalGeneral)) && (!(ventaAnterior.TotalGeneral < venta.TotalGeneral)))
+                            {
+                                cliente.Balance += (ventaAnterior.TotalGeneral - venta.TotalGeneral);
+                                cliente.LimiteCredito -= (ventaAnterior.TotalGeneral - venta.TotalGeneral);
+                            }
+
+                            if ((!(ventaAnterior.TotalGeneral == venta.TotalGeneral)) && (!(ventaAnterior.TotalGeneral > venta.TotalGeneral)))
+                            {
+                                cliente.Balance += (venta.TotalGeneral - venta.TotalGeneral);
+                                cliente.LimiteCredito -= (venta.TotalGeneral - ventaAnterior.TotalGeneral);
+                            }
+
                             ClientesBLL.Modificar(cliente);
                         }
 
@@ -163,7 +174,6 @@ namespace Ferreteria_FBF_App.BLL
                     {
                         contexto.Entry(item).State = EntityState.Modified;  
                         var Producto = ProductosBLL.Buscar(item.ProductoId);
-                        Producto.Inventario -= item.Cantidad;
                         Producto.ValorInventario = Producto.Inventario * Producto.PrecioUnitario;
                         ProductosBLL.Modificar(Producto);
 
