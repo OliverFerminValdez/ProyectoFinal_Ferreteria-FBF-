@@ -23,7 +23,7 @@ namespace Ferreteria_FBF_App.DAL
 
         protected override void OnConfiguring(DbContextOptionsBuilder dbContext)
         {
-            dbContext.UseSqlite(@"Data Source = C:\Base de datos\FerreteriaFBF.db");
+            dbContext.UseSqlite(@"Data Source = DATA\FerreteriaFBF.db");
         }
 
         protected override void OnModelCreating(ModelBuilder model)
