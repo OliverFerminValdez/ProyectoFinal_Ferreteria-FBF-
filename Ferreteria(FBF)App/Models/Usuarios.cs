@@ -12,9 +12,11 @@ namespace Ferreteria_FBF_App.Models
         [Key]
         public int UsuarioId { get; set; }
 
+        [StringLength(maximumLength: 30, MinimumLength = 4, ErrorMessage = "El nombre es muy corto")]
         [Required(ErrorMessage = "Es obligatorio introducir el nombre")]
         public string Nombre { get; set; }
 
+        [StringLength(maximumLength: 30, MinimumLength = 4, ErrorMessage = "El apellido es muy corto")]
         [Required(ErrorMessage = "Es obligatorio introducir el apellido")]
         public string Apellido { get; set; }
 
@@ -30,11 +32,11 @@ namespace Ferreteria_FBF_App.Models
         [Required(ErrorMessage = "Es obligatorio introducir el telefono")]
         [StringLength(10, ErrorMessage = "Debe contener 10 digitos", MinimumLength = 10)]
         public string Telefono { get; set; }
-        
+
+        [StringLength(maximumLength: 30, MinimumLength = 4, ErrorMessage = "El usuario es muy corto")]
         [Required(ErrorMessage = "Es obligatorio introducir el usuario")]
         public string Usuario { get; set; }
 
-        [RegularExpression("({(?=.*[a - z])(?=.*[A - Z]).{8,}}|{(?=.*[A - Z])(?!.*\\s).{8,}})",ErrorMessage ="Elija una contraseña segura")]
         [Required(ErrorMessage = "Es obligatorio introducir la contraseña")]
         [StringLength(50, ErrorMessage = "Debe contener minimo 4 digitos", MinimumLength = 4)]
         public string Contraseña { get; set; }

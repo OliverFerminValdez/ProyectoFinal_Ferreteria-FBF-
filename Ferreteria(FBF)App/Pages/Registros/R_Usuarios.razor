@@ -27,7 +27,7 @@
                             <div class="form-group">
                                 <label>Usuario Id</label>
                                 <div class="input-group">
-                                    <InputNumber @bind-Value="Usuario.UsuarioId" class="form-control col-3" />
+                                    <InputNumber @bind-Value="Usuario.UsuarioId" min="0" class="form-control col-3" />
                                     <div class="input-group-append">
                                         <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
                                             <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
@@ -89,7 +89,7 @@
                         <div class="col form-group">
                             <label>Contraseña</label>
                             <div class="input-group">
-                                <input type="@(View ? "text": "password")" @bind="Usuario.Contraseña" class="form-control" placeholder="Elija una contraseña" autocomplete="off"/>
+                                <input type="@(View ? "text": "password")" @bind="Usuario.Contraseña" class="form-control" placeholder="Elija una contraseña" autocomplete="off" />
                                 <ValidationMessage For="@(() => Usuario.Contraseña)" />
                                 <button type="button" class="input-group-append btn btn-dark btn-block col-1" @onmousedown="Ver" @onmouseup="Ocultar"><span class="oi oi-eye"></span></button>
                             </div>
@@ -104,7 +104,7 @@
                     </div>
                 </form>
             </div>
- 
+
             <div class="card-footer text-center" display: inline-block>
                 <div class="form-group">
 
@@ -127,8 +127,8 @@
 }
 else
 {
-    @if(!@ComprobarAdministrador())
-       {
+    @if (!@ComprobarAdministrador())
+    {
         toast.ShowWarning("Solo los administradores tienen acceso a interactuar con los usuarios");
     }
 }
@@ -149,6 +149,7 @@ else
     protected override void OnInitialized()
     {
         Usuario.Contraseña = string.Empty;
+        ConfirmarContrasena = string.Empty;
         Usuario.Usuario = string.Empty;
 
         ObtenerUsuarioLogeado();
@@ -162,11 +163,13 @@ else
     public void Nuevo()
     {
         Usuario = new Usuarios();
+        ConfirmarContrasena = string.Empty;
     }
 
     public void Buscar(int id)
     {
         var encontrado = UsuariosBLL.Buscar(id);
+
         if (encontrado != null)
         {
             this.Usuario = encontrado;
@@ -201,7 +204,6 @@ else
 
         if (Usuario.UsuarioId >= 0 && Verificado)
         {
-            Usuario.UsuarioId = UsuarioLogeado.UsuarioId;
             guardo = UsuariosBLL.Guardar(Usuario);
 
             if (guardo)
@@ -302,7 +304,7 @@ else
 
         foreach (var item in UsuariosBLL.GetList(p => true))
         {
-            if(Usuario.Usuario == item.Usuario)
+            if (Usuario.Usuario == item.Usuario && Usuario.UsuarioId != item.UsuarioId)
             {
                 paso = false;
                 toast.ShowError("Este nombre de usuario ya esta en uso");

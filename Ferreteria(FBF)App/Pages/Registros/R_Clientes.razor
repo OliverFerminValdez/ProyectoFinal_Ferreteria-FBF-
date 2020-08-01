@@ -30,7 +30,7 @@
                             <div class="form-group">
                                 <label>Cliente Id</label>
                                 <div class="input-group">
-                                    <InputNumber @bind-Value="Cliente.ClienteId" class="form-control col-4" />
+                                    <InputNumber @bind-Value="Cliente.ClienteId" min="0" class="form-control col-4" />
                                     <div class="input-group-append">
                                         <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
                                             <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
@@ -40,7 +40,7 @@
                             </div>
                         </div>
 
-                        @*Cantidad*@
+                        @*DetalleCobro*@
                         <div class="col-auto">
                             <a class="btn btn-lg btn-info" href="@($"DetalleCobro/{Cliente.ClienteId}")" role="button">Listado de cobros</a>
                         </div>
@@ -105,7 +105,7 @@
                     @*Limite de credito*@
                     <div class="form-group">
                         <label>Limite de Credito</label>
-                        <InputNumber @bind-Value="Cliente.LimiteCredito" class="form-control" />
+                        <InputNumber @bind-Value="Cliente.LimiteCredito" min="0" class="form-control" />
                         <ValidationMessage For="@(() => Cliente.LimiteCredito)" />
                     </div>
 
@@ -170,7 +170,8 @@ else
     public void Buscar(int id)
     {
         var encontrado = ClientesBLL.Buscar(id);
-        this.Cliente = encontrado;
+        if(encontrado != null)
+            this.Cliente = encontrado;
     }
 
     public void Buscar()

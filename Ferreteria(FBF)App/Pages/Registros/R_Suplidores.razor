@@ -27,7 +27,7 @@
                             <div class="form-group">
                                 <label>Suplidor Id</label>
                                 <div class="input-group">
-                                    <InputNumber @bind-Value="Suplidor.SuplidorId" class="form-control col-3" />
+                                    <InputNumber @bind-Value="Suplidor.SuplidorId" min="0" class="form-control col-3" />
                                     <div class="input-group-append">
                                         <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
                                             <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
@@ -40,7 +40,7 @@
 
                     @*NombreSuplidor*@
                     <div class="form-group">
-                        <label>Nombre suplidor</label>
+                        <label>Nombre</label>
                         <InputText @bind-Value="Suplidor.NombreSuplidor" class="form-control" />
                         <ValidationMessage For="@(() => Suplidor.NombreSuplidor)" />
                     </div>

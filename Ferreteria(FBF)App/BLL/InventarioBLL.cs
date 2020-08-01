@@ -160,16 +160,20 @@ namespace Ferreteria_FBF_App.BLL
             {
                 Inventario venta = InventarioBLL.Buscar(id);
 
-                foreach (var item in venta.Productos) //Afecta el inventario
+                if(venta != null)
                 {
-                    var Producto = ProductosBLL.Buscar(item.ProductoId);
-                    Producto.Inventario -= item.Inventario;
-                    Producto.ValorInventario = Producto.Inventario * Producto.PrecioUnitario;
-                    ProductosBLL.Modificar(Producto);
+                    foreach (var item in venta.Productos) //Afecta el inventario
+                    {
+                        var Producto = ProductosBLL.Buscar(item.ProductoId);
+                        Producto.Inventario -= item.Inventario;
+                        Producto.ValorInventario = Producto.Inventario * Producto.PrecioUnitario;
+                        ProductosBLL.Modificar(Producto);
+                    }
+
+                    contexto.Inventarios.Remove(venta);
+                    paso = (contexto.SaveChanges() > 0);
                 }
 
-                contexto.Inventarios.Remove(venta);
-                paso = (contexto.SaveChanges() > 0);
             }
             catch (Exception)
             {

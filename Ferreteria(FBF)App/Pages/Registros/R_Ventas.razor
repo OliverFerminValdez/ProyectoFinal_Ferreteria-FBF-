@@ -28,7 +28,7 @@
                         <div class="col-md-4">
                             <label>Venta Id</label>
                             <div class="input-group">
-                                <InputNumber @bind-Value="Venta.VentaId" class="form-control" />
+                                <InputNumber @bind-Value="Venta.VentaId" min="0" class="form-control" />
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
                                         <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
@@ -38,7 +38,7 @@
                         </div>
 
                         @*Tipo Factura*@
-                        <div class="col-md-2 offset-md-6">
+                        <div class="col-md-3 offset-md-5">
                             <label>Tipo de factura</label>
                             <select @bind="Venta.Tipo" class="form-control">
                                 <option disabled="disabled" selected="selected">Elija una opción</option>
@@ -177,7 +177,7 @@
                         @*Descuentos*@
                         <div class="col-md-4">
                             <label>Descuentos</label>
-                            <InputNumber @bind-Value="Venta.Descuentos" class="form-control" @onfocusout="CalcularTotalGeneral" readonly />
+                            <InputNumber @bind-Value="Venta.Descuentos" min="0" class="form-control" @onfocusout="CalcularTotalGeneral" />
                             <ValidationMessage For="@(() => Venta.Descuentos)" />
                         </div>
 
@@ -273,31 +273,39 @@ else
 
     private void AgregarDetalle()
     {
-        if (VerificoDetalle())
+        if(cantidadProducto > 0)
         {
-            if (VerificoStock())
+            if (VerificoDetalle())
             {
-                CalcularImporte();
-
-                Venta.VentasDetalle.Add(new VentasDetalle
+                if (VerificoStock())
                 {
-                    VentaId = Venta.VentaId,
-                    ProductoId = productoSeleccionado,
-                    Cantidad = cantidadProducto,
-                    Precio = precioProducto
-                });
+                    CalcularImporte();
 
-                Venta.CantidadProductos = Venta.VentasDetalle.Count;
+                    Venta.VentasDetalle.Add(new VentasDetalle
+                    {
+                        VentaId = Venta.VentaId,
+                        ProductoId = productoSeleccionado,
+                        Cantidad = cantidadProducto,
+                        Precio = precioProducto
+                    });
 
-                CalcularTotal();
-                CalcularITBIS();
-                CalcularTotalGeneral();
+                    Venta.CantidadProductos = Venta.VentasDetalle.Count;
+
+                    CalcularTotal();
+                    CalcularITBIS();
+                    CalcularTotalGeneral();
+                }
+                else
+                    toast.ShowWarning("Solo hay " + maxValue() + " Unidades de este articulo");
             }
             else
-                toast.ShowWarning("Solo hay " + maxValue() + " Unidades de este articulo");
+                toast.ShowWarning("Tienes que selecionar un producto y llenar los campos");
         }
         else
-            toast.ShowWarning("Tienes que selecionar un producto y llenar los campos");
+        {
+            toast.ShowWarning("Debe seleccionar una cantidad de productos valida");
+        }
+
 
         Limits();
 
@@ -346,26 +354,29 @@ else
             CalcularITBIS();
             CalcularTotalGeneral();
 
-            if (VerificarLimiteCredito() && Venta.VentaId >= 0)
+            if (Venta.VentaId >= 0)
             {
-                Venta.UsuarioId = Usuario.UsuarioId;
-
-                guardo = VentasBLL.Guardar(Venta);
-
-                if (guardo)
+                if (VerificarLimiteCredito())
                 {
-                    if (VentaId > 0)
-                        nav.NavigateTo("consultaventas", true);
+                    Venta.UsuarioId = Usuario.UsuarioId;
 
-                    Nuevo();
-                    toast.ShowSuccess("Guardo correctamente");
+                    guardo = VentasBLL.Guardar(Venta);
 
-                    if (PocoStock() != null)
-                        await js.InvokeVoidAsync("Notificar", "Hay articulos que estan en reorden");
+                    if (guardo)
+                    {
+                        if (VentaId > 0)
+                            nav.NavigateTo("consultaventas", true);
 
+                        Nuevo();
+                        toast.ShowSuccess("Guardo correctamente");
+
+                        if (PocoStock() != null)
+                            await js.InvokeVoidAsync("Notificar", "Hay articulos que estan en reorden");
+
+                    }
+                    else
+                        toast.ShowError("No fue posible guardar");
                 }
-                else
-                    toast.ShowError("No fue posible guardar");
             }
             else
             {
@@ -665,7 +676,7 @@ else
         }
         else
         {
-            if (Venta != null)
+            if (Validar())
             {
                 var parameters = new ModalParameters();
                 parameters.Add("Venta", Venta);
@@ -684,6 +695,8 @@ else
     {
         bool paso = true;
 
+        if (Venta.VentaId < 0)
+            paso = false;
         if (Venta.ClienteId == 0)
             paso = false;
         if (Venta.Tipo == string.Empty)

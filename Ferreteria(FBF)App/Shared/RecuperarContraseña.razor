@@ -87,24 +87,31 @@
 
     public void VerificarAutenticidad()
     {
+        bool paso = false;
+
         foreach (var item in UsuariosBLL.GetList(p => true))
         {
             if (item.Usuario == User)
             {
                 UsuarioId = item.UsuarioId;
+                paso = true;
+                break;
             }
         }
 
-        NombreUsuario = UsuariosBLL.Buscar(UsuarioId).Usuario;
-        CorreoUsuario = UsuariosBLL.Buscar(UsuarioId).Email;
+        if (paso)
+        {
+            NombreUsuario = UsuariosBLL.Buscar(UsuarioId).Usuario;
+            CorreoUsuario = UsuariosBLL.Buscar(UsuarioId).Email;
 
-        if (NombreUsuario == User && CorreoUsuario == Correo)
-        {
-            ConstruirCorreo();
-        }
-        else
-        {
-            toast.ShowError("Los datos no coinciden");
+            if (NombreUsuario == User && CorreoUsuario == Correo)
+            {
+                ConstruirCorreo();
+            }
+            else
+            {
+                toast.ShowError("Los datos no coinciden");
+            }
         }
     }
 }

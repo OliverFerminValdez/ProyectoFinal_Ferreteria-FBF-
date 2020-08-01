@@ -19,114 +19,116 @@
                 <h2 style="font-family :'Segoe UI'">Entrada de inventario</h2>
             </div>
             <div class="card-body">
-                @*Inventario Id*@
-                <div class="form-group">
-                    <div class="col-4">
-                        <label>Inventario Id</label>
-                        <div class="input-group">
-                            <InputNumber @bind-Value="Inventario.InventarioId" class="form-control" />
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
-                                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @*Fecha*@
-                <div class="form-group">
-                    <label>Fecha</label>
-                    <InputDate class="form-control" @bind-Value="Inventario.Fecha"></InputDate>
-                    <ValidationMessage For="@(() => Inventario.Fecha)" />
-                </div>
-
-                @*Suplidor*@
-                <div class="form-group">
-                    <label>Suplidor</label>
-                    <select class="form-control" @bind="Inventario.SuplidorId">
-                        <option disabled="disabled" selected="selected">Elija una opción</option>
-                        @foreach (var auxiliar in SuplidoresBLL.GetList(p => true))
-                        {
-                            <option value="@auxiliar.SuplidorId">@auxiliar.NombreSuplidor</option>
-                        }
-                    </select>
-                    <ValidationMessage For="@(() => Inventario.SuplidorId)" />
-                </div>
-
-                @*Agregar Al detalle*@
-                <div class="card">
-                    <div class="card-header">
-                        <div class="form-row">
-
-                            <div class="form-group col-3">
-                                <label>Descripción</label>
-                                <InputSelectNumber class="form-control" @bind-Value="productoSeleccionado">
-                                    <option disabled="disabled" selected="selected">Elija una opción</option>
-                                    @foreach (var auxiliar in ProductosBLL.GetList(p => true))
-                                    {
-                                        <option value="@auxiliar.ProductoId">@auxiliar.Descripción</option>
-                                    }
-                                </InputSelectNumber>
-                            </div>
-
-                            <div class="form-group col-3">
-                                <label>Costo</label>
-                                <InputNumber @bind-Value="costoproducto" class="form-control" />
-                            </div>
-
-                            <div class="form-group col-2">
-                                <label>Inventario</label>
-                                <InputNumber @bind-Value="inventarioproducto" class="form-control" @onfocusout="CalcularImporte" />
-                            </div>
-
-                            <div class="form-group col-3">
-                                <label>Importe</label>
-                                <div class="input-group">
-                                    <InputNumber @bind-Value="Importe" class="form-control" readonly />
-                                    <div class="input-group-append">
-                                        <button type="button" class="btn btn-secondary" @onclick="AgregarAlDetalle"><span class="oi oi-plus"></span></button>
-                                    </div>
+                <form>
+                    @*Inventario Id*@
+                    <div class="form-group form-row">
+                        <div class="col-4">
+                            <label>Inventario Id</label>
+                            <div class="input-group">
+                                <InputNumber @bind-Value="Inventario.InventarioId" min="0" class="form-control" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
+                                        <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    @*Fecha*@
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <InputDate class="form-control" @bind-Value="Inventario.Fecha"></InputDate>
+                        <ValidationMessage For="@(() => Inventario.Fecha)" />
+                    </div>
 
-                    <div class="card-body">
-                        <table class="table">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col">ProductoId</th>
-                                    <th scope="col">Descripcion</th>
-                                    <th scope="col">Cantidad</th>
-                                    <th scope="col">Costo</th>
-                                    <th scope="col">Valor inventario</th>
-                                    <th scope="col">Ajuste</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var auxiliar in Inventario.Productos)
-                                {
+                    @*Suplidor*@
+                    <div class="form-group">
+                        <label>Suplidor</label>
+                        <select class="form-control" @bind="Inventario.SuplidorId">
+                            <option disabled="disabled" selected="selected">Elija una opción</option>
+                            @foreach (var auxiliar in SuplidoresBLL.GetList(p => true))
+                            {
+                                <option value="@auxiliar.SuplidorId">@auxiliar.NombreSuplidor</option>
+                            }
+                        </select>
+                        <ValidationMessage For="@(() => Inventario.SuplidorId)" />
+                    </div>
+
+                    @*Agregar Al detalle*@
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="form-row">
+
+                                <div class="form-group col-3">
+                                    <label>Descripción</label>
+                                    <InputSelectNumber class="form-control" @bind-Value="productoSeleccionado">
+                                        <option disabled="disabled" selected="selected">Elija una opción</option>
+                                        @foreach (var auxiliar in ProductosBLL.GetList(p => true))
+                                            {
+                                            <option value="@auxiliar.ProductoId">@auxiliar.Descripción</option>
+                                            }
+                                    </InputSelectNumber>
+                                </div>
+
+                                <div class="form-group col-3">
+                                    <label>Costo</label>
+                                    <InputNumber @bind-Value="costoproducto" min="0" class="form-control" @onfocusout="CalcularImporte" />
+                                </div>
+
+                                <div class="form-group col-2">
+                                    <label>Inventario</label>
+                                    <InputNumber @bind-Value="inventarioproducto" min="0" class="form-control" @onfocusout="CalcularImporte" />
+                                </div>
+
+                                <div class="form-group col-3">
+                                    <label>Importe</label>
+                                    <div class="input-group">
+                                        <InputNumber @bind-Value="Importe" class="form-control" readonly />
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-secondary" @onclick="AgregarAlDetalle"><span class="oi oi-plus"></span></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <table class="table">
+                                <thead class="thead-dark">
                                     <tr>
-                                        <td>@auxiliar.ProductoId</td>
-                                        <td>@ProductosBLL.Buscar(auxiliar.ProductoId).Descripción</td>
-                                        <td>@auxiliar.Inventario</td>
-                                        <td>@auxiliar.costo</td>
-                                        <td>@auxiliar.ValorInventario</td>
-                                        <td>
-                                            <button type="button" class="btn btn-danger" @onclick="@(() => EliminarDetalle(auxiliar))">
-                                                <span class="oi oi-x"></span>
-                                            </button>
-                                        </td>
+                                        <th scope="col">ProductoId</th>
+                                        <th scope="col">Descripcion</th>
+                                        <th scope="col">Cantidad</th>
+                                        <th scope="col">Costo</th>
+                                        <th scope="col">Valor inventario</th>
+                                        <th scope="col">Ajuste</th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach (var auxiliar in Inventario.Productos)
+                                    {
+                                        <tr>
+                                            <td>@auxiliar.ProductoId</td>
+                                            <td>@ProductosBLL.Buscar(auxiliar.ProductoId).Descripción</td>
+                                            <td>@auxiliar.Inventario</td>
+                                            <td>@auxiliar.costo</td>
+                                            <td>@auxiliar.ValorInventario</td>
+                                            <td>
+                                                <button type="button" class="btn btn-danger" @onclick="@(() => EliminarDetalle(auxiliar))">
+                                                    <span class="oi oi-x"></span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer">
+                            <label>Total inventario</label>
+                            <InputNumber class="form-control col-4" @bind-Value="Inventario.TotalInventario" readonly></InputNumber>
+                        </div>
                     </div>
-                    <div class="card-footer">
-                        <label>Total inventario</label>
-                        <InputNumber class="form-control col-4" @bind-Value="Inventario.TotalInventario" readonly></InputNumber>
-                    </div>
-                </div>
+                </form>
             </div>
             <div class="card-footer">
                 <div class="form-group text-center" display: inline-block>
@@ -160,7 +162,7 @@ else
     [Parameter]
     public int InventarioId { get; set; }
 
-    public int productoSeleccionado { get; set; }
+    public int productoSeleccionado { get; set; } = 0;
     public int inventarioproducto { get; set; }
     public double costoproducto { get; set; }
     public float Importe { get; set; }
@@ -172,9 +174,10 @@ else
     {
         Nuevo();
         ObtenerUsuarioLogeado();
-        Buscar();
+        Buscar(InventarioId);
 
     }
+
     public void Nuevo()
     {
         Inventario = new Inventario();
@@ -184,13 +187,25 @@ else
         costoproducto = 0;
         Importe = 0;
     }
+
+    public void Buscar(int id)
+    {
+        var encontrado = InventarioBLL.Buscar(id);
+
+        if (encontrado != null)
+            this.Inventario = encontrado;
+    }
+
     public void Buscar()
     {
         var encontrado = InventarioBLL.Buscar(Inventario.InventarioId);
 
         if (encontrado != null)
             this.Inventario = encontrado;
+        else
+            toast.ShowWarning("No encontrado");
     }
+
     public void Guardar()
     {
         bool guardo;
@@ -199,25 +214,33 @@ else
         {
             if (Inventario.Productos.Count != 0)
             {
-                Inventario.UsuarioId = Usuario.UsuarioId;
-                CalcularValorInventario();
-                guardo = InventarioBLL.Guardar(Inventario);
-
-                if (guardo)
+                if(Inventario.SuplidorId > 0)
                 {
+                    Inventario.UsuarioId = Usuario.UsuarioId;
+                    CalcularValorInventario();
+                    guardo = InventarioBLL.Guardar(Inventario);
 
-                    Nuevo();
-                    toast.ShowSuccess("Guardado exitosamente");
+                    if (guardo)
+                    {
+
+                        Nuevo();
+                        toast.ShowSuccess("Guardado exitosamente");
+                    }
+                    else
+                    {
+                        toast.ShowError("No se pudo guardar");
+                    }
                 }
                 else
                 {
-                    toast.ShowError("No se pudo guardar");
+                    toast.ShowWarning("Debe seleccionar un suplidor");
                 }
             }
             else
                 toast.ShowWarning("Debe insertar datos validos al detalle");
         }
     }
+
     public async Task Eliminar()
     {
         bool elimino;
@@ -244,31 +267,53 @@ else
         }
 
     }
+
     public void AgregarAlDetalle()
     {
         if (validarDetalle())
         {
-            Inventario.Productos.Add(new InventarioDetalle
+            if (ConfirmarPrecio())
             {
-                InventarioId = Inventario.InventarioId,
-                ProductoId = productoSeleccionado,
-                Inventario = inventarioproducto,
-                costo = costoproducto,
-                ValorInventario = Importe
-            });
+                Inventario.Productos.Add(new InventarioDetalle
+                {
+                    InventarioId = Inventario.InventarioId,
+                    ProductoId = productoSeleccionado,
+                    Inventario = inventarioproducto,
+                    costo = costoproducto,
+                    ValorInventario = Importe
+                });
+            }
+            else
+            {
+                toast.ShowWarning("El costo no puede ser mayor al precio de venta");
+            }
         }
         else
         {
             toast.ShowWarning("Ingrese datos validos");
         }
-        productoSeleccionado = 0;
-        costoproducto = 0;
-        inventarioproducto = 0;
-        Importe = 0;
 
         CalcularImporte();
         CalcularValorInventario();
     }
+
+    public bool ConfirmarPrecio()
+    {
+        Productos producto = ProductosBLL.Buscar(productoSeleccionado);
+        bool paso = true;
+
+        if(producto != null)
+        {
+            if (costoproducto >= producto.PrecioUnitario)
+            {
+                paso = false;
+                return paso;
+            }
+        }
+
+        return paso;
+    }
+
     public void CalcularValorInventario()
     {
         Inventario.TotalInventario = 0;
@@ -278,16 +323,19 @@ else
             Inventario.TotalInventario += item.ValorInventario;
         }
     }
+
     public void CalcularImporte()
     {
         Importe = (float)costoproducto * inventarioproducto;
     }
+
     public void EliminarDetalle(InventarioDetalle detalle)
     {
         Inventario.Productos.Remove(detalle);
 
         CalcularValorInventario();
     }
+
     public void ObtenerUsuarioLogeado()
     {
         Usuarios usuario = UsuariosBLL.Buscar(AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name);
@@ -297,6 +345,7 @@ else
             Usuario = usuario;
         }
     }
+
     public bool VerificarNivelAcceso()
     {
         bool paso = false;
@@ -306,6 +355,7 @@ else
 
         return paso;
     }
+
     public bool validarDetalle()
     {
         bool paso = true;
@@ -319,6 +369,21 @@ else
 
         return paso;
     }
+
+    public bool Valido()
+    {
+        bool paso = true;
+
+        if (Inventario.InventarioId < 0)
+            paso = false;
+        if (Inventario.Productos.Count() == 0)
+            paso = false;
+        if (Inventario.SuplidorId == 0)
+            paso = false;
+
+        return paso;
+    }
+
     public void Imprimir()
     {
         FacturaDeCompra rpt = new FacturaDeCompra();
@@ -326,7 +391,7 @@ else
         if (Inventario.InventarioId == 0)
         {
             Inventario.UsuarioId = Usuario.UsuarioId;
-            if (validarDetalle())
+            if (Valido())
             {
                 var parameters = new ModalParameters();
                 parameters.Add("Inventario", Inventario);
@@ -341,7 +406,7 @@ else
         }
         else
         {
-            if (Inventario != null)
+            if (Valido())
             {
                 var parameters = new ModalParameters();
                 parameters.Add("Inventario", Inventario);
@@ -355,4 +420,4 @@ else
         }
 
     }
-    }
+}

@@ -102,16 +102,10 @@ namespace Ferreteria_FBF_App.BLL
                         }
                         else
                         {
-                            if ((!(ventaAnterior.TotalGeneral == venta.TotalGeneral)) && (!(ventaAnterior.TotalGeneral < venta.TotalGeneral)))
+                            if ((ventaAnterior.TotalGeneral != venta.TotalGeneral))
                             {
-                                cliente.Balance += (ventaAnterior.TotalGeneral - venta.TotalGeneral);
-                                cliente.LimiteCredito -= (ventaAnterior.TotalGeneral - venta.TotalGeneral);
-                            }
-
-                            if ((!(ventaAnterior.TotalGeneral == venta.TotalGeneral)) && (!(ventaAnterior.TotalGeneral > venta.TotalGeneral)))
-                            {
-                                cliente.Balance += (venta.TotalGeneral - venta.TotalGeneral);
-                                cliente.LimiteCredito -= (venta.TotalGeneral - ventaAnterior.TotalGeneral);
+                                cliente.Balance = ((cliente.Balance - ventaAnterior.TotalGeneral) + venta.TotalGeneral);
+                                cliente.LimiteCredito = ((cliente.LimiteCredito + ventaAnterior.TotalGeneral)- venta.TotalGeneral);
                             }
 
                             ClientesBLL.Modificar(cliente);
@@ -131,21 +125,37 @@ namespace Ferreteria_FBF_App.BLL
                 }
                 else
                 {
-
                     if (ventaAnterior.Tipo == "Credito")
                     {
-                        cliente.Balance -= venta.TotalGeneral;
-                        cliente.LimiteCredito += venta.TotalGeneral;
-                        ClientesBLL.Modificar(cliente);
-                    }
+                        if (venta.Tipo == "Contado")
+                        {
+                            cliente.Balance -= ventaAnterior.TotalGeneral;
+                            cliente.LimiteCredito += ventaAnterior.TotalGeneral;
+                            ClientesBLL.Modificar(cliente);
+                        }
+                        else
+                        {
+                            if(venta.Tipo == "Credito")
+                            {
+                                cliente.Balance -= ventaAnterior.TotalGeneral;
+                                cliente.LimiteCredito += ventaAnterior.TotalGeneral;
+                                ClientesBLL.Modificar(cliente);
 
-                    if (venta.Tipo == "Credito")
+                                NuevoCliente.Balance += venta.TotalGeneral;
+                                NuevoCliente.LimiteCredito -= venta.TotalGeneral;
+                                ClientesBLL.Modificar(NuevoCliente);
+                            }
+                        }
+                    }
+                    else
                     {
-                        NuevoCliente.Balance += venta.TotalGeneral;
-                        cliente.LimiteCredito -= venta.TotalGeneral;
-                        ClientesBLL.Modificar(NuevoCliente);
+                        if (venta.Tipo == "Credito")
+                        {
+                            NuevoCliente.Balance += venta.TotalGeneral;
+                            NuevoCliente.LimiteCredito -= venta.TotalGeneral;
+                            ClientesBLL.Modificar(NuevoCliente);
+                        }
                     }
-
                 }
 
                 foreach (var item in ventaAnterior.VentasDetalle)
@@ -230,25 +240,29 @@ namespace Ferreteria_FBF_App.BLL
             {   
                 Ventas venta = VentasBLL.Buscar(id);
 
-                Clientes cliente = ClientesBLL.Buscar(venta.ClienteId);
-
-                if (venta.Tipo == "Credito")
+                if(venta != null)
                 {
-                    cliente.Balance -= venta.TotalGeneral;
-                    cliente.LimiteCredito += venta.TotalGeneral;
-                    ClientesBLL.Modificar(cliente);
-                }
+                    Clientes cliente = ClientesBLL.Buscar(venta.ClienteId);
 
-                foreach (var item in venta.VentasDetalle) //Afecta el inventario
-                {
+                    if (venta.Tipo == "Credito")
+                    {
+                        cliente.Balance -= venta.TotalGeneral;
+                        cliente.LimiteCredito += venta.TotalGeneral;
+                        ClientesBLL.Modificar(cliente);
+                    }
+
+
+                    foreach (var item in venta.VentasDetalle) //Afecta el inventario
+                    {
                         var Producto = ProductosBLL.Buscar(item.ProductoId);
                         Producto.Inventario += item.Cantidad;
                         Producto.ValorInventario = Producto.Inventario * Producto.PrecioUnitario;
                         ProductosBLL.Modificar(Producto);
-                }
+                    }
 
-                contexto.Ventas.Remove(venta);
-                paso = (contexto.SaveChanges() > 0);
+                    contexto.Ventas.Remove(venta);
+                    paso = (contexto.SaveChanges() > 0);
+                }
             }
             catch (Exception)
             {

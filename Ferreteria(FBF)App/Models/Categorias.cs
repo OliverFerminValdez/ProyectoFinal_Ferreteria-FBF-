@@ -10,6 +10,7 @@ namespace Ferreteria_FBF_App.Models
     {
         [Key]
         public int CategoriaId { get; set; }
+        [StringLength(maximumLength: 50, MinimumLength = 3, ErrorMessage = "El nombre es muy corto")]
         [Required(ErrorMessage ="Es obligatorio introducir una descripcion")]
         public string Descripcion { get; set; }
         public int UsuarioId { get; set; }

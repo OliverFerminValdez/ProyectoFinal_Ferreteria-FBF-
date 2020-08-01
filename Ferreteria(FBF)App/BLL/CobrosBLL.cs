@@ -83,15 +83,18 @@ namespace Ferreteria_FBF_App.BLL
             {
                 if (anterior.ClienteId == cobro.ClienteId)
                 {
-                    cliente.Balance += anterior.Monto - cobro.Monto;
+                    cliente.Balance = (cliente.Balance + anterior.Monto) - cobro.Monto;
+                    cliente.LimiteCredito = (cliente.LimiteCredito - anterior.Monto) + cobro.Monto;
                     ClientesBLL.Modificar(cliente);
                 }
                 else
                 {
-                    NuevoCliente.Balance = cobro.Monto;
+                    NuevoCliente.Balance -= cobro.Monto;
+                    NuevoCliente.LimiteCredito += cobro.Monto;
                     ClientesBLL.Modificar(NuevoCliente);
 
-                    cliente.Balance -= cobro.Monto;
+                    cliente.Balance += cobro.Monto;
+                    cliente.LimiteCredito -= cobro.Monto;
                     ClientesBLL.Modificar(cliente);
                 }
                    

@@ -27,7 +27,7 @@
                             <div class="form-group">
                                 <label>Categoria Id</label>
                                 <div class="input-group">
-                                    <InputNumber @bind-Value="Categoria.CategoriaId" class="form-control col-3" />
+                                    <InputNumber @bind-Value="Categoria.CategoriaId" min="0" class="form-control col-3" />
                                     <div class="input-group-append">
                                         <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
                                             <span class="oi oi-magnifying-glass" aria-hidden="true"></span>

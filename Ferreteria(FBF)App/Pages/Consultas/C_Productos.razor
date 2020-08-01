@@ -151,7 +151,6 @@ else
     public int Filtro { get; set; }
     public int Order { get; set; }
     public double TotalInventario { get; set; }
-    RepositorioBase<Productos> repo = new RepositorioBase<Productos>();
 
 
     protected override void OnInitialized()
@@ -183,7 +182,7 @@ else
                     UpdateList(omite);
                     break;
                 case 2:
-                    Items = repo.GetList(a => a.Descripción.Contains(Criterio));
+                    Items = ProductosBLL.GetList(a => a.Descripción.Contains(Criterio));
                     TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
                     UpdateList(omite);
                     break;

@@ -27,7 +27,7 @@
                             <div class="form-group">
                                 <label>Cobro Id</label>
                                 <div class="input-group">
-                                    <InputNumber @bind-Value="Cobro.CobroId" class="form-control col-3" />
+                                    <InputNumber @bind-Value="Cobro.CobroId" min="0" class="form-control col-3" />
                                     <div class="input-group-append">
                                         <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">
                                             <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
@@ -41,7 +41,7 @@
                     @*Cliente Id*@
                     <div class="form-group">
                         <label>Cliente Id</label>
-                        <InputSelectNumber class="form-control" @bind-Value="Cobro.ClienteId" @onclick="pullBalance">
+                        <InputSelectNumber class="form-control" @bind-Value="Cobro.ClienteId" @onfocusout="pullBalance">
                             <option disabled="disabled" selected="selected">Elija una opción</option>
                             @foreach (var auxiliar in LlenarComboCliente())
                                 {
@@ -60,7 +60,7 @@
                     @*Monto*@
                     <div class="form-group">
                         <label>Monto</label>
-                        <InputNumber @bind-Value="Cobro.Monto" @onfocusin="CalcularBalance" class="form-control" />
+                        <InputNumber @bind-Value="Cobro.Monto" @onfocusout="CalcularBalance" min="1" class="form-control" />
                         <ValidationMessage For="@(() => Cobro.Monto)" />
                     </div>
 
@@ -153,7 +153,7 @@ else
         {
             if(Cobro.ClienteId > 0)
             {
-                if(Cobro.Monto > 0 && Cobro.Monto <= BalanceCobro)
+                if(Cobro.Monto > 0 && Cobro.Monto <= getBalance())
                 {
                     Cobro.UsuarioId = UsuariosBLL.Buscar(AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name).UsuarioId;
 
@@ -223,6 +223,16 @@ else
         }
 
         return listaClientes;
+    }
+
+    public double getBalance()
+    {
+        double balance = 0;
+
+        if (ClientesBLL.Buscar(Cobro.ClienteId) != null)
+            balance = ClientesBLL.Buscar(Cobro.ClienteId).Balance;
+
+        return balance;
     }
 
     public void pullBalance()

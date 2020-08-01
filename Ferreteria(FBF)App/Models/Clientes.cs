@@ -13,9 +13,11 @@ namespace Ferreteria_FBF_App.Models
         [Key]
         public int ClienteId { get; set; }
 
+        [StringLength(maximumLength: 30, MinimumLength = 4, ErrorMessage = "El nombre es muy corto")]
         [Required(ErrorMessage = "Es obligatorio introducir el nombre")]
         public string Nombre { get; set; }
 
+        [StringLength(maximumLength: 30, MinimumLength = 4, ErrorMessage = "El apellido es muy corto")]
         [Required(ErrorMessage = "Es obligatorio introducir el apellido")]
         public string Apellido { get; set; }
 
@@ -28,7 +30,7 @@ namespace Ferreteria_FBF_App.Models
         [EmailAddress(ErrorMessage ="Introduzca una direccion valida")]
         public string Email { get; set; }
 
-        [StringLength(30,ErrorMessage = "Debe contener 10 digitos", MinimumLength = 10)]
+        [StringLength(200,ErrorMessage = "Introduzca una direccion valida", MinimumLength = 4)]
         [Required(ErrorMessage = "Es obligatorio introducir la direccion")]
         public string Dirección { get; set; }
 
