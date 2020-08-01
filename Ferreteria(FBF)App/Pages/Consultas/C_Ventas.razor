@@ -31,12 +31,13 @@
                                 <select class="form-control" @bind="Filtro">
                                     <option value=0>Eliga un filtro</option>
                                     <option value=1>ID</option>
+                                    <option value=2>ClienteId</option>
                                 </select>
                             </div>
                             <div class="form-group col-3">
                                 <label><strong>Criterio: </strong></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Criterio" @bind="Criterio" />
+                                    <input type="number" class="form-control" placeholder="Criterio" @bind="Criterio" />
                                     <button type="button" class="btn btn-danger input-group-append" @onclick="@(c => Consultar(0))">Consultar</button>
                                 </div>
                             </div>
@@ -191,12 +192,6 @@ else
                 case 2:
                     int clienteId = Convert.ToInt32(Criterio);
                     Items = VentasBLL.GetList(a => a.ClienteId == clienteId);
-                    TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
-                    UpdateList(omite);
-                    break;
-                case 3:
-                    double total = Convert.ToDouble(Criterio);
-                    Items = VentasBLL.GetList(a => a.TotalGeneral == total);
                     TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
                     UpdateList(omite);
                     break;

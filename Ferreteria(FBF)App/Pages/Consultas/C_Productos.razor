@@ -33,7 +33,7 @@
                             <div class="form-group col-4">
                                 <label><strong>Criterio: </strong></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" @bind="Criterio" placeholder="Criterio" />
+                                    <input type="@(Filtro == 1 || Filtro == 3 ? "number" : "text" )" class="form-control" @bind="Criterio" placeholder="Criterio" />
                                     <button type="button" class="btn btn-danger input-group-append" @onclick="@(c => Consultar(0))">Consultar</button>
                                 </div>
                             </div>
@@ -71,7 +71,7 @@
                                     <td>@item.PrecioUnitario</td>
                                     <td>@item.Inventario</td>
                                     <td>@item.ValorInventario</td>
-                                    <td><a class="btn btn-danger" href="@($"ProductoId/{item.ProductoId}")">Editar</a></td>
+                                    <td><a class="btn btn-danger" href="@($"Productos/{item.ProductoId}")">Editar</a></td>
                                 </tr>
                             }
 

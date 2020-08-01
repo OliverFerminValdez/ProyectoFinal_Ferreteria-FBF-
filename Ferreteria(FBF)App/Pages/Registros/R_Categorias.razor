@@ -1,4 +1,5 @@
 ﻿@page "/Categorias"
+@page "/Categorias/{CategoriaId:int}"
 
 
 @using BLL
@@ -85,6 +86,8 @@ else
     {
         Nuevo();
         Buscar();
+        if (CategoriaId > 0)
+            Buscar(CategoriaId);
 
         ObtenerUsuarioLogeado();
     }
@@ -93,7 +96,13 @@ else
     {
         Categoria = new Categorias();
     }
+    public void Buscar(int id)
+    {
+        var encontrado = CategoriasBLL.Buscar(id);
 
+        if (encontrado != null)
+            this.Categoria = encontrado;
+    }
     public void Buscar()
     {
         if (Categoria.CategoriaId > 0)

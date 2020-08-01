@@ -1,4 +1,5 @@
 ﻿@page "/suplidores"
+@page "/suplidores/{SuplidorId:int}"
 
 
 @using BLL
@@ -85,10 +86,18 @@ else
     {
         Nuevo();
         Buscar();
+        if(SuplidorId > 0)
+            Buscar(SuplidorId);
 
         ObtenerUsuarioLogeado();
     }
+    public void Buscar(int id)
+    {
+        var encontrado = SuplidoresBLL.Buscar(id);
 
+        if (encontrado != null)
+            this.Suplidor = encontrado;
+    }
     public void Nuevo()
     {
         Suplidor = new Suplidores();

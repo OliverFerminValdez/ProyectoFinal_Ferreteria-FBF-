@@ -246,9 +246,14 @@ namespace Ferreteria_FBF_App.BLL
 
                     if (venta.Tipo == "Credito")
                     {
-                        cliente.Balance -= venta.TotalGeneral;
-                        cliente.LimiteCredito += venta.TotalGeneral;
-                        ClientesBLL.Modificar(cliente);
+                        if (venta.TotalGeneral > cliente.Balance)
+                            cliente.Balance = 0;
+                        else
+                        {
+                            cliente.Balance -= venta.TotalGeneral;
+                            cliente.LimiteCredito += venta.TotalGeneral;
+                            ClientesBLL.Modificar(cliente);
+                        }
                     }
 
 

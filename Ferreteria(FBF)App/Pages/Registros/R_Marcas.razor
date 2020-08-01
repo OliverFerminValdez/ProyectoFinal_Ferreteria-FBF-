@@ -86,7 +86,18 @@ else
         Nuevo();
         Buscar();
 
+        if (MarcaId > 0)
+            Buscar(MarcaId);
+
         ObtenerUsuarioLogeado();
+    }
+
+    public void Buscar(int id)
+    {
+        var encontrado = MarcasBLL.Buscar(id);
+
+        if (encontrado != null)
+            this.Marca = encontrado;
     }
 
     public void Nuevo()

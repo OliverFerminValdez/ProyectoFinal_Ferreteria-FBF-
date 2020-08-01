@@ -1,5 +1,5 @@
 ﻿@page "/Productos"
-@page "/productos/{ProductoId:int}"
+@page "/Productos/{ProductoId:int}"
 
 @using BLL
 @using Models
@@ -193,8 +193,6 @@ else
             if (guardo)
             {
                 ActualizarValorInventario();
-                if (ProductoId > 0)
-                    Navigation.NavigateTo("consultaproductos", true);
 
                 Nuevo();
                 toast.ShowSuccess("Guardado exitosamente");

@@ -30,7 +30,7 @@
                             <div class="form-group col-4">
                                 <label><strong>Criterio: </strong></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" @bind="Criterio" placeholder="Criterio" />
+                                    <input type="number" class="form-control" @bind="Criterio" placeholder="Criterio" />
                                     <button type="button" class="btn btn-danger input-group-append" @onclick="@(c => Consultar(0))">Consultar</button>
                                 </div>
                             </div>
@@ -64,7 +64,7 @@
                                     <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
                                     <td>@item.SuplidorId</td>
                                     <td>@item.TotalInventario</td>
-                                    <td><a class="btn btn-danger" href="@($"InventarioId/{item.InventarioId}")">Editar</a></td>
+                                    <td><a class="btn btn-danger" href="@($"Inventario/{item.InventarioId}")">Editar</a></td>
                                 </tr>
                             }
 

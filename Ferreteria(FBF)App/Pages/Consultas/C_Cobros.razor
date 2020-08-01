@@ -32,7 +32,7 @@
                             <div class="form-group col-4">
                                 <label><strong>Criterio: </strong></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Criterio" @bind="Criterio" />
+                                    <input type="@(Filtro == 1 || Filtro == 2 ? "number" : "text" )" class="form-control" placeholder="Criterio" @bind="Criterio" />
                                     <button type="button" class="btn btn-danger input-group-append" @onclick="@( c => Consultar(0))">Consultar</button>
                                 </div>
                             </div>
@@ -51,6 +51,7 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
+                                <th scope="col">ID</th>
                                 <th scope="col">Cliente</th>
                                 <th scope="col">Fecha</th>
                                 <th scope="col">Monto</th>
@@ -62,6 +63,7 @@
                             @foreach (var item in ItemsList)
                             {
                                 <tr>
+                                    <td>@item.CobroId</td>
                                     <td>@ClientesBLL.Buscar(item.ClienteId).Nombre @ClientesBLL.Buscar(item.ClienteId).Apellido</td>
                                     <td>@item.Fecha</td>
                                     <td>@item.Monto</td>

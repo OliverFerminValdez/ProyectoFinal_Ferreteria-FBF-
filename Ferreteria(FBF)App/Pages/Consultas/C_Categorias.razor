@@ -1,6 +1,196 @@
-﻿
+﻿@page "/consultaCategorias"
 
+@using Models
+@using BLL
+@inject IJSRuntime js
+@inject IModalService Modal
+@inject IToastService toast
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+
+@if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
+{
+    <div class="card rounded" style="border-color:#dc3545">
+        <div class="card-header text-lg-center" style="background-color: #dc3545">
+            <h3><strong>Consulta de Categorias</strong></h3>
+        </div>
+        <div class="card-body">
+            <div class="card">
+                <div class="card-header" style="background-color:#CDCBCB">
+                    <div class="row">
+                        <div class="input-group col-12">
+                            <div class="form-group col-3">
+                                <label><strong>Filtro: </strong></label>
+                                <select class="form-control" @bind="Filtro">
+                                    <option value="0">Eliga un filtro</option>
+                                    <option value=1>ID</option>
+                                    <option value=2>Nombre</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-4">
+                                <label><strong>Criterio: </strong></label>
+                                <div class="input-group">
+                                    <input type="@(Filtro == 1 ? "number" : "text" )" class="form-control" placeholder="Criterio" @bind="Criterio" />
+                                    <button type="button" class="btn btn-danger input-group-append" @onclick="@( c => Consultar(0))">Consultar</button>
+                                </div>
+                            </div>
+                            <div class="form-group col-2 col-md-4 ml-auto">
+                                <label><strong>Ordenar por: </strong></label>
+                                <select class="form-control" @bind="Order" @onclick="Ordenar" disabled="@(Items.Count>0 ? false : true)">
+                                    <option value="value">Eliga una opcion</option>
+                                    <option value=1>Nombre</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Descripcion</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ItemsList)
+                            {
+                                <tr>
+                                    <td>@item.CategoriaId</td>
+                                    <td>@item.Descripcion</td>
+                                    <td><a class="btn btn-dark" href="@($"Categorias/{item.CategoriaId}")">Editar</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer" style="background-color:#CDCBCB">
+                </div>
+            </div>
+
+        </div>
+        <div class="card-footer" style="background-color: #dc3545">
+            <div class="form-group text-center" display: inline-block>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item">
+                            <button class="page-link btn btn-danger"
+                                    @onclick="@(e => NavegateTo("Previous"))" tabindex="-1">
+                                Previous
+                            </button>
+                        </li>
+
+                        @for (int i = 0; i < TotalPages; i++)
+                        {
+                            var pageNumber = i;
+                            <li class="page-item">
+                                <button class="@(CurrentPage == pageNumber ? "page-link btn btn-dark" : "page-link btn btn-danger")"
+                                        @onclick="@(u => Consultar(pageNumber))">
+                                    @(i + 1)
+                                </button>
+                            </li>
+                        }
+
+                        <li class="page-item">
+                            <button type="button" class="page-link btn btn-danger" @onclick="@(e => NavegateTo("Next"))" tabindex="-1">Next</button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <LoginControl />
+}
 
 @code {
+    public List<Categorias> ItemsList { get; set; } = new List<Categorias>();
+    public List<Categorias> Items { get; set; } = new List<Categorias>();
+
+    public string Criterio { get; set; }
+    public int Numeracion { get; set; }
+    public int PageSize { get; set; }
+    public int TotalPages { get; set; }
+    public int CurrentPage { get; set; }
+    public int Filtro { get; set; }
+    public int Order { get; set; }
+    public double TotalDeuda { get; set; }
+    public int UserNumber { get; set; }
+
+    protected override void OnInitialized()
+    {
+        // Items = CategoriasBLL.GetList(p => true);
+        PageSize = 4;
+        // ItemsList = Items.Take(PageSize).ToList();
+        // TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+        //  CalcularInventario();
+
+        base.OnInitialized();
+    }
+
+    public void Consultar(int omite)
+    {
+        if (Criterio != string.Empty)
+        {
+            switch (Filtro)
+            {
+                case 0:
+                    Items = CategoriasBLL.GetList(p => true);
+                    TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+                    UpdateList(omite);
+                    break;
+                case 1:
+                    int id = Convert.ToInt32(Criterio);
+                    Items = CategoriasBLL.GetList(a => a.UsuarioId == id);
+                    TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+                    UpdateList(omite);
+                    break;
+                case 2:
+                    Items = CategoriasBLL.GetList(a => a.Descripcion.Contains(Criterio));
+                    TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+                    UpdateList(omite);
+                    break;
+            } //
+        }
+        else
+        {
+            Items = CategoriasBLL.GetList(a => true);
+            TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+            UpdateList(omite);
+        }
+
+    }
+
+    private void UpdateList(int pageNumber)
+    {
+        ItemsList = Items.Skip(pageNumber * PageSize).Take(PageSize).ToList();
+        CurrentPage = pageNumber;
+    }
+
+    private void NavegateTo(string direction)
+    {
+        if (direction == "Previous" && CurrentPage != 0)
+            CurrentPage -= 1;
+        if (direction == "Next" && CurrentPage != TotalPages)
+            CurrentPage += 1;
+
+        UpdateList(CurrentPage);
+    }
+
+    private void Ordenar()
+    {
+        if (Order == 1)
+        {
+            ItemsList = new List<Categorias>();
+            UpdateList(CurrentPage);
+            ItemsList = ItemsList.OrderBy(x => x.Descripcion).ToList();
+        }
+
+
+    }
+
 
 }
