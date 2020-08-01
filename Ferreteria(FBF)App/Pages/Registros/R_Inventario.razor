@@ -48,7 +48,7 @@
                             <option disabled="disabled" selected="selected">Elija una opción</option>
                             @foreach (var auxiliar in SuplidoresBLL.GetList(p => true))
                             {
-                                <option value="@auxiliar.SuplidorId">@auxiliar.NombreSuplidor</option>
+                                <option value="@auxiliar.SuplidorId">@auxiliar.Nombre</option>
                             }
                         </select>
                         <ValidationMessage For="@(() => Inventario.SuplidorId)" />

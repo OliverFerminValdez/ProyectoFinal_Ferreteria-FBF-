@@ -58,7 +58,7 @@
                             {
                                 <tr>
                                     <td>@item.SuplidorId</td>
-                                    <td>@item.NombreSuplidor</td>
+                                    <td>@item.Nombre</td>
                                     <td><a class="btn btn-dark" href="@($"Suplidores/{item.SuplidorId}")">Editar</a></td>
                                 </tr>
                             }
@@ -149,7 +149,7 @@ else
                     UpdateList(omite);
                     break;
                 case 2:
-                    Items = SuplidoresBLL.GetList(a => a.NombreSuplidor.Contains(Criterio));
+                    Items = SuplidoresBLL.GetList(a => a.Nombre.Contains(Criterio));
                     TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
                     UpdateList(omite);
                     break;
@@ -186,7 +186,7 @@ else
         {
             ItemsList = new List<Suplidores>();
             UpdateList(CurrentPage);
-            ItemsList = ItemsList.OrderBy(x => x.NombreSuplidor).ToList();
+            ItemsList = ItemsList.OrderBy(x => x.Nombre).ToList();
         }
 
 

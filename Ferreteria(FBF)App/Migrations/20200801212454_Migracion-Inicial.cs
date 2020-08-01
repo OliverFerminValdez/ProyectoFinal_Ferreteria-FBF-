@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ferreteria_FBF_App.Migrations
 {
-    public partial class Migracioninicial : Migration
+    public partial class MigracionInicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,7 +13,7 @@ namespace Ferreteria_FBF_App.Migrations
                 {
                     CategoriaId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Descripcion = table.Column<string>(nullable: false),
+                    Descripcion = table.Column<string>(maxLength: 50, nullable: false),
                     UsuarioId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -27,11 +27,11 @@ namespace Ferreteria_FBF_App.Migrations
                 {
                     ClienteId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Nombre = table.Column<string>(nullable: false),
-                    Apellido = table.Column<string>(nullable: false),
+                    Nombre = table.Column<string>(maxLength: 30, nullable: false),
+                    Apellido = table.Column<string>(maxLength: 30, nullable: false),
                     Cedula = table.Column<string>(maxLength: 11, nullable: false),
                     Email = table.Column<string>(nullable: false),
-                    Dirección = table.Column<string>(maxLength: 30, nullable: false),
+                    Dirección = table.Column<string>(maxLength: 200, nullable: false),
                     Telefono = table.Column<string>(maxLength: 12, nullable: false),
                     LimiteCredito = table.Column<double>(nullable: false),
                     Balance = table.Column<double>(nullable: false),
@@ -81,7 +81,7 @@ namespace Ferreteria_FBF_App.Migrations
                 {
                     MarcaId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Descripcion = table.Column<string>(nullable: false),
+                    Descripcion = table.Column<string>(maxLength: 50, nullable: false),
                     UsuarioId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -96,7 +96,7 @@ namespace Ferreteria_FBF_App.Migrations
                     ProductoId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Descripción = table.Column<string>(maxLength: 30, nullable: false),
-                    Unidad = table.Column<string>(nullable: false),
+                    Unidad = table.Column<string>(maxLength: 30, nullable: false),
                     MarcaId = table.Column<int>(nullable: false),
                     CategoriaId = table.Column<int>(nullable: false),
                     PrecioUnitario = table.Column<double>(nullable: false),
@@ -115,7 +115,7 @@ namespace Ferreteria_FBF_App.Migrations
                 {
                     SuplidorId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    NombreSuplidor = table.Column<string>(nullable: false),
+                    Nombre = table.Column<string>(maxLength: 50, nullable: false),
                     UsuarioId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -129,12 +129,12 @@ namespace Ferreteria_FBF_App.Migrations
                 {
                     UsuarioId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Nombre = table.Column<string>(nullable: false),
-                    Apellido = table.Column<string>(nullable: false),
+                    Nombre = table.Column<string>(maxLength: 30, nullable: false),
+                    Apellido = table.Column<string>(maxLength: 30, nullable: false),
                     Email = table.Column<string>(nullable: false),
                     NivelAcceso = table.Column<string>(nullable: false),
                     Telefono = table.Column<string>(maxLength: 10, nullable: false),
-                    Usuario = table.Column<string>(nullable: false),
+                    Usuario = table.Column<string>(maxLength: 30, nullable: false),
                     Contraseña = table.Column<string>(maxLength: 50, nullable: false)
                 },
                 constraints: table =>

@@ -79,15 +79,15 @@ namespace Ferreteria_FBF_App.BLL
 
             try
             {
-
-                foreach (var item in invAnterior.Productos)
-                {
+                if(invAnterior != null)
+                    foreach (var item in invAnterior.Productos)
+                    {
                         var producto = ProductosBLL.Buscar(item.ProductoId);
                         producto.Inventario -= item.Inventario;
                         producto.ValorInventario = producto.Inventario * producto.PrecioUnitario;
                         ProductosBLL.Modificar(producto);
                         contexto.Entry(item).State = EntityState.Deleted;
-                }
+                    }
 
                 foreach (var item in inventario.Productos)
                 {
