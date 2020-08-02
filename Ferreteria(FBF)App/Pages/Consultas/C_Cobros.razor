@@ -19,6 +19,14 @@
                 <div class="card-header" style="background-color:#CDCBCB">
                     <div class="row">
                         <div class="input-group col-12">
+                            <div class="form-group col-2">
+                                <label><strong>Desde: </strong></label>
+                                <input type="date" class="form-control" @bind="Desde" />
+                            </div>
+                            <div class="form-group col-2">
+                                <label><strong>Hasta: </strong></label>
+                                <input type="date" class="form-control" @bind="Hasta" />
+                            </div>
                             <div class="form-group col-3">
                                 <label><strong>Filtro: </strong></label>
                                 <select class="form-control" @bind="Filtro">
@@ -29,14 +37,14 @@
                                     <option value=4>Apellido cliente</option>
                                 </select>
                             </div>
-                            <div class="form-group col-4">
+                            <div class="form-group col-3">
                                 <label><strong>Criterio: </strong></label>
                                 <div class="input-group">
                                     <input type="@(Filtro == 1 || Filtro == 2 ? "number" : "text" )" class="form-control" placeholder="Criterio" @bind="Criterio" />
                                     <button type="button" class="btn btn-danger input-group-append" @onclick="@( c => Consultar(0))">Consultar</button>
                                 </div>
                             </div>
-                            <div class="form-group col-2 col-md-4 ml-auto">
+                            <div class="form-group col-2 col-md-2 ml-auto">
                                 <label><strong>Ordenar por: </strong></label>
                                 <select class="form-control" @bind="Order" @onclick="Ordenar" disabled="@(Items.Count>0 ? false : true)">
                                     <option value="value">Eliga una opcion</option>
@@ -125,6 +133,8 @@ else
     public List<Cobros> ItemsList { get; set; } = new List<Cobros>();
     public List<Cobros> Items { get; set; } = new List<Cobros>();
 
+    public DateTime Desde { get; set; } = DateTime.Today;
+    public DateTime Hasta { get; set; } = DateTime.Today;
     public string Criterio { get; set; }
     public int Numeracion { get; set; }
     public int PageSize { get; set; }
@@ -183,11 +193,16 @@ else
                     TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
                     UpdateList(omite);
                     break;
-            } //
+            }
+            Items = Items.Where(c => c.Fecha >= Desde.Date && c.Fecha.Date <= Hasta.Date).ToList();
+            TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+            UpdateList(omite);
+
         }
         else
         {
             Items = CobrosBLL.GetList(a => true);
+            Items = Items.Where(c => c.Fecha >= Desde.Date && c.Fecha.Date <= Hasta.Date).ToList();
             TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
             UpdateList(omite);
         }

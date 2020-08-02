@@ -196,13 +196,15 @@ else
                     UpdateList(omite);
                     break;
             }
-
             Items = Items.Where(c => c.Fecha >= Desde.Date && c.Fecha.Date <= Hasta.Date).ToList();
+            TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+            UpdateList(omite);
 
         }
         else
         {
             Items = VentasBLL.GetList(a => true);
+            Items = Items.Where(c => c.Fecha >= Desde.Date && c.Fecha.Date <= Hasta.Date).ToList();
             TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
             UpdateList(omite);
 
