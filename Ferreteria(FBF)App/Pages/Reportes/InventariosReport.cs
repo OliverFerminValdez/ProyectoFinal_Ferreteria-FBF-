@@ -190,7 +190,7 @@ namespace Ferreteria_FBF_App.Pages.Reportes
                 pdfCell.BackgroundColor = BaseColor.White;
                 pdfPTable.AddCell(pdfCell);
 
-                pdfCell = new PdfPCell(new Phrase(SuplidoresBLL.Buscar(item.SuplidorId).NombreSuplidor, _fontStyle));
+                pdfCell = new PdfPCell(new Phrase(SuplidoresBLL.Buscar(item.SuplidorId).Nombre, _fontStyle));
                 pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
                 pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                 pdfCell.BackgroundColor = BaseColor.White;

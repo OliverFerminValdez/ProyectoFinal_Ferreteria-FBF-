@@ -24,7 +24,8 @@ namespace Ferreteria_FBF_App.Migrations
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(50);
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("INTEGER");
@@ -42,7 +43,8 @@ namespace Ferreteria_FBF_App.Migrations
 
                     b.Property<string>("Apellido")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(30);
 
                     b.Property<double>("Balance")
                         .HasColumnType("REAL");
@@ -55,7 +57,7 @@ namespace Ferreteria_FBF_App.Migrations
                     b.Property<string>("Dirección")
                         .IsRequired()
                         .HasColumnType("TEXT")
-                        .HasMaxLength(30);
+                        .HasMaxLength(200);
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -66,7 +68,8 @@ namespace Ferreteria_FBF_App.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(30);
 
                     b.Property<string>("Telefono")
                         .IsRequired()
@@ -166,7 +169,8 @@ namespace Ferreteria_FBF_App.Migrations
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(50);
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("INTEGER");
@@ -201,7 +205,8 @@ namespace Ferreteria_FBF_App.Migrations
 
                     b.Property<string>("Unidad")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(30);
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("INTEGER");
@@ -220,9 +225,10 @@ namespace Ferreteria_FBF_App.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("NombreSuplidor")
+                    b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(50);
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("INTEGER");
@@ -240,7 +246,8 @@ namespace Ferreteria_FBF_App.Migrations
 
                     b.Property<string>("Apellido")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(30);
 
                     b.Property<string>("Contraseña")
                         .IsRequired()
@@ -257,7 +264,8 @@ namespace Ferreteria_FBF_App.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(30);
 
                     b.Property<string>("Telefono")
                         .IsRequired()
@@ -266,7 +274,8 @@ namespace Ferreteria_FBF_App.Migrations
 
                     b.Property<string>("Usuario")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(30);
 
                     b.HasKey("UsuarioId");
 

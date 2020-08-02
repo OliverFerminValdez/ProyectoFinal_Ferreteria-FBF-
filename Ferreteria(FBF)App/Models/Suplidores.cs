@@ -12,7 +12,7 @@ namespace Ferreteria_FBF_App.Models
         public int SuplidorId { get; set; }
         [StringLength(maximumLength: 50, MinimumLength = 3, ErrorMessage = "El nombre es muy corto")]
         [Required(ErrorMessage ="Es obligatorio introducir el nombre")]
-        public string NombreSuplidor { get; set; }
+        public string Nombre { get; set; }
         public int UsuarioId { get; set; }
 
     }

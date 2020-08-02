@@ -14,7 +14,7 @@
 {
     <EditForm Model="Inventario" OnValidSubmit="Guardar">
         <DataAnnotationsValidator></DataAnnotationsValidator>
-        <div class="card">
+        <div class="card border-danger">
             <div class="card-header bg-danger text-center">
                 <h2 style="font-family :'Segoe UI'">Entrada de inventario</h2>
             </div>
@@ -48,7 +48,7 @@
                             <option disabled="disabled" selected="selected">Elija una opción</option>
                             @foreach (var auxiliar in SuplidoresBLL.GetList(p => true))
                             {
-                                <option value="@auxiliar.SuplidorId">@auxiliar.NombreSuplidor</option>
+                                <option value="@auxiliar.SuplidorId">@auxiliar.Nombre</option>
                             }
                         </select>
                         <ValidationMessage For="@(() => Inventario.SuplidorId)" />

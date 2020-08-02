@@ -280,9 +280,9 @@ namespace Ferreteria_FBF_App.Pages.Reportes
             TableRows("", "", fontStyle, "");
 
             if (SuplidoresBLL.Buscar(inv.SuplidorId) != null)
-                Totales("Usuario: ", (UsuariosBLL.Buscar(inv.UsuarioId).Nombre + " " + UsuariosBLL.Buscar(inv.UsuarioId).Apellido), "Suplidor: ", SuplidoresBLL.Buscar(inv.SuplidorId).NombreSuplidor, _fontStyle);/*+ UsuariosBLL.Buscar(venta.UsuarioId).Nombre + " " + UsuariosBLL.Buscar(venta.UsuarioId).Apellido, fontStyle, ""*/
+                Totales("Usuario: ", (UsuariosBLL.Buscar(inv.UsuarioId).Nombre + " " + UsuariosBLL.Buscar(inv.UsuarioId).Apellido), "Suplidor: ", SuplidoresBLL.Buscar(inv.SuplidorId).Nombre, _fontStyle);/*+ UsuariosBLL.Buscar(venta.UsuarioId).Nombre + " " + UsuariosBLL.Buscar(venta.UsuarioId).Apellido, fontStyle, ""*/
             else
-                Totales("Despachado por:", (UsuariosBLL.Buscar(usuariologueadoId).Nombre + " " + UsuariosBLL.Buscar(usuariologueadoId).Apellido), "Suplidor: ", SuplidoresBLL.Buscar(inv.SuplidorId).NombreSuplidor, _fontStyle);
+                Totales("Despachado por:", (UsuariosBLL.Buscar(usuariologueadoId).Nombre + " " + UsuariosBLL.Buscar(usuariologueadoId).Apellido), "Suplidor: ", SuplidoresBLL.Buscar(inv.SuplidorId).Nombre, _fontStyle);
             #endregion
         }
         public void Totales(string num, string col2, string total, string restotal, Font _fontStyle)
