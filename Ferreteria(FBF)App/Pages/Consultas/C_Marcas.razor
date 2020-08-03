@@ -144,7 +144,7 @@ else
                     break;
                 case 1:
                     int id = Convert.ToInt32(Criterio);
-                    Items = MarcasBLL.GetList(a => a.UsuarioId == id);
+                    Items = MarcasBLL.GetList(a => a.MarcaId == id);
                     TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
                     UpdateList(omite);
                     break;

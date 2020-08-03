@@ -15,7 +15,7 @@ namespace Ferreteria_FBF_App.Models
         [StringLength(30, ErrorMessage = "La descripcion debe contener al menos 4 digitos", MinimumLength = 4)]
         public string Descripción { get; set; }
 
-        [StringLength(maximumLength: 30, MinimumLength = 4, ErrorMessage = "El nombre es muy corto")]
+        [StringLength(maximumLength: 30, MinimumLength = 2, ErrorMessage = "El nombre de la unidad es muy corto")]
         [Required(ErrorMessage = "Es obligatorio introducir la unidad")]
         public string Unidad { get; set; }
 
