@@ -4,6 +4,7 @@
     <StartWorkingDirectory>$(MSBuildProjectDirectory)</StartWorkingDirectory>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Ferreteria_FBF_App</RootNamespace>
+    <UserSecretsId>a70d3ea7-65b6-4079-ad8e-2316df25b3ca</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +16,12 @@
     <Compile Remove="Migrations\20200804212755_Migracion.Designer.cs" />
     <Compile Remove="Migrations\20200804213525_Migracion.cs" />
     <Compile Remove="Migrations\20200804213525_Migracion.Designer.cs" />
+    <Compile Remove="Migrations\20200804213912_Migracion.cs" />
+    <Compile Remove="Migrations\20200804213912_Migracion.Designer.cs" />
+    <Compile Remove="Migrations\20200804224455_Migracion.cs" />
+    <Compile Remove="Migrations\20200804224455_Migracion.Designer.cs" />
+    <Compile Remove="Migrations\20200804225525_Migracion.cs" />
+    <Compile Remove="Migrations\20200804225525_Migracion.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

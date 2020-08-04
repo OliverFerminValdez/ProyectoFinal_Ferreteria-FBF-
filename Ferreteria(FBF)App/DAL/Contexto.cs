@@ -23,7 +23,8 @@ namespace Ferreteria_FBF_App.DAL
 
         protected override void OnConfiguring(DbContextOptionsBuilder dbContext)
         {
-            dbContext.UseSqlServer(@"Server=.\SQLEXPRESS; Database=FerreteriaFBF; Trusted_Connection=True;");
+            //dbContext.UseSqlServer(@"Server=.\SQLEXPRESS; Database=FerreteriaFBF; Trusted_Connection=True;");
+            dbContext.UseSqlServer(@"Server=tcp:ferreteriafbfappdbserver.database.windows.net,1433;Initial Catalog=Ferreteria(FBF)App_db;Persist Security Info=False;User ID=admin020202003;Password=SolucionesFB020202003;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
         }
 
         protected override void OnModelCreating(ModelBuilder model)
