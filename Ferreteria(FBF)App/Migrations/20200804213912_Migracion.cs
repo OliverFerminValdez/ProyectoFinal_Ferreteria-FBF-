@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ferreteria_FBF_App.Migrations
 {
-    public partial class MigracionInicial : Migration
+    public partial class Migracion : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +12,7 @@ namespace Ferreteria_FBF_App.Migrations
                 columns: table => new
                 {
                     CategoriaId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Descripcion = table.Column<string>(maxLength: 50, nullable: false),
                     UsuarioId = table.Column<int>(nullable: false)
                 },
@@ -26,7 +26,7 @@ namespace Ferreteria_FBF_App.Migrations
                 columns: table => new
                 {
                     ClienteId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(maxLength: 30, nullable: false),
                     Apellido = table.Column<string>(maxLength: 30, nullable: false),
                     Cedula = table.Column<string>(maxLength: 11, nullable: false),
@@ -47,7 +47,7 @@ namespace Ferreteria_FBF_App.Migrations
                 columns: table => new
                 {
                     CobroId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     ClienteId = table.Column<int>(nullable: false),
                     Fecha = table.Column<DateTime>(nullable: false),
                     Monto = table.Column<double>(nullable: false),
@@ -64,7 +64,7 @@ namespace Ferreteria_FBF_App.Migrations
                 columns: table => new
                 {
                     InventarioId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     SuplidorId = table.Column<int>(nullable: false),
                     Fecha = table.Column<DateTime>(nullable: false),
                     TotalInventario = table.Column<double>(nullable: false),
@@ -80,7 +80,7 @@ namespace Ferreteria_FBF_App.Migrations
                 columns: table => new
                 {
                     MarcaId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Descripcion = table.Column<string>(maxLength: 50, nullable: false),
                     UsuarioId = table.Column<int>(nullable: false)
                 },
@@ -94,7 +94,7 @@ namespace Ferreteria_FBF_App.Migrations
                 columns: table => new
                 {
                     ProductoId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Descripción = table.Column<string>(maxLength: 30, nullable: false),
                     Unidad = table.Column<string>(maxLength: 30, nullable: false),
                     MarcaId = table.Column<int>(nullable: false),
@@ -114,7 +114,7 @@ namespace Ferreteria_FBF_App.Migrations
                 columns: table => new
                 {
                     SuplidorId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(maxLength: 50, nullable: false),
                     UsuarioId = table.Column<int>(nullable: false)
                 },
@@ -128,7 +128,7 @@ namespace Ferreteria_FBF_App.Migrations
                 columns: table => new
                 {
                     UsuarioId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(maxLength: 30, nullable: false),
                     Apellido = table.Column<string>(maxLength: 30, nullable: false),
                     Email = table.Column<string>(nullable: false),
@@ -147,7 +147,7 @@ namespace Ferreteria_FBF_App.Migrations
                 columns: table => new
                 {
                     VentaId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     ClienteId = table.Column<int>(nullable: false),
                     Fecha = table.Column<DateTime>(nullable: false),
                     Tipo = table.Column<string>(nullable: false),
@@ -169,7 +169,7 @@ namespace Ferreteria_FBF_App.Migrations
                 columns: table => new
                 {
                     InventarioDetalleId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     InventarioId = table.Column<int>(nullable: false),
                     ProductoId = table.Column<int>(nullable: false),
                     costo = table.Column<double>(nullable: false),
@@ -192,7 +192,7 @@ namespace Ferreteria_FBF_App.Migrations
                 columns: table => new
                 {
                     VentasDetalleId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     VentaId = table.Column<int>(nullable: false),
                     ProductoId = table.Column<int>(nullable: false),
                     Cantidad = table.Column<int>(nullable: false),
@@ -212,7 +212,7 @@ namespace Ferreteria_FBF_App.Migrations
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Apellido", "Contraseña", "Email", "NivelAcceso", "Nombre", "Telefono", "Usuario" },
-                values: new object[] { 1, "FB", "UwBvAGwAdQBjAGkAbwBuAGUAcwBGAEIAMAAyADAAMgAwADIAMAAwADMA", "FerreteriaFBF@gmail.com", "Administrador", "Soluciones", "8095883505", "Admin" });
+                values: new object[] { 1, "FB", "UwBvAGwAdQBjAGkAbwBuAGUAcwBGAEIA", "FerreteriaFBF@gmail.com", "Administrador", "Soluciones", "8095883505", "Admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_InventarioDetalle_InventarioId",

@@ -23,7 +23,7 @@ namespace Ferreteria_FBF_App.DAL
 
         protected override void OnConfiguring(DbContextOptionsBuilder dbContext)
         {
-            dbContext.UseSqlite(@"Data Source = DATA\FerreteriaFBF.db");
+            dbContext.UseSqlServer(@"Server=.\SQLEXPRESS; Database=FerreteriaFBF; Trusted_Connection=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder model)
@@ -33,7 +33,7 @@ namespace Ferreteria_FBF_App.DAL
                 Nombre = "Soluciones",
                 Apellido = "FB",
                 Usuario = "Admin",
-                Contraseña = Encriptar("SolucionesFB020202003"),
+                Contraseña = Encriptar("SolucionesFB"),
                 Email = "FerreteriaFBF@gmail.com",
                 NivelAcceso = "Administrador",
                 Telefono = "8095883505"
