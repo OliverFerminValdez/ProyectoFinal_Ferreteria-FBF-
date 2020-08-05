@@ -9,7 +9,7 @@ Este repositorio contiene el proyecto final de programacion aplicada II, el cual
 
 ![image](https://user-images.githubusercontent.com/54644026/89111561-1afeb500-d425-11ea-8ab9-9774103d77f5.png)
 
-**El usuario predeterminado es Admin y la contraseña es SolucionesFB020202003**
+**El usuario predeterminado es Admin y la contraseña es SolucionesFB**
 
 En esta ventana se lleva acabo el acceso a la pagina web, el usuario debe de ingresar los datos y seleccionar
 el boton de LOGIN para poder seguir al resto de la pagina, en caso de que se le olivde la contraseña al usuario 
